@@ -6,6 +6,9 @@
 | 2 | 68102010209 | นาย พิชยุตม์ เจียวพงษ์พิพัฒน์ | @Ctrl-Pichayut |
 | 3 | 68102010203 | นาย ธราเทพ ศรีมานนท์ | @203Tharathep |
 | 4 | 68102010190 | นาย ก้องเกียรติ อมรธรรมคุณ| @Kizizi123123 |
+---
+
+# POS ร้านคาเฟ่และเบเกอรี่ (Café & Bakery POS Web Application)
 
 ---
 ## 1. ที่มาของปัญหาและความสำคัญ (Problem Statement & Significance)
@@ -128,19 +131,21 @@
 
 ## 8. สรุปผลการประชุมทบทวนการทำงาน (Sprint 1 Retrospective)
 
+คลิปวิดีโอสรุปการประชุม Retrospective https://youtu.be/IORRQBUFmWI
+
 เมื่อสิ้นสุดการทำงานใน Sprint 1 (Due date: 9 กันยายน 2569) ทีมงานได้จัดประชุมทบทวนการทำงานร่วมกัน (Retrospective) สรุปประเด็นสำคัญจากที่ประชุมได้ดังนี้
 
-1.สิ่งที่ทำได้ดี (What went well)
+### 1. สิ่งที่ทำได้ดี (What went well)
 
 ทีมงานทุกคนมีความเข้าใจในปัญหาของร้านคาเฟ่ตรงกัน ทำให้การกำหนดขอบเขตงาน (Scope) ทำได้ชัดเจนตั้งแต่ต้น 
 การกระจายงานเขียนเอกสารและการกำหนด User Story บน GitHub มีการแบ่งหน้าที่กันอย่างชัดเจน 
 
-2.สิ่งที่ควรปรับปรุง (What could be improved)
+### 2. สิ่งที่ควรปรับปรุง (What could be improved)
 
 ควรระบุขนาดและหน่วยของสต็อกสินค้าให้ละเอียดมากขึ้นในสปรินต์ถัดไป 
 การออกแบบ UI ใน Figma ควรเริ่มทำคู่ขนานไปพร้อมกับการพัฒนา Backend API ทันทีตั้งแต่ Sprint 2 
 
-3.สิ่งที่ต้องทำต่อไป (Next Steps / Action Items)
+### 3. สิ่งที่ต้องทำต่อไป (Next Steps / Action Items)
 
 เริ่มต้นพัฒนาโครงสร้างโปรเจกต์ (Project Setup) และทำหน้า Login เป็นลำดับแรกใน Sprint 2 ตาม Backlog ที่วางไว้
 
@@ -163,6 +168,3 @@
 <img width="1568" height="745" alt="9 3_issue_detail_example" src="https://github.com/user-attachments/assets/0fd8b2f8-614d-4e04-9ca5-a3d52dd57834" />
 
 คำอธิบาย: ตัวอย่างรายละเอียดของ Issue #5 "[User Story] User Authentication and Role-based Access" แสดงโครงสร้าง User Story ในรูปแบบ "As a Staff/Owner, I want to login with my credentials so that I can access the system with my assigned role permissions." พร้อม Assignee (203Tharathep), Label (Feature, Priority High), Milestone (Sprint2) และสถานะบน Project Board (Todo)
-
-คลิบวิดีโอ Requirement
-https://youtu.be/mrEzVA0Pjyg
