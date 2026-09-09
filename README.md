@@ -119,3 +119,45 @@
 4. **การวิเคราะห์และจัดกลุ่ม Requirement**: นำผลสัมภาษณ์มาคัดกรอง แยกเป็น Functional / Non-Functional Requirements และกำหนดขอบเขต In-Scope / Out-of-Scope ร่วมกันในทีม
 
 ---
+
+
+
+
+## 8. สรุปผลการประชุมทบทวนการทำงาน (Sprint 1 Retrospective)
+
+เมื่อสิ้นสุดการทำงานใน Sprint 1 (Due date: 9 กันยายน 2569) ทีมงานได้จัดประชุมทบทวนการทำงานร่วมกัน (Retrospective) สรุปประเด็นสำคัญจากที่ประชุมได้ดังนี้
+
+1.สิ่งที่ทำได้ดี (What went well)
+
+ทีมงานทุกคนมีความเข้าใจในปัญหาของร้านคาเฟ่ตรงกัน ทำให้การกำหนดขอบเขตงาน (Scope) ทำได้ชัดเจนตั้งแต่ต้น 
+การกระจายงานเขียนเอกสารและการกำหนด User Story บน GitHub มีการแบ่งหน้าที่กันอย่างชัดเจน 
+
+2.สิ่งที่ควรปรับปรุง (What could be improved)
+
+ควรระบุขนาดและหน่วยของสต็อกสินค้าให้ละเอียดมากขึ้นในสปรินต์ถัดไป 
+การออกแบบ UI ใน Figma ควรเริ่มทำคู่ขนานไปพร้อมกับการพัฒนา Backend API ทันทีตั้งแต่ Sprint 2 
+
+3.สิ่งที่ต้องทำต่อไป (Next Steps / Action Items)
+
+เริ่มต้นพัฒนาโครงสร้างโปรเจกต์ (Project Setup) และทำหน้า Login เป็นลำดับแรกใน Sprint 2 ตาม Backlog ที่วางไว้
+
+---
+
+
+
+## 9. ภาพหน้าจอการทำงานบน GitHub (Screenshots & Explanations)
+9.1 Product Backlog (Work Items & User Stories)
+<img width="1568" height="745" alt="9 1_product_backlog_issues" src="https://github.com/user-attachments/assets/76c0cd10-5c50-4271-999c-2457e3d4c5a6" />
+
+คำอธิบาย: หน้า GitHub Issues แสดงรายการ Work Items และ User Stories ทั้งหมดของโปรเจกต์ (รวม 10 Issues) ครอบคลุมทั้งงานเอกสาร (label documentation) และฟีเจอร์ของระบบ (label Feature) โดยแต่ละรายการมีการติด Priority (Priority High / Priority Low) และผูกกับ Milestone ของแต่ละ Sprint (Sprint1–Sprint4) ไว้อย่างชัดเจน
+
+9.2 Sprint Backlog & Milestones
+<img width="1568" height="745" alt="9 2_sprint_backlog_milestones" src="https://github.com/user-attachments/assets/6fe9b1c5-08a1-4476-96cd-215fea6f03f6" />
+
+คำอธิบาย: หน้า GitHub Milestones แสดงการแบ่งงานออกเป็น 4 Sprint (Sprint1–Sprint4) แต่ละ Sprint มีการกำหนด Due Date และจำนวน Issue ที่ต้องทำให้เสร็จอย่างชัดเจน เช่น Sprint 1 (Due 9 ก.ย. 2569) มี 4 Issues ครอบคลุมงาน Requirement, TOR, README และ Retrospective ส่วน Sprint 2–4 เป็น User Story ของฟีเจอร์หลักของระบบ POS ตามลำดับ
+
+9.3 ตัวอย่างรายละเอียดของ Issue (Issue Detail)
+<img width="1568" height="745" alt="9 3_issue_detail_example" src="https://github.com/user-attachments/assets/0fd8b2f8-614d-4e04-9ca5-a3d52dd57834" />
+
+คำอธิบาย: ตัวอย่างรายละเอียดของ Issue #5 "[User Story] User Authentication and Role-based Access" แสดงโครงสร้าง User Story ในรูปแบบ "As a Staff/Owner, I want to login with my credentials so that I can access the system with my assigned role permissions." พร้อม Assignee (203Tharathep), Label (Feature, Priority High), Milestone (Sprint2) และสถานะบน Project Board (Todo)
+
