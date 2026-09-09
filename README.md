@@ -53,7 +53,7 @@
 
 ---
 
-## 4. ความต้องการของระบบ (System Requirements)
+## 4. ความต้องการของระบบและคลิปการสอบถาม (System Requirements)
 
 ### 4.1 Functional Requirements (FR)
 * **FR-01 (Authentication)**: ระบบสามารถเข้าสู่ระบบและแยกสิทธิ์การใช้งานระหว่าง Admin และ Cashier ได้
@@ -112,7 +112,10 @@
 
 ---
 
-## 7. สรุปขั้นตอนการเก็บรวบรวม Requirement (Requirement Collection Summary)
+## 7. สรุปขั้นตอนการเก็บรวบรวมและคลิปการสอบถาม Requirement (Requirement Collection Summary & Video)
+
+คลิบวิดีโอ Requirement https://youtu.be/mrEzVA0Pjyg
+
 1. **การกำหนดกลุ่มเป้าหมาย**: เลือกผู้ประกอบการร้านคาเฟ่และเบเกอรี่ขนาดย่อมเป็นผู้ให้ความต้องการ
 2. **การเตรียมชุดคำถาม**: จัดทำคำถามสัมภาษณ์ 6 หมวดหมู่ (บริบทและปัญหา, สิทธิ์ผู้ใช้, สินค้าและสต็อก, การชำระเงิน, รายงาน, และขอบเขตทางเทคนิค)
 3. **การสัมภาษณ์และบันทึกข้อมูล**: สัมภาษณ์ผ่านทางออนไลน์และจดบันทึกประเด็นปัญหา (Pain Points) หลัก ได้แก่ การคิดเงินช้า, สต็อกเบเกอรี่ไม่ตรง, และการสรุปยอดขายยาก
@@ -161,5 +164,5 @@
 
 คำอธิบาย: ตัวอย่างรายละเอียดของ Issue #5 "[User Story] User Authentication and Role-based Access" แสดงโครงสร้าง User Story ในรูปแบบ "As a Staff/Owner, I want to login with my credentials so that I can access the system with my assigned role permissions." พร้อม Assignee (203Tharathep), Label (Feature, Priority High), Milestone (Sprint2) และสถานะบน Project Board (Todo)
 
-## 10. คลิบวิดีโอ Requirement
+คลิบวิดีโอ Requirement
 https://youtu.be/mrEzVA0Pjyg
