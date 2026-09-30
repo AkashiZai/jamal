@@ -12,9 +12,6 @@ export default function Navbar({ currentUser, onLogout, onNavigate, currentPage 
         <div>
           <div className="font-bold tracking-wide flex items-center gap-1.5">
             <span>JAMAL CAFÉ &amp; BAKERY</span>
-            <span className="bg-matcha text-white text-[10px] px-1.5 py-0.5 rounded font-mono font-bold">
-              Figma Spec v1.0
-            </span>
           </div>
           <div className="text-warmgray-400 text-[11px] hidden sm:block">
             Point of Sale System / Barista POS System
