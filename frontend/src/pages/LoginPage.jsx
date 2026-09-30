@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Coffee, ShieldCheck, Lock, User, KeyRound, AlertCircle, ArrowRight, Clock } from 'lucide-react';
-/s
+
 export const DEMO_ACCOUNTS = [
   {
     id: 'staff-01',
