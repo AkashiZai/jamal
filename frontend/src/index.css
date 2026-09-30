@@ -5,6 +5,8 @@
 @layer base {
   body {
     font-family: 'Plus Jakarta Sans', 'Sarabun', sans-serif;
+    background-color: #EDE7DF;
+    color: #1E1B18;
     -webkit-tap-highlight-color: transparent;
   }
 }
@@ -14,21 +16,76 @@
   font-family: 'JetBrains Mono', monospace;
 }
 
-/* Custom scrollbars for POS touch screens */
+/* Custom scrollbar for touch-friendly POS matching Figma */
 ::-webkit-scrollbar {
   width: 6px;
   height: 6px;
 }
-
 ::-webkit-scrollbar-track {
   background: #F5EFEB;
 }
-
 ::-webkit-scrollbar-thumb {
   background: #D8CEC2;
   border-radius: 999px;
 }
 
-::-webkit-scrollbar-thumb:hover {
-  background: #C85A32;
+/* 80mm Thermal Receipt Jagged Edge */
+.thermal-receipt {
+  background: #FFFFFF;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+  position: relative;
+}
+.thermal-receipt::after {
+  content: "";
+  position: absolute;
+  bottom: -8px;
+  left: 0;
+  right: 0;
+  height: 8px;
+  background: radial-gradient(circle, transparent, transparent 50%, #FFFFFF 50%, #FFFFFF 100% );
+  background-size: 16px 16px;
+}
+
+/* ========================================================================= */
+/* PRINT STYLES FOR 80MM THERMAL SLIP PRINTER (FR-06)                        */
+/* ========================================================================= */
+@media print {
+  @page {
+    size: 80mm auto;
+    margin: 0;
+  }
+
+  html, body {
+    background: #ffffff !important;
+    color: #000000 !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    height: auto !important;
+    min-height: auto !important;
+    overflow: visible !important;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+
+  /* Thermal Receipt clean styling on print */
+  .thermal-receipt {
+    box-shadow: none !important;
+    border: none !important;
+    border-radius: 0 !important;
+    margin: 0 auto !important;
+    padding: 3mm 2mm !important;
+    width: 76mm !important;
+    max-width: 76mm !important;
+    background: #ffffff !important;
+    color: #000000 !important;
+  }
+
+  .thermal-receipt::after {
+    display: none !important;
+  }
+
+  .thermal-receipt * {
+    color: #000000 !important;
+    border-color: #000000 !important;
+  }
 }

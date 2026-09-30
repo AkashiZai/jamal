@@ -1,5 +1,4 @@
 import React from 'react';
-import { Plus, SlidersHorizontal } from 'lucide-react';
 
 export default function ProductCard({ product, onSelect }) {
   const isOutOfStock = product.stock !== null && product.stock <= 0;
@@ -10,74 +9,61 @@ export default function ProductCard({ product, onSelect }) {
       onClick={() => {
         if (!isOutOfStock) onSelect(product);
       }}
-      className={`bg-white rounded-2xl border transition-all duration-200 p-3 flex flex-col justify-between group select-none ${
+      className={`bg-white rounded-2xl border border-cream-300 p-3 flex flex-col justify-between h-fit self-start transition cursor-pointer select-none ${
         isOutOfStock
-          ? 'border-cream-300 opacity-60 pointer-events-none'
-          : 'border-cream-300 hover:border-terracotta hover:shadow-lg cursor-pointer active:scale-[0.98]'
+          ? 'opacity-60 pointer-events-none'
+          : 'hover:border-terracotta hover:shadow-md active:scale-[0.98]'
       }`}
     >
-      {/* Product Image Box */}
-      <div className="relative w-full aspect-square rounded-xl overflow-hidden bg-cream-200 mb-2.5">
+      {/* Product Image */}
+      <div className="aspect-[4/3] rounded-xl overflow-hidden mb-2 bg-cream-200 relative">
         <img
           src={product.img}
           alt={product.name}
-          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+          className="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
           loading="lazy"
         />
 
+        {/* Low Stock Badge */}
+        {isLowStock && (
+          <span className="absolute top-2 right-2 bg-amber-500 text-white text-[10px] font-bold px-2 py-0.5 rounded shadow">
+            เหลือ {product.stock} ชิ้น
+          </span>
+        )}
+
         {/* Out of Stock Overlay */}
         {isOutOfStock && (
-          <div className="absolute inset-0 bg-espresso-900/80 backdrop-blur-[2px] flex items-center justify-center p-2 text-center">
-            <span className="text-white font-extrabold text-xs tracking-wider uppercase bg-red-600 px-2.5 py-1 rounded-md shadow">
-              สินค้าหมด (Out of Stock)
-            </span>
-          </div>
-        )}
-
-        {/* Low Stock Badge (FR-03) */}
-        {isLowStock && (
-          <div className="absolute top-2 right-2 bg-amber-500 text-white text-[11px] font-bold px-2 py-0.5 rounded-lg shadow-md font-mono">
-            เหลือ {product.stock} ชิ้น
-          </div>
-        )}
-
-        {/* Customizer Indicator */}
-        {product.customizable && !isOutOfStock && (
-          <div className="absolute bottom-2 left-2 bg-espresso-900/80 backdrop-blur-sm text-white text-[10px] font-bold px-2 py-0.5 rounded-md flex items-center gap-1">
-            <SlidersHorizontal className="w-2.5 h-2.5 text-terracotta" />
-            <span>ปรับแต่งได้</span>
+          <div className="absolute inset-0 bg-black/60 flex items-center justify-center text-white font-bold text-xs">
+            สินค้าหมด (OUT OF STOCK)
           </div>
         )}
       </div>
 
-      {/* Product Info */}
-      <div className="flex-1 flex flex-col justify-between">
+      {/* Product Information */}
+      <div className="flex flex-col justify-between flex-1">
         <div>
-          <h4 className="font-bold text-xs sm:text-sm text-espresso-900 line-clamp-1 leading-snug">
+          <div className="font-bold text-xs text-espresso-900 line-clamp-1">
             {product.name}
-          </h4>
+          </div>
           <p className="text-[11px] text-warmgray-600 line-clamp-1 mt-0.5">
             {product.desc}
           </p>
         </div>
 
-        {/* Bottom Bar: Price & Add Button */}
-        <div className="flex items-center justify-between mt-3 pt-2 border-t border-cream-200">
-          <span className="font-mono font-extrabold text-terracotta text-sm sm:text-base tabular-nums">
+        {/* Price & Add Button */}
+        <div className="flex justify-between items-center mt-2.5 pt-1.5 border-t border-cream-200">
+          <span className="font-mono font-bold text-terracotta text-sm tabular-nums">
             ฿{product.price.toFixed(2)}
           </span>
-
-          <button
-            type="button"
-            className={`px-3 py-1.5 rounded-xl font-bold text-xs flex items-center gap-1 transition ${
+          <span
+            className={`px-2.5 py-1 text-xs font-bold rounded-lg transition ${
               product.customizable
-                ? 'bg-terracotta-light text-terracotta hover:bg-terracotta hover:text-white'
+                ? 'bg-cream-200 text-espresso-900 hover:bg-terracotta hover:text-white'
                 : 'bg-cream-200 text-espresso-900 hover:bg-terracotta hover:text-white'
             }`}
           >
-            <Plus className="w-3.5 h-3.5" />
-            <span>{product.customizable ? 'เลือก' : 'เพิ่ม'}</span>
-          </button>
+            {product.customizable ? 'Custom' : '+ เพิ่ม'}
+          </span>
         </div>
       </div>
     </div>

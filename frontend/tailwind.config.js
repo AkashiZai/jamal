@@ -32,8 +32,11 @@ export default {
         warmgray: {
           800: '#1E1B18',
           600: '#635C54',
+          500: '#7E766D',
           400: '#968E85',
+          300: '#D8CEC2',
           200: '#E3DDD5',
+          100: '#F5EFEB',
         }
       },
       fontFamily: {

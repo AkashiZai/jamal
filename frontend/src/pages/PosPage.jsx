@@ -1,12 +1,13 @@
 import React, { useState, useMemo } from 'react';
-import { Search, SlidersHorizontal, RefreshCw, AlertCircle, ShoppingBag, CheckCircle2 } from 'lucide-react';
+import { Store, Search } from 'lucide-react';
 import { CATEGORIES, PRODUCTS } from '../data/products';
 import ProductCard from '../components/ProductCard';
 import CustomizationModal from '../components/CustomizationModal';
 import CartSidebar from '../components/CartSidebar';
 import PaymentModal from '../components/PaymentModal';
+import VoidModal from '../components/VoidModal';
 
-export default function PosPage({ currentUser, onTimeoutWarning }) {
+export default function PosPage({ currentUser }) {
   const [productsList, setProductsList] = useState(PRODUCTS);
   const [selectedCategory, setSelectedCategory] = useState('all');
   const [searchQuery, setSearchQuery] = useState('');
@@ -14,13 +15,12 @@ export default function PosPage({ currentUser, onTimeoutWarning }) {
   
   // Cart state
   const [cart, setCart] = useState([]);
-  const [orderType, setOrderType] = useState('dine-in'); // 'dine-in' | 'takeaway'
   
-  // Checkout & Payment Modal state
+  // Modals state
   const [activeCheckoutSummary, setActiveCheckoutSummary] = useState(null);
-  const [lastCompletedOrder, setLastCompletedOrder] = useState(null);
+  const [showVoidModal, setShowVoidModal] = useState(false);
 
-  // Filter products by category & search query (instant reactive filter < 1s per NFR-01)
+  // Filter products by category & search query
   const filteredProducts = useMemo(() => {
     return productsList.filter((prod) => {
       const matchCategory =
@@ -38,7 +38,6 @@ export default function PosPage({ currentUser, onTimeoutWarning }) {
     if (product.customizable) {
       setCustomizingProduct(product);
     } else {
-      // Add directly to cart
       addToCart(product, {
         optionsText: '',
         unitPrice: product.price,
@@ -49,7 +48,6 @@ export default function PosPage({ currentUser, onTimeoutWarning }) {
   // Add item with options into cart
   const addToCart = (product, { optionsText, unitPrice }) => {
     setCart((prevCart) => {
-      // Check if identical product + customization already exists in cart
       const existingIndex = prevCart.findIndex(
         (item) => item.id === product.id && item.optionsText === optionsText
       );
@@ -63,7 +61,6 @@ export default function PosPage({ currentUser, onTimeoutWarning }) {
         return nextCart;
       }
 
-      // New line item
       return [
         ...prevCart,
         {
@@ -105,17 +102,10 @@ export default function PosPage({ currentUser, onTimeoutWarning }) {
     }
   };
 
-  // Trigger Checkout
-  const handleInitiateCheckout = (summary) => {
-    setActiveCheckoutSummary(summary);
-  };
-
-  // Payment completed successfully (FR-03 Inventory Deduction)
-  const handlePaymentSuccess = ({ method, total, change }) => {
-    // Deduct stock for sold items in inventory
+  // Payment completed (FR-03 Inventory Deduction)
+  const handlePaymentSuccess = () => {
     setProductsList((prevProducts) => {
       return prevProducts.map((p) => {
-        // Count how many of this item were in the cart
         const cartQty = cart
           .filter((ci) => ci.id === p.id)
           .reduce((sum, ci) => sum + ci.quantity, 0);
@@ -131,104 +121,104 @@ export default function PosPage({ currentUser, onTimeoutWarning }) {
       });
     });
 
-    setLastCompletedOrder({
-      orderId: `#JM-${Date.now().toString().slice(-6)}`,
-      total,
-      time: new Date().toLocaleTimeString('th-TH'),
-      itemCount: cart.reduce((s, i) => s + i.quantity, 0),
-    });
-
-    // Clear cart after checkout completes
     setCart([]);
   };
 
+  // Void Cart Action (FR-07)
+  const handleConfirmVoid = () => {
+    setCart([]);
+    alert('อนุมัติ Void บิลสำเร็จโดย Admin Zai (บันทึก Audit Log เรียบร้อย)');
+  };
+
   return (
-    <div className="flex-1 flex flex-col lg:flex-row h-[calc(100vh-65px)] overflow-hidden bg-cream">
-      {/* LEFT SECTION: Catalog & Touch Filters */}
-      <main className="flex-1 flex flex-col h-full overflow-hidden">
-        {/* Top Controls: Search Bar & Info */}
-        <div className="p-4 sm:p-5 bg-white border-b border-cream-300 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-          <div className="relative flex-1 max-w-md">
-            <Search className="w-4 h-4 text-warmgray-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
-            <input
-              type="text"
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              placeholder="ค้นหาชื่อสินค้า (เช่น ลาเต้, ครัวซองต์, ชีสเค้ก)..."
-              className="w-full pl-10 pr-4 py-2.5 bg-cream-50 border border-cream-300 rounded-2xl text-xs sm:text-sm font-semibold text-espresso-900 focus:outline-none focus:ring-2 focus:ring-terracotta"
-            />
-            {searchQuery && (
-              <button
-                onClick={() => setSearchQuery('')}
-                className="absolute right-3 top-1/2 -translate-y-1/2 text-xs font-bold text-warmgray-400 hover:text-espresso-900"
-              >
-                ล้าง
-              </button>
-            )}
+    <main className="flex-1 flex justify-center items-start p-2 sm:p-4 overflow-x-hidden print:p-0 print:m-0 print:overflow-visible">
+      {/* Centered iPad Screen Container (1194x834 spec) */}
+      <div className="w-full max-w-[1240px] bg-cream-100 rounded-2xl shadow-xl border border-cream-300 overflow-hidden flex flex-col md:flex-row min-h-[760px] print:hidden">
+        
+        {/* LEFT SECTION: CATALOG & CATEGORIES (70% WIDTH) */}
+        <div className="flex-1 flex flex-col border-r border-cream-300 bg-cream-50">
+          
+          {/* Sub-header & Quick Search */}
+          <div className="p-4 border-b border-cream-300 flex flex-col sm:flex-row gap-3 items-center justify-between bg-white">
+            <div className="flex items-center gap-2">
+              <div className="p-2 rounded-xl bg-cream-200 text-espresso-800">
+                <Store className="w-5 h-5 text-espresso-800" />
+              </div>
+              <div>
+                <h2 className="font-bold text-espresso-900 text-base leading-none">
+                  เมนูสินค้าหน้าร้าน (Menu Catalog)
+                </h2>
+                <p className="text-xs text-warmgray-600 mt-0.5">
+                  พนักงาน: <span className="font-semibold text-espresso-800">{currentUser ? currentUser.name : 'Zai (กะเช้า)'}</span> • โต๊ะ/ออเดอร์หน้าร้าน
+                </p>
+              </div>
+            </div>
+
+            {/* Search input */}
+            <div className="relative w-full sm:w-72">
+              <Search className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-warmgray-400" />
+              <input
+                type="text"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                placeholder="ค้นหาชื่อเมนู หรือรหัส..."
+                className="w-full pl-9 pr-4 py-2 bg-cream-100 border border-cream-300 rounded-xl text-sm focus:outline-none focus:border-terracotta focus:ring-1 focus:ring-terracotta transition"
+              />
+              {searchQuery && (
+                <button
+                  onClick={() => setSearchQuery('')}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-xs font-bold text-warmgray-400 hover:text-espresso-900"
+                >
+                  ✕
+                </button>
+              )}
+            </div>
           </div>
 
-          {/* Quick Info & Feedback */}
-          <div className="flex items-center gap-2 text-xs text-warmgray-500">
-            <span className="font-mono bg-cream-200 px-2.5 py-1 rounded-xl text-espresso-900 font-bold">
-              พบ {filteredProducts.length} รายการ
-            </span>
-            <span className="hidden sm:inline">•</span>
-            <span className="hidden sm:inline">NFR-01 ตอบสนองทันที (&lt;1s)</span>
+          {/* Category Pills Bar matching Figma */}
+          <div className="px-4 py-2.5 bg-cream-100 border-b border-cream-300 flex gap-2 overflow-x-auto items-center no-scrollbar">
+            {CATEGORIES.map((cat) => {
+              const isActive = selectedCategory === cat.id;
+              return (
+                <button
+                  key={cat.id}
+                  onClick={() => setSelectedCategory(cat.id)}
+                  className={`px-4 py-2 rounded-xl text-sm font-semibold transition whitespace-nowrap ${
+                    isActive
+                      ? 'bg-espresso-800 text-white shadow-sm'
+                      : 'bg-white text-espresso-800 border border-cream-300 hover:bg-cream-200'
+                  }`}
+                >
+                  {cat.id === 'all' ? '☕ ทั้งหมด (All)' : cat.name}
+                </button>
+              );
+            })}
+          </div>
+
+          {/* Product Grid matching Figma (max-h-[620px]) */}
+          <div className="flex-1 p-4 grid grid-cols-2 sm:grid-cols-3 xl:grid-cols-4 gap-3.5 overflow-y-auto max-h-[620px] content-start auto-rows-max items-start">
+            {filteredProducts.map((product) => (
+              <ProductCard
+                key={product.id}
+                product={product}
+                onSelect={handleSelectProduct}
+              />
+            ))}
           </div>
         </div>
 
-        {/* Category Pills Bar (Touchscreen Optimized NFR-02) */}
-        <div className="px-4 sm:px-5 py-3 bg-cream-100 border-b border-cream-300 flex items-center gap-2 overflow-x-auto no-scrollbar">
-          {CATEGORIES.map((cat) => (
-            <button
-              key={cat.id}
-              onClick={() => setSelectedCategory(cat.id)}
-              className={`px-4 py-2.5 rounded-2xl font-bold text-xs sm:text-sm whitespace-nowrap transition flex items-center gap-1.5 shrink-0 ${
-                selectedCategory === cat.id
-                  ? 'bg-espresso-900 text-white shadow-md'
-                  : 'bg-white text-espresso-900 border border-cream-300 hover:bg-cream-200'
-              }`}
-            >
-              <span>{cat.icon}</span>
-              <span>{cat.name}</span>
-            </button>
-          ))}
-        </div>
+        {/* RIGHT SECTION: ORDER CART SIDEBAR (30% WIDTH) */}
+        <CartSidebar
+          cart={cart}
+          onUpdateQty={handleUpdateQty}
+          onRemoveItem={handleRemoveItem}
+          onClearCart={handleClearCart}
+          onCheckout={(summary) => setActiveCheckoutSummary(summary)}
+          onVoidClick={() => setShowVoidModal(true)}
+        />
+      </div>
 
-        {/* Products Grid (iPad Touchscreen 1194x834 target) */}
-        <div className="flex-1 overflow-y-auto p-4 sm:p-5">
-          {filteredProducts.length === 0 ? (
-            <div className="h-full flex flex-col items-center justify-center text-center p-8 text-warmgray-400">
-              <AlertCircle className="w-12 h-12 stroke-1 text-warmgray-400 mb-2" />
-              <p className="font-bold text-espresso-900 text-sm">ไม่พบสินค้าที่คุณค้นหา</p>
-              <p className="text-xs text-warmgray-500 mt-1">ลองเปลี่ยนคำค้นหาหรือเลือกหมวดหมู่อื่น</p>
-            </div>
-          ) : (
-            <div className="grid grid-cols-2 sm:grid-cols-3 xl:grid-cols-4 gap-3 sm:gap-4">
-              {filteredProducts.map((product) => (
-                <ProductCard
-                  key={product.id}
-                  product={product}
-                  onSelect={handleSelectProduct}
-                />
-              ))}
-            </div>
-          )}
-        </div>
-      </main>
-
-      {/* RIGHT SECTION: Cart Sidebar */}
-      <CartSidebar
-        cart={cart}
-        onUpdateQty={handleUpdateQty}
-        onRemoveItem={handleRemoveItem}
-        onClearCart={handleClearCart}
-        onCheckout={handleInitiateCheckout}
-        orderType={orderType}
-        setOrderType={setOrderType}
-      />
-
-      {/* Drink Customization Modal (Sweetness, Milk, Add-ons) */}
+      {/* Product Customization Modal */}
       {customizingProduct && (
         <CustomizationModal
           product={customizingProduct}
@@ -240,16 +230,23 @@ export default function PosPage({ currentUser, onTimeoutWarning }) {
         />
       )}
 
-      {/* Payment & Receipt Modal */}
+      {/* Payment & 80mm Receipt Modal */}
       {activeCheckoutSummary && (
         <PaymentModal
           orderSummary={activeCheckoutSummary}
           cart={cart}
-          orderType={orderType}
           onClose={() => setActiveCheckoutSummary(null)}
           onPaymentSuccess={handlePaymentSuccess}
         />
       )}
-    </div>
+
+      {/* Admin Void Approval Modal (FR-07) */}
+      {showVoidModal && (
+        <VoidModal
+          onClose={() => setShowVoidModal(false)}
+          onConfirmVoid={handleConfirmVoid}
+        />
+      )}
+    </main>
   );
 }

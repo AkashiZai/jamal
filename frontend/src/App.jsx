@@ -89,20 +89,22 @@ export default function App() {
 
       {/* Security Session Timer Status Bar (NFR-04) */}
       {currentUser && (
-        <div className="bg-espresso-800 text-warmgray-300 px-4 py-1.5 text-[11px] flex items-center justify-between border-b border-espresso-700">
+        <div className="bg-espresso-800 text-white px-4 py-1.5 text-[11px] flex items-center justify-between border-b border-espresso-700 print:hidden">
           <div className="flex items-center gap-2">
             <span className="w-1.5 h-1.5 rounded-full bg-green-400"></span>
-            <span>กำลังใช้งานในชื่อ: <strong className="text-white">{currentUser.name}</strong> ({currentUser.roleName})</span>
+            <span className="text-warmgray-200">
+              กำลังใช้งานในชื่อ: <strong className="text-white font-bold">{currentUser.name}</strong> ({currentUser.roleName})
+            </span>
           </div>
 
           <div className="flex items-center gap-2">
             <Clock className="w-3.5 h-3.5 text-terracotta" />
-            <span>
-              Session Timeout: <strong className="font-mono text-terracotta-light font-bold">{formatTime(remainingSeconds)}</strong>
+            <span className="text-warmgray-200">
+              Session Timeout: <strong className="font-mono text-terracotta font-extrabold text-xs">{formatTime(remainingSeconds)}</strong>
             </span>
             <button
               onClick={resetTimer}
-              className="text-[10px] text-warmgray-400 hover:text-white underline ml-1"
+              className="text-[10px] text-warmgray-300 hover:text-white underline ml-1"
               title="ต่อเวลาเซสชัน"
             >
               รีเซ็ตเวลา

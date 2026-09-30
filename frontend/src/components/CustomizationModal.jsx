@@ -1,22 +1,24 @@
 import React, { useState } from 'react';
-import { X, Check } from 'lucide-react';
 
 export default function CustomizationModal({ product, onClose, onConfirm }) {
   const [sweetness, setSweetness] = useState('25%');
-  const [milk, setMilk] = useState('นมสดวัวปกติ');
+  const [milk, setMilk] = useState('นมสดวัวแท้ (Fresh Milk)');
   const [extraShot, setExtraShot] = useState(false);
   const [brownSugarJelly, setBrownSugarJelly] = useState(false);
 
-  // Calculate Extra Costs
+  // Extra cost calculations
   let extraPrice = 0;
-  if (milk.includes('15')) extraPrice += 15;
+  if (milk.includes('+15') || milk.includes('Oat') || milk.includes('Almond')) extraPrice += 15;
   if (extraShot) extraPrice += 20;
   if (brownSugarJelly) extraPrice += 15;
 
   const totalPrice = product.price + extraPrice;
 
   const handleConfirm = () => {
-    const selectedOptions = [`หวาน ${sweetness}`, milk];
+    const selectedOptions = [`หวาน ${sweetness}`];
+    if (milk.includes('Oat')) selectedOptions.push('นมโอ๊ต (+฿15)');
+    else if (milk.includes('Almond')) selectedOptions.push('นมอัลมอนด์ (+฿15)');
+
     if (extraShot) selectedOptions.push('เพิ่มช็อต (+฿20)');
     if (brownSugarJelly) selectedOptions.push('บุกบราวน์ชูการ์ (+฿15)');
 
@@ -27,150 +29,137 @@ export default function CustomizationModal({ product, onClose, onConfirm }) {
   };
 
   return (
-    <div className="fixed inset-0 bg-espresso-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-      <div className="bg-white w-full max-w-lg rounded-3xl shadow-2xl border border-cream-300 overflow-hidden flex flex-col animate-in fade-in zoom-in duration-150">
+    <div className="fixed inset-0 bg-espresso-900/50 backdrop-blur-sm flex items-center justify-center p-4 sm:p-6 z-50 animate-in fade-in duration-150">
+      <div className="bg-white w-full max-w-lg rounded-3xl shadow-2xl border border-cream-300 overflow-hidden select-none">
         
-        {/* Modal Header */}
-        <div className="p-4 sm:p-5 bg-cream-100 border-b border-cream-300 flex justify-between items-center">
+        {/* Header */}
+        <div className="p-5 bg-cream-100 border-b border-cream-300 flex justify-between items-center">
           <div>
-            <h3 className="font-bold text-espresso-900 text-base sm:text-lg">
+            <h2 className="font-bold text-espresso-900 text-lg leading-tight">
               {product.name}
-            </h3>
+            </h2>
             <span className="font-mono font-bold text-terracotta text-sm">
               ราคาเริ่มต้น ฿{product.price.toFixed(2)}
             </span>
           </div>
           <button
             onClick={onClose}
-            className="w-8 h-8 rounded-full bg-cream-200 hover:bg-cream-300 text-warmgray-600 flex items-center justify-center transition"
+            className="w-8 h-8 rounded-full bg-cream-200 hover:bg-cream-300 text-warmgray-600 flex items-center justify-center font-bold text-sm transition"
           >
-            <X className="w-4 h-4" />
+            ✕
           </button>
         </div>
 
-        {/* Modal Body / Options Form */}
-        <div className="p-5 sm:p-6 space-y-5 overflow-y-auto max-h-[60vh]">
-          
-          {/* 1. Sweetness Level (NFR-02 Touch-friendly Large Targets) */}
+        {/* Body Options */}
+        <div className="p-6 space-y-5 overflow-y-auto max-h-[65vh]">
+          {/* 1. Sweetness */}
           <div>
-            <label className="block text-xs font-bold text-espresso-900 mb-2 uppercase tracking-wider">
+            <label className="block text-xs font-bold text-espresso-900 mb-2">
               1. ระดับความหวาน (Sweetness Level)
             </label>
             <div className="grid grid-cols-4 gap-2">
               {[
-                { label: '0%', desc: 'ไม่หวาน' },
-                { label: '25%', desc: 'หวานน้อย' },
-                { label: '50%', desc: 'หวานปกติ' },
-                { label: '100%', desc: 'หวานมาก' },
-              ].map((item) => (
+                { label: '0%', sub: 'ไม่หวาน' },
+                { label: '25%', sub: 'หวานน้อย' },
+                { label: '50%', sub: 'หวานปกติ' },
+                { label: '100%', sub: 'หวานมาก' },
+              ].map((sw) => (
                 <button
-                  key={item.label}
+                  key={sw.label}
                   type="button"
-                  onClick={() => setSweetness(item.label)}
-                  className={`py-3 px-2 rounded-2xl text-xs font-bold border transition text-center flex flex-col items-center justify-center ${
-                    sweetness === item.label
-                      ? 'border-terracotta bg-terracotta-light text-terracotta shadow-sm ring-1 ring-terracotta'
-                      : 'border-cream-300 bg-white text-espresso-900 hover:bg-cream-100'
+                  onClick={() => setSweetness(sw.label)}
+                  className={`py-3 px-2 rounded-xl text-xs text-center transition ${
+                    sweetness === sw.label
+                      ? 'border-2 border-terracotta bg-terracotta-light text-terracotta font-bold shadow-sm'
+                      : 'border border-cream-300 bg-white text-espresso-900 font-semibold hover:bg-cream-50'
                   }`}
                 >
-                  <span className="text-sm font-extrabold">{item.label}</span>
-                  <span className="text-[10px] font-medium opacity-80">{item.desc}</span>
+                  <span className="text-sm font-extrabold">{sw.label}</span>
+                  <br />
+                  <span className="text-[10px] text-warmgray-600">{sw.sub}</span>
                 </button>
               ))}
             </div>
           </div>
 
-          {/* 2. Milk Options */}
+          {/* 2. Milk Choice */}
           <div>
-            <label className="block text-xs font-bold text-espresso-900 mb-2 uppercase tracking-wider">
-              2. ประเภทนม (Milk Choices)
+            <label className="block text-xs font-bold text-espresso-900 mb-2">
+              2. ประเภทนม (Milk Choice)
             </label>
-            <div className="space-y-2">
+            <div className="space-y-2 text-xs">
               {[
-                { name: 'นมสดวัวปกติ', price: 0 },
-                { name: 'นมโอ๊ต Oatly (+15฿)', price: 15 },
-                { name: 'นมอัลมอนด์ (+15฿)', price: 15 },
-              ].map((item) => (
-                <label
-                  key={item.name}
-                  onClick={() => setMilk(item.name)}
-                  className={`flex items-center justify-between p-3 rounded-2xl border text-xs font-semibold cursor-pointer transition ${
-                    milk === item.name
-                      ? 'border-terracotta bg-terracotta-light text-terracotta shadow-sm ring-1 ring-terracotta'
-                      : 'border-cream-300 bg-white text-espresso-900 hover:bg-cream-50'
-                  }`}
-                >
-                  <span className="flex items-center gap-2.5">
-                    <input
-                      type="radio"
-                      name="milkChoice"
-                      checked={milk === item.name}
-                      onChange={() => setMilk(item.name)}
-                      className="text-terracotta focus:ring-terracotta"
-                    />
-                    {item.name}
-                  </span>
-                  <span className="font-mono font-bold text-terracotta">
-                    {item.price > 0 ? `+฿${item.price.toFixed(2)}` : '+฿0.00'}
-                  </span>
-                </label>
-              ))}
+                { id: 'fresh', name: 'นมสดวัวแท้ (Fresh Milk)', price: 0 },
+                { id: 'oat', name: 'นมโอ๊ต Oatly (Oat Milk)', price: 15 },
+                { id: 'almond', name: 'นมอัลมอนด์ (Almond Milk)', price: 15 },
+              ].map((m) => {
+                const isSelected = milk.includes(m.name);
+                return (
+                  <div
+                    key={m.id}
+                    onClick={() => setMilk(m.name)}
+                    className={`p-3 rounded-xl cursor-pointer flex justify-between items-center transition ${
+                      isSelected
+                        ? 'border-2 border-terracotta bg-terracotta-light text-terracotta font-bold shadow-sm'
+                        : 'border border-cream-300 bg-white text-espresso-900 hover:bg-cream-50'
+                    }`}
+                  >
+                    <span>
+                      {isSelected ? '✓ ' : ''}
+                      {m.name}
+                    </span>
+                    <span className="font-mono text-warmgray-600 font-bold">
+                      {m.price > 0 ? `+฿${m.price.toFixed(2)}` : '+฿0.00'}
+                    </span>
+                  </div>
+                );
+              })}
             </div>
           </div>
 
-          {/* 3. Add-ons & Toppings */}
+          {/* 3. Add-ons */}
           <div>
-            <label className="block text-xs font-bold text-espresso-900 mb-2 uppercase tracking-wider">
+            <label className="block text-xs font-bold text-espresso-900 mb-2">
               3. ท็อปปิ้งเพิ่มเติม (Add-ons)
             </label>
-            <div className="space-y-2">
-              <label
-                className={`flex items-center justify-between p-3 rounded-2xl border text-xs font-semibold cursor-pointer transition ${
+            <div className="space-y-2 text-xs">
+              <div
+                onClick={() => setExtraShot(!extraShot)}
+                className={`p-3 rounded-xl cursor-pointer flex justify-between items-center transition ${
                   extraShot
-                    ? 'border-terracotta bg-terracotta-light text-terracotta ring-1 ring-terracotta'
-                    : 'border-cream-300 bg-white text-espresso-900 hover:bg-cream-50'
+                    ? 'border-2 border-terracotta bg-terracotta-light text-terracotta font-bold shadow-sm'
+                    : 'border border-cream-300 bg-white text-espresso-900 hover:bg-cream-50'
                 }`}
               >
-                <span className="flex items-center gap-2.5">
-                  <input
-                    type="checkbox"
-                    checked={extraShot}
-                    onChange={(e) => setExtraShot(e.target.checked)}
-                    className="rounded text-terracotta focus:ring-terracotta"
-                  />
-                  เพิ่มช็อตกาแฟเข้มข้น (Extra Espresso Shot)
+                <span>
+                  {extraShot ? '✓ ' : ''}เพิ่มช็อตกาแฟ (Extra Espresso Shot)
                 </span>
                 <span className="font-mono font-bold text-terracotta">+฿20.00</span>
-              </label>
+              </div>
 
-              <label
-                className={`flex items-center justify-between p-3 rounded-2xl border text-xs font-semibold cursor-pointer transition ${
+              <div
+                onClick={() => setBrownSugarJelly(!brownSugarJelly)}
+                className={`p-3 rounded-xl cursor-pointer flex justify-between items-center transition ${
                   brownSugarJelly
-                    ? 'border-terracotta bg-terracotta-light text-terracotta ring-1 ring-terracotta'
-                    : 'border-cream-300 bg-white text-espresso-900 hover:bg-cream-50'
+                    ? 'border-2 border-terracotta bg-terracotta-light text-terracotta font-bold shadow-sm'
+                    : 'border border-cream-300 bg-white text-espresso-900 hover:bg-cream-50'
                 }`}
               >
-                <span className="flex items-center gap-2.5">
-                  <input
-                    type="checkbox"
-                    checked={brownSugarJelly}
-                    onChange={(e) => setBrownSugarJelly(e.target.checked)}
-                    className="rounded text-terracotta focus:ring-terracotta"
-                  />
-                  บุกบราวน์ชูการ์เจลลี่ (Brown Sugar Jelly)
+                <span>
+                  {brownSugarJelly ? '✓ ' : ''}บุกบราวน์ชูการ์เจลลี่ (Brown Sugar Jelly)
                 </span>
                 <span className="font-mono font-bold text-terracotta">+฿15.00</span>
-              </label>
+              </div>
             </div>
           </div>
         </div>
 
-        {/* Modal Footer */}
-        <div className="p-4 sm:p-5 bg-cream-100 border-t border-cream-300 flex items-center gap-3">
+        {/* Footer */}
+        <div className="p-5 bg-cream-100 border-t border-cream-300 flex items-center gap-3">
           <button
             type="button"
             onClick={onClose}
-            className="flex-1 py-3.5 bg-white border border-cream-300 hover:bg-cream-200 rounded-2xl text-xs font-bold text-warmgray-600 transition"
+            className="flex-1 py-3.5 bg-white border border-cream-300 rounded-2xl text-xs font-bold text-warmgray-600 hover:bg-cream-200 transition"
           >
             ยกเลิก
           </button>
@@ -179,8 +168,7 @@ export default function CustomizationModal({ product, onClose, onConfirm }) {
             onClick={handleConfirm}
             className="flex-2 w-full py-3.5 bg-terracotta hover:bg-terracotta-hover text-white rounded-2xl text-xs sm:text-sm font-bold shadow-lg transition flex items-center justify-center gap-2"
           >
-            <Check className="w-4 h-4" />
-            <span>เพิ่มลงในบิล • ฿{totalPrice.toFixed(2)}</span>
+            เพิ่มลงในบิล • ฿{totalPrice.toFixed(2)}
           </button>
         </div>
       </div>
