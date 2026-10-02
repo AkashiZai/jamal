@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Customer Mobile — JAMAL CAFÉ</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@500;700&family=Plus+Jakarta+Sans:wght@500;600;700;800&family=Sarabun:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="min-h-screen bg-[#FBF8F4] flex items-center justify-center p-6" style="font-family:'Plus Jakarta Sans','Sarabun',sans-serif;">
+  <div class="w-[393px] bg-white rounded-[42px] shadow-2xl border-[8px] border-[#1A120B] overflow-hidden flex flex-col">
+    <!-- Speaker Notch -->
+    <div class="w-32 h-5 bg-[#1A120B] rounded-b-2xl mx-auto flex items-center justify-center">
+      <div class="w-12 h-1 bg-[#635C54] rounded-full"></div>
+    </div>
+
+    <!-- Header -->
+    <div class="p-4 bg-[#FBF8F4] border-b border-[#EAE3D8] flex justify-between items-center">
+      <div>
+        <span class="text-[11px] font-mono text-[#C85A32] font-bold">โต๊ะ 04 • สั่งทานที่ร้าน</span>
+        <h1 class="font-bold text-[#1E1B18] text-base">JAMAL CAFÉ</h1>
+      </div>
+      <span class="bg-[#EAF4ED] text-[#3B6E4C] text-xs px-2.5 py-0.5 rounded-full font-bold">เปิดบริการ</span>
+    </div>
+
+    <!-- Live Queue Status -->
+    <div class="p-3.5 bg-[#1A120B] text-white text-xs space-y-1">
+      <div class="flex justify-between items-center">
+        <span class="font-mono text-[#C85A32] font-bold text-sm">คิวของคุณ: #A03</span>
+        <span class="bg-blue-600 text-white text-[10px] px-2 py-0.5 rounded font-bold">กำลังจัดเตรียม</span>
+      </div>
+      <p class="text-[11px] text-[#968E85]">บาริสต้ากำลังชงเครื่องดื่มให้คุณ (คาดว่าเสร็จใน 3 นาที)</p>
+    </div>
+
+    <!-- Product List -->
+    <div class="p-3.5 space-y-3 flex-1 overflow-y-auto max-h-[460px]">
+      <div class="text-xs font-bold text-[#1E1B18]">เมนูยอดนิยม (Popular)</div>
+
+      <div class="p-3 bg-[#FDFBF7] rounded-2xl border border-[#EAE3D8] flex justify-between items-center">
+        <div>
+          <div class="font-bold text-xs text-[#1E1B18]">เอสเพรสโซ่เย็น (Iced Espresso)</div>
+          <div class="text-[11px] text-[#635C54]">คั่วกลาง หอมเข้ม กลมกล่อม</div>
+          <div class="font-mono font-bold text-[#C85A32] text-sm mt-1">฿65.00</div>
+        </div>
+        <button class="px-3.5 py-2 bg-[#231710] text-white rounded-xl text-xs font-bold shadow">+ สั่ง</button>
+      </div>
+
+      <div class="p-3 bg-[#FDFBF7] rounded-2xl border border-[#EAE3D8] flex justify-between items-center">
+        <div>
+          <div class="font-bold text-xs text-[#1E1B18]">ครัวซองต์เนยสด AOP</div>
+          <div class="text-[11px] text-[#635C54]">เนยแท้ฝรั่งเศส (เหลือ 4 ชิ้น)</div>
+          <div class="font-mono font-bold text-[#C85A32] text-sm mt-1">฿85.00</div>
+        </div>
+        <button class="px-3.5 py-2 bg-[#231710] text-white rounded-xl text-xs font-bold shadow">+ สั่ง</button>
+      </div>
+
+      <div class="p-3 bg-[#FDFBF7] rounded-2xl border border-[#EAE3D8] flex justify-between items-center">
+        <div>
+          <div class="font-bold text-xs text-[#1E1B18]">มัทฉะลาเต้อูจิ</div>
+          <div class="text-[11px] text-[#635C54]">ผงมัทฉะแท้เกียวโต</div>
+          <div class="font-mono font-bold text-[#C85A32] text-sm mt-1">฿85.00</div>
+        </div>
+        <button class="px-3.5 py-2 bg-[#231710] text-white rounded-xl text-xs font-bold shadow">+ สั่ง</button>
+      </div>
+    </div>
+
+    <!-- Sticky Bottom Cart -->
+    <div class="p-4 bg-white border-t border-[#EAE3D8] flex justify-between items-center shadow-lg">
+      <div>
+        <span class="text-[10px] text-[#635C54]">ยอดรวม 2 รายการในตะกร้า</span>
+        <div class="font-mono font-bold text-[#1E1B18] text-base">฿150.00</div>
+      </div>
+      <button class="px-5 py-2.5 bg-[#C85A32] text-white rounded-xl text-xs font-bold shadow-md">
+        ดูตะกร้า (2) →
+      </button>
+    </div>
+  </div>
+</body>
+</html>

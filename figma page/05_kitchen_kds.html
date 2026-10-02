@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Kitchen KDS — JAMAL POS</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@500;700&family=Plus+Jakarta+Sans:wght@500;600;700;800&family=Sarabun:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="min-h-screen bg-[#FBF8F4] p-6 flex flex-col" style="font-family:'Plus Jakarta Sans','Sarabun',sans-serif;">
+  <div class="max-w-[1240px] w-full mx-auto bg-white rounded-3xl p-6 border border-[#EAE3D8] shadow-xl flex-1 flex flex-col space-y-6">
+    <div class="flex justify-between items-center pb-4 border-b border-[#EAE3D8]">
+      <div class="flex items-center gap-3">
+        <div class="w-10 h-10 rounded-xl bg-[#231710] text-white flex items-center justify-center font-bold text-lg">
+          ☕
+        </div>
+        <div>
+          <h1 class="text-xl font-bold text-[#1E1B18]">กระดานคิวห้องครัว &amp; บาริสต้า (Kitchen KDS Kanban)</h1>
+          <p class="text-xs text-[#635C54]">รองรับ TOR สำหรับ Operator (1-5)</p>
+        </div>
+      </div>
+      <span class="text-xs font-mono font-bold text-[#3B6E4C] bg-[#EAF4ED] px-3 py-1.5 rounded-xl border border-[#A8D5B5]">
+        3 คิวกำลังดำเนินการ
+      </span>
+    </div>
+
+    <!-- 3 Columns -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-5 flex-1">
+      <!-- Col 1 -->
+      <div class="bg-[#FDFBF7] rounded-2xl p-4 border border-[#EAE3D8] space-y-3">
+        <span class="font-bold text-xs text-amber-800 bg-amber-100 px-3 py-1 rounded-lg">รอดำเนินการ (Pending) • 1</span>
+        <div class="bg-white p-4 rounded-2xl border border-[#EAE3D8] shadow-sm space-y-2">
+          <div class="flex justify-between items-start">
+            <span class="text-lg font-black font-mono text-[#1E1B18]">#คิว A04</span>
+            <span class="text-[11px] font-mono text-[#968E85]">14:40 (1 นาที)</span>
+          </div>
+          <div class="text-xs space-y-1 py-2 border-y border-[#F5EFEB]">
+            <div class="font-bold text-[#1E1B18]">1x เอสเพรสโซ่เย็น</div>
+            <div class="text-[11px] text-[#C85A32] font-semibold pl-2">↳ หวาน 25% • นมโอ๊ต</div>
+            <div class="font-bold text-[#1E1B18] pt-1">1x ครัวซองต์เนยสด AOP</div>
+            <div class="text-[11px] text-[#635C54] pl-2">↳ อบอุ่นร้อน</div>
+          </div>
+          <button class="w-full py-2.5 bg-[#1A120B] text-white rounded-xl text-xs font-bold shadow">
+            รับทำออเดอร์นี้ →
+          </button>
+        </div>
+      </div>
+
+      <!-- Col 2 -->
+      <div class="bg-[#FDFBF7] rounded-2xl p-4 border border-[#EAE3D8] space-y-3">
+        <span class="font-bold text-xs text-blue-800 bg-blue-100 px-3 py-1 rounded-lg">กำลังทำ (In Progress) • 1</span>
+        <div class="bg-white p-4 rounded-2xl border-2 border-blue-400 shadow-sm space-y-2">
+          <div class="flex justify-between items-start">
+            <span class="text-lg font-black font-mono text-[#1E1B18]">#คิว A03</span>
+            <span class="text-[10px] font-mono text-blue-700 bg-blue-50 px-2 py-0.5 rounded font-bold">กำลังทำ (3 นาที)</span>
+          </div>
+          <div class="text-xs space-y-1 py-2 border-y border-[#F5EFEB]">
+            <div class="font-bold text-[#1E1B18]">2x มัทฉะลาเต้อูจิ</div>
+            <div class="text-[11px] text-[#3B6E4C] font-semibold pl-2">↳ หวาน 50% • นมสดปกติ</div>
+          </div>
+          <button class="w-full py-2.5 bg-[#3B6E4C] text-white rounded-xl text-xs font-bold shadow">
+            ✓ ทำเสร็จแล้ว (พร้อมเสิร์ฟ)
+          </button>
+        </div>
+      </div>
+
+      <!-- Col 3 -->
+      <div class="bg-[#FDFBF7] rounded-2xl p-4 border border-[#EAE3D8] space-y-3">
+        <span class="font-bold text-xs text-[#3B6E4C] bg-[#EAF4ED] px-3 py-1 rounded-lg">พร้อมเสิร์ฟ (Ready) • 1</span>
+        <div class="bg-white p-4 rounded-2xl border border-[#A8D5B5] shadow-sm space-y-2">
+          <div class="flex justify-between items-start">
+            <span class="text-lg font-black font-mono text-[#3B6E4C]">#คิว A02</span>
+            <span class="text-[10px] font-bold text-[#3B6E4C] bg-[#EAF4ED] px-2 py-0.5 rounded">ขานเรียกแล้ว</span>
+          </div>
+          <div class="text-xs space-y-1 py-2 border-y border-[#F5EFEB]">
+            <div class="font-bold text-[#1E1B18]">1x ชาไทยการันต์เย็น</div>
+            <div class="text-[11px] text-[#635C54] pl-2">↳ หวานปกติ 100%</div>
+          </div>
+          <button class="w-full py-2.5 bg-[#F5EFEB] text-[#1E1B18] rounded-xl text-xs font-bold">
+            ลูกค้ารับสินค้าแล้ว (ปิดออเดอร์)
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>
