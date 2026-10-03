@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sales History & Void Bill — JAMAL ADMIN</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@500;700&family=Plus+Jakarta+Sans:wght@500;600;700;800&family=Sarabun:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="min-h-screen bg-[#FBF8F4] p-8 space-y-6" style="font-family:'Plus Jakarta Sans','Sarabun',sans-serif;">
+  <div class="max-w-[1360px] mx-auto space-y-6">
+    <!-- Header -->
+    <div class="flex justify-between items-center bg-white p-6 rounded-3xl border border-[#EAE3D8] shadow-sm">
+      <div class="flex items-center gap-3">
+        <div class="w-12 h-12 rounded-2xl bg-[#BA3C34] text-white flex items-center justify-center font-bold text-xl">
+          🧾
+        </div>
+        <div>
+          <h1 class="text-xl font-bold text-[#1E1B18]">ประวัติการขาย &amp; การอนุมัติ Void คืนเงิน (Sales &amp; Void Audit)</h1>
+          <p class="text-xs text-[#635C54]">รองรับ FR-07 (Void Protection โดย Admin) และ TOR Admin ข้อ 4</p>
+        </div>
+      </div>
+      <div class="flex gap-2">
+        <input type="date" value="2026-09-22" class="px-4 py-2 bg-[#F5EFEB] border border-[#EAE3D8] rounded-xl text-xs font-mono">
+        <button class="px-4 py-2 bg-[#231710] text-white rounded-xl text-xs font-bold">ส่งออกรายงาน (Excel/PDF)</button>
+      </div>
+    </div>
+
+    <!-- Sales Table -->
+    <div class="bg-white rounded-3xl border border-[#EAE3D8] p-6 shadow-sm space-y-4">
+      <table class="w-full text-left text-xs border-collapse">
+        <thead>
+          <tr class="bg-[#F5EFEB] text-[#635C54] border-y border-[#EAE3D8]">
+            <th class="py-3 px-4">เลขที่บิล</th>
+            <th class="py-3 px-4">เวลา</th>
+            <th class="py-3 px-4">รายการสินค้า</th>
+            <th class="py-3 px-4">วิธีชำระเงิน</th>
+            <th class="py-3 px-4">ยอดสุทธิ</th>
+            <th class="py-3 px-4">แคชเชียร์</th>
+            <th class="py-3 px-4">สถานะบิล</th>
+            <th class="py-3 px-4 text-center">การจัดการ</th>
+          </tr>
+        </thead>
+        <tbody class="divide-y divide-[#F5EFEB]">
+          <tr>
+            <td class="py-3.5 px-4 font-mono font-bold text-[#1E1B18]">#JM-2026-084</td>
+            <td class="py-3.5 px-4 font-mono text-[#635C54]">14:45:10</td>
+            <td class="py-3.5 px-4 text-[#1E1B18]">1x เอสเพรสโซ่เย็น, 1x ครัวซองต์เนยสด AOP</td>
+            <td class="py-3.5 px-4"><span class="bg-[#EAF4ED] text-[#3B6E4C] px-2 py-0.5 rounded text-[11px] font-bold">เงินสด (Cash)</span></td>
+            <td class="py-3.5 px-4 font-mono font-bold text-[#C85A32]">฿165.00</td>
+            <td class="py-3.5 px-4">Zai</td>
+            <td class="py-3.5 px-4"><span class="bg-[#EAF4ED] text-[#3B6E4C] px-2.5 py-1 rounded-lg text-[10px] font-bold">สำเร็จ (Paid)</span></td>
+            <td class="py-3.5 px-4 text-center">
+              <button class="px-3 py-1 bg-red-50 text-red-600 border border-red-200 rounded-lg text-[11px] font-bold hover:bg-red-100">Void บิล (Admin)</button>
+            </td>
+          </tr>
+          <tr>
+            <td class="py-3.5 px-4 font-mono font-bold text-[#1E1B18]">#JM-2026-083</td>
+            <td class="py-3.5 px-4 font-mono text-[#635C54]">14:38:22</td>
+            <td class="py-3.5 px-4 text-[#1E1B18]">2x มัทฉะลาเต้อูจิ</td>
+            <td class="py-3.5 px-4"><span class="bg-blue-50 text-blue-700 px-2 py-0.5 rounded text-[11px] font-bold">PromptPay QR</span></td>
+            <td class="py-3.5 px-4 font-mono font-bold text-[#C85A32]">฿170.00</td>
+            <td class="py-3.5 px-4">Zai</td>
+            <td class="py-3.5 px-4"><span class="bg-[#EAF4ED] text-[#3B6E4C] px-2.5 py-1 rounded-lg text-[10px] font-bold">สำเร็จ (Paid)</span></td>
+            <td class="py-3.5 px-4 text-center">
+              <button class="px-3 py-1 bg-red-50 text-red-600 border border-red-200 rounded-lg text-[11px] font-bold hover:bg-red-100">Void บิล (Admin)</button>
+            </td>
+          </tr>
+          <tr class="bg-red-50/40">
+            <td class="py-3.5 px-4 font-mono font-bold text-[#968E85]">#JM-2026-082</td>
+            <td class="py-3.5 px-4 font-mono text-[#968E85]">14:12:05</td>
+            <td class="py-3.5 px-4 text-[#968E85]">1x อเมริกาโน่น้ำส้ม (สั่งผิดรายการ)</td>
+            <td class="py-3.5 px-4 text-[#968E85]">เงินสด</td>
+            <td class="py-3.5 px-4 font-mono font-bold text-[#968E85]">฿85.00</td>
+            <td class="py-3.5 px-4 text-[#968E85]">Zai</td>
+            <td class="py-3.5 px-4"><span class="bg-red-100 text-red-700 px-2.5 py-1 rounded-lg text-[10px] font-bold">ยกเลิก (Voided by Admin)</span></td>
+            <td class="py-3.5 px-4 text-center text-[#968E85] font-mono text-[11px]">อนุมัติโดย Admin</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</body>
+</html>

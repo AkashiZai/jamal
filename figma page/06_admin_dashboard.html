@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Dashboard & Inventory — JAMAL POS</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@500;700&family=Plus+Jakarta+Sans:wght@500;600;700;800&family=Sarabun:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="min-h-screen bg-[#FBF8F4] p-8 space-y-6" style="font-family:'Plus Jakarta Sans','Sarabun',sans-serif;">
+  <div class="max-w-[1360px] mx-auto space-y-6">
+    <!-- Header -->
+    <div class="flex justify-between items-center bg-white p-6 rounded-3xl border border-[#EAE3D8] shadow-sm">
+      <div class="flex items-center gap-3">
+        <div class="w-12 h-12 rounded-2xl bg-[#C85A32] text-white flex items-center justify-center font-bold text-xl">
+          📊
+        </div>
+        <div>
+          <h1 class="text-xl font-bold text-[#1E1B18]">แผงควบคุมเจ้าของร้าน &amp; จัดการสต็อก (Admin Portal)</h1>
+          <p class="text-xs text-[#635C54]">ครอบคลุม FR-02 (เมนู), FR-03 (สต็อกเบเกอรี่), FR-08 (รายงานยอดขาย)</p>
+        </div>
+      </div>
+      <div class="text-right">
+        <span class="text-xs font-mono font-bold text-[#635C54] bg-[#F5EFEB] px-4 py-2 rounded-xl">วันที่: 22 ก.ย. 2569</span>
+      </div>
+    </div>
+
+    <!-- 4 KPI Cards -->
+    <div class="grid grid-cols-4 gap-4">
+      <div class="bg-white p-5 rounded-2xl border border-[#EAE3D8] shadow-sm">
+        <span class="text-xs text-[#635C54]">ยอดขายรวมวันนี้</span>
+        <div class="text-3xl font-black font-mono text-[#1E1B18] mt-1">฿14,250.00</div>
+        <span class="text-xs text-[#3B6E4C] font-bold mt-1 inline-block">↑ +12% เทียบกับเมื่อวาน</span>
+      </div>
+      <div class="bg-white p-5 rounded-2xl border border-[#EAE3D8] shadow-sm">
+        <span class="text-xs text-[#635C54]">จำนวนบิลทั้งหมด</span>
+        <div class="text-3xl font-black font-mono text-[#1E1B18] mt-1">84 บิล</div>
+        <span class="text-xs text-[#635C54] mt-1 inline-block">เฉลี่ย ฿169.64 ต่อบิล</span>
+      </div>
+      <div class="bg-white p-5 rounded-2xl border border-[#EAE3D8] shadow-sm">
+        <span class="text-xs text-[#635C54]">สัดส่วนการชำระเงิน</span>
+        <div class="flex gap-2 mt-2">
+          <span class="text-xs font-mono font-bold text-blue-700 bg-blue-50 px-2.5 py-1 rounded-lg">PromptPay 64%</span>
+          <span class="text-xs font-mono font-bold text-[#3B6E4C] bg-[#EAF4ED] px-2.5 py-1 rounded-lg">เงินสด 36%</span>
+        </div>
+      </div>
+      <div class="bg-white p-5 rounded-2xl border border-[#EAE3D8] shadow-sm">
+        <span class="text-xs text-[#635C54]">เตือนสต็อกเบเกอรี่ (FR-03)</span>
+        <div class="text-3xl font-black font-mono text-[#C85A32] mt-1">2 รายการ</div>
+        <span class="text-xs text-red-600 font-bold mt-1 inline-block">เหลือน้อยกว่า 5 ชิ้น</span>
+      </div>
+    </div>
+
+    <!-- Bakery Real-time Inventory Table -->
+    <div class="bg-white rounded-3xl border border-[#EAE3D8] p-6 shadow-sm space-y-4">
+      <div class="flex justify-between items-center">
+        <div>
+          <h2 class="text-base font-bold text-[#1E1B18]">ระบบควบคุมและตัดสต็อกเบเกอรี่รายวัน (Bakery Stock Tracking)</h2>
+          <p class="text-xs text-[#635C54]">ระบบตัดสต็อกอัตโนมัติเมื่อเกิดการขายหน้าร้าน</p>
+        </div>
+        <button class="px-4 py-2 bg-[#231710] text-white rounded-xl text-xs font-bold shadow">+ เพิ่มสต็อกรอบเช้า</button>
+      </div>
+
+      <table class="w-full text-left text-xs border-collapse">
+        <thead>
+          <tr class="bg-[#F5EFEB] text-[#635C54] border-y border-[#EAE3D8]">
+            <th class="py-3 px-4 font-bold">SKU</th>
+            <th class="py-3 px-4 font-bold">ชื่อเบเกอรี่</th>
+            <th class="py-3 px-4 font-bold">ราคา</th>
+            <th class="py-3 px-4 font-bold">รับเข้าเช้า</th>
+            <th class="py-3 px-4 font-bold">ขายแล้ว</th>
+            <th class="py-3 px-4 font-bold">คงเหลือจริง</th>
+            <th class="py-3 px-4 font-bold">สถานะ</th>
+            <th class="py-3 px-4 font-bold text-center">ปรับสต็อก</th>
+          </tr>
+        </thead>
+        <tbody class="divide-y divide-[#F5EFEB]">
+          <tr>
+            <td class="py-3.5 px-4 font-mono font-bold text-[#635C54]">BK-01</td>
+            <td class="py-3.5 px-4 font-bold text-[#1E1B18]">ครัวซองต์เนยสด AOP (France)</td>
+            <td class="py-3.5 px-4 font-mono font-bold text-[#C85A32]">฿85.00</td>
+            <td class="py-3.5 px-4 font-mono">15</td>
+            <td class="py-3.5 px-4 font-mono text-[#635C54]">11</td>
+            <td class="py-3.5 px-4 font-mono font-bold text-amber-600">4 ชิ้น</td>
+            <td class="py-3.5 px-4"><span class="bg-amber-100 text-amber-800 px-2.5 py-1 rounded-lg text-[10px] font-bold">ใกล้หมด</span></td>
+            <td class="py-3.5 px-4 text-center"><span class="border border-[#EAE3D8] px-2.5 py-1 rounded bg-[#F5EFEB] font-bold">- / +</span></td>
+          </tr>
+          <tr>
+            <td class="py-3.5 px-4 font-mono font-bold text-[#635C54]">BK-02</td>
+            <td class="py-3.5 px-4 font-bold text-[#1E1B18]">เดนิชสตรอว์เบอร์รี</td>
+            <td class="py-3.5 px-4 font-mono font-bold text-[#C85A32]">฿95.00</td>
+            <td class="py-3.5 px-4 font-mono">10</td>
+            <td class="py-3.5 px-4 font-mono text-[#635C54]">7</td>
+            <td class="py-3.5 px-4 font-mono font-bold text-amber-600">3 ชิ้น</td>
+            <td class="py-3.5 px-4"><span class="bg-amber-100 text-amber-800 px-2.5 py-1 rounded-lg text-[10px] font-bold">ใกล้หมด</span></td>
+            <td class="py-3.5 px-4 text-center"><span class="border border-[#EAE3D8] px-2.5 py-1 rounded bg-[#F5EFEB] font-bold">- / +</span></td>
+          </tr>
+          <tr>
+            <td class="py-3.5 px-4 font-mono font-bold text-[#635C54]">BK-03</td>
+            <td class="py-3.5 px-4 font-bold text-[#968E85]">บาสก์ชีสเค้กหน้าไหม้</td>
+            <td class="py-3.5 px-4 font-mono font-bold text-[#968E85]">฿125.00</td>
+            <td class="py-3.5 px-4 font-mono">8</td>
+            <td class="py-3.5 px-4 font-mono text-[#635C54]">8</td>
+            <td class="py-3.5 px-4 font-mono font-bold text-red-600">0 ชิ้น</td>
+            <td class="py-3.5 px-4"><span class="bg-red-100 text-red-700 px-2.5 py-1 rounded-lg text-[10px] font-bold">สินค้าหมด</span></td>
+            <td class="py-3.5 px-4 text-center"><span class="border border-[#EAE3D8] px-2.5 py-1 rounded bg-[#F5EFEB] font-bold">- / +</span></td>
+          </tr>
+          <tr>
+            <td class="py-3.5 px-4 font-mono font-bold text-[#635C54]">BK-04</td>
+            <td class="py-3.5 px-4 font-bold text-[#1E1B18]">เค้กแครอทครีมชีส</td>
+            <td class="py-3.5 px-4 font-mono font-bold text-[#C85A32]">฿95.00</td>
+            <td class="py-3.5 px-4 font-mono">12</td>
+            <td class="py-3.5 px-4 font-mono text-[#635C54]">4</td>
+            <td class="py-3.5 px-4 font-mono font-bold text-[#3B6E4C]">8 ชิ้น</td>
+            <td class="py-3.5 px-4"><span class="bg-[#EAF4ED] text-[#3B6E4C] px-2.5 py-1 rounded-lg text-[10px] font-bold">พร้อมขาย</span></td>
+            <td class="py-3.5 px-4 text-center"><span class="border border-[#EAE3D8] px-2.5 py-1 rounded bg-[#F5EFEB] font-bold">- / +</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Top 5 Best Sellers -->
+    <div class="bg-white rounded-3xl border border-[#EAE3D8] p-6 shadow-sm space-y-4">
+      <h2 class="text-base font-bold text-[#1E1B18]">🏆 5 อันดับเมนูขายดีประจำวัน (Top 5 Best Sellers)</h2>
+      <div class="grid grid-cols-5 gap-3">
+        <div class="p-4 bg-[#FDFBF7] rounded-2xl border border-[#EAE3D8]">
+          <span class="text-[10px] font-bold text-amber-800 bg-amber-100 px-2 py-0.5 rounded">อันดับ 1</span>
+          <div class="font-bold text-xs text-[#1E1B18] mt-1.5">เอสเพรสโซ่เย็น</div>
+          <div class="text-xs font-mono text-[#635C54] mt-0.5">38 แก้ว • ฿2,470</div>
+        </div>
+        <div class="p-4 bg-[#FDFBF7] rounded-2xl border border-[#EAE3D8]">
+          <span class="text-[10px] font-bold text-[#635C54] bg-[#F5EFEB] px-2 py-0.5 rounded">อันดับ 2</span>
+          <div class="font-bold text-xs text-[#1E1B18] mt-1.5">มัทฉะลาเต้อูจิ</div>
+          <div class="text-xs font-mono text-[#635C54] mt-0.5">26 แก้ว • ฿2,210</div>
+        </div>
+        <div class="p-4 bg-[#FDFBF7] rounded-2xl border border-[#EAE3D8]">
+          <span class="text-[10px] font-bold text-[#635C54] bg-[#F5EFEB] px-2 py-0.5 rounded">อันดับ 3</span>
+          <div class="font-bold text-xs text-[#1E1B18] mt-1.5">ครัวซองต์เนยสด AOP</div>
+          <div class="text-xs font-mono text-[#635C54] mt-0.5">21 ชิ้น • ฿1,785</div>
+        </div>
+        <div class="p-4 bg-[#FDFBF7] rounded-2xl border border-[#EAE3D8]">
+          <span class="text-[10px] font-bold text-[#635C54] bg-[#F5EFEB] px-2 py-0.5 rounded">อันดับ 4</span>
+          <div class="font-bold text-xs text-[#1E1B18] mt-1.5">อเมริกาโน่น้ำส้ม</div>
+          <div class="text-xs font-mono text-[#635C54] mt-0.5">18 แก้ว • ฿1,530</div>
+        </div>
+        <div class="p-4 bg-[#FDFBF7] rounded-2xl border border-[#EAE3D8]">
+          <span class="text-[10px] font-bold text-[#635C54] bg-[#F5EFEB] px-2 py-0.5 rounded">อันดับ 5</span>
+          <div class="font-bold text-xs text-[#1E1B18] mt-1.5">เค้กแครอทครีมชีส</div>
+          <div class="text-xs font-mono text-[#635C54] mt-0.5">12 ชิ้น • ฿1,140</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>
