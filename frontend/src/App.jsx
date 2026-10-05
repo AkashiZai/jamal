@@ -2,17 +2,20 @@ import React, { useState, useEffect, useCallback } from 'react';
 import Navbar from './components/Navbar';
 import PosPage from './pages/PosPage';
 import LoginPage, { DEMO_ACCOUNTS } from './pages/LoginPage';
-import { Clock, ShieldAlert } from 'lucide-react';
+import KitchenKdsPage from './pages/KitchenKdsPage';
+import AdminDashboardPage from './pages/AdminDashboardPage';
+import CustomerMobilePage from './pages/CustomerMobilePage';
+import { AppProvider } from './context/AppContext';
+import { Clock } from 'lucide-react';
 
-export default function App() {
+function MainApp() {
   // Default to POS page with pre-logged in Cashier account for instant preview
   const [currentPage, setCurrentPage] = useState('pos');
   const [currentUser, setCurrentUser] = useState(DEMO_ACCOUNTS[0]);
-  
+
   // NFR-04: 15-minute session timeout simulation (900 seconds)
   const SESSION_TIMEOUT_SECONDS = 15 * 60;
   const [remainingSeconds, setRemainingSeconds] = useState(SESSION_TIMEOUT_SECONDS);
-  const [showTimeoutAlert, setShowTimeoutAlert] = useState(false);
 
   // Reset session timer upon user activity
   const resetTimer = useCallback(() => {
@@ -67,8 +70,15 @@ export default function App() {
   const handleLoginSuccess = (user) => {
     setCurrentUser(user);
     resetTimer();
-    // Redirect role: Cashier & Admin go to POS
-    setCurrentPage('pos');
+
+    // Smart role-based redirection matching TOR:
+    if (user.role === 'operator') {
+      setCurrentPage('kds');
+    } else if (user.role === 'admin') {
+      setCurrentPage('admin');
+    } else {
+      setCurrentPage('pos');
+    }
   };
 
   const formatTime = (secs) => {
@@ -78,8 +88,8 @@ export default function App() {
   };
 
   return (
-    <div className="min-h-screen flex flex-col bg-cream font-sans text-espresso-900">
-      {/* Top Navbar */}
+    <div className="min-h-screen flex flex-col bg-cream-100 font-sans text-espresso-900">
+      {/* Top Navbar with All-Screen Switcher */}
       <Navbar
         currentUser={currentUser}
         onLogout={() => handleLogout()}
@@ -113,17 +123,32 @@ export default function App() {
         </div>
       )}
 
-      {/* Main Pages */}
+      {/* Main Pages (Figma Screen Suite) */}
       <div className="flex-1 flex flex-col">
-        {currentPage === 'login' ? (
+        {currentPage === 'login' && (
           <LoginPage onLoginSuccess={handleLoginSuccess} />
-        ) : (
-          <PosPage
-            currentUser={currentUser}
-            onTimeoutWarning={() => setShowTimeoutAlert(true)}
-          />
+        )}
+        {currentPage === 'pos' && (
+          <PosPage currentUser={currentUser} />
+        )}
+        {currentPage === 'kds' && (
+          <KitchenKdsPage />
+        )}
+        {currentPage === 'admin' && (
+          <AdminDashboardPage />
+        )}
+        {currentPage === 'customer' && (
+          <CustomerMobilePage />
         )}
       </div>
     </div>
+  );
+}
+
+export default function App() {
+  return (
+    <AppProvider>
+      <MainApp />
+    </AppProvider>
   );
 }

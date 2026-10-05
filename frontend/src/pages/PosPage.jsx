@@ -6,9 +6,11 @@ import CustomizationModal from '../components/CustomizationModal';
 import CartSidebar from '../components/CartSidebar';
 import PaymentModal from '../components/PaymentModal';
 import VoidModal from '../components/VoidModal';
+import { useApp } from '../context/AppContext';
 
 export default function PosPage({ currentUser }) {
-  const [productsList, setProductsList] = useState(PRODUCTS);
+  const app = useApp();
+  const productsList = app?.products || PRODUCTS;
   const [selectedCategory, setSelectedCategory] = useState('all');
   const [searchQuery, setSearchQuery] = useState('');
   const [customizingProduct, setCustomizingProduct] = useState(null);
@@ -102,31 +104,36 @@ export default function PosPage({ currentUser }) {
     }
   };
 
-  // Payment completed (FR-03 Inventory Deduction)
-  const handlePaymentSuccess = () => {
-    setProductsList((prevProducts) => {
-      return prevProducts.map((p) => {
-        const cartQty = cart
-          .filter((ci) => ci.id === p.id)
-          .reduce((sum, ci) => sum + ci.quantity, 0);
-
-        if (p.stock !== null && cartQty > 0) {
-          const newStock = Math.max(0, p.stock - cartQty);
-          return {
-            ...p,
-            stock: newStock,
-          };
-        }
-        return p;
+  // Payment completed (FR-03 Inventory Deduction & Forward to Kitchen KDS)
+  const handlePaymentSuccess = (paymentDetail) => {
+    if (app?.createOrder) {
+      const totalAmount = cart.reduce(
+        (sum, item) => sum + (item.unitPrice || item.price || 0) * item.quantity,
+        0
+      );
+      app.createOrder({
+        items: cart.map((ci) => ({
+          id: ci.id,
+          name: ci.name,
+          quantity: ci.quantity,
+          optionsText: ci.optionsText,
+          category: ci.category,
+          isBakery: ci.isBakery,
+        })),
+        totalAmount,
+        paymentMethod: paymentDetail?.method === 'cash' ? 'เงินสด' : 'PromptPay',
+        tableNo: 'หน้าร้าน (POS)',
+        channel: 'หน้าร้าน (Cashier POS)',
+        cashierName: currentUser ? currentUser.name : 'Zai (กะเช้า)',
       });
-    });
-
+    }
     setCart([]);
   };
 
   // Void Cart Action (FR-07)
   const handleConfirmVoid = () => {
     setCart([]);
+    setShowVoidModal(false);
     alert('อนุมัติ Void บิลสำเร็จโดย Admin Zai (บันทึก Audit Log เรียบร้อย)');
   };
 

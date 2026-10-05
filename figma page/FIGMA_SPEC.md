@@ -1,5 +1,6 @@
 # 🎨 Figma Architecture & Design System Specification
 **Project**: Café & Bakery POS (Jamal)  
+**Figma Prototype**: [https://www.figma.com/design/DSn2mfMqepHiauo2lbwBFV/jamal?node-id=0-1&t=TBf61dXn3PTERRvu-1](https://www.figma.com/design/DSn2mfMqepHiauo2lbwBFV/jamal?node-id=0-1&t=TBf61dXn3PTERRvu-1)  
 **Target Devices**: iPad / Tablet Landscape (1194 × 834), Desktop (1440 × 900), Mobile (393 × 852)  
 **Design Philosophy**: Human-Centered, Artisanal Warm Modernist, High-Contrast Ergonomic POS (Strictly Non-AI-Slop)
 
