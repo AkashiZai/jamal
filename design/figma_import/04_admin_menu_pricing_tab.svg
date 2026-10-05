@@ -1,0 +1,254 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 1440 900" width="1440" height="900" style="background:#FBF8F4; font-family:'Plus Jakarta Sans','Sarabun',sans-serif;">
+  <!-- TOP ADMIN BAR -->
+  <rect x="0" y="0" width="1440" height="64" fill="#1A120B"/>
+  <rect x="24" y="16" width="32" height="32" rx="8" fill="#C85A32"/>
+  <text x="31" y="38" font-size="14" font-weight="bold" fill="#FFFFFF">JM</text>
+  <text x="68" y="38" font-size="16" font-weight="bold" fill="#FFFFFF">JAMAL CAFÉ — ADMIN PORTAL</text>
+  <text x="1260" y="38" font-size="13" fill="#968E85">ผู้ดูแลระบบ (Admin Zai)</text>
+
+  <!-- SIDEBAR NAVIGATION (240px) -->
+  <g transform="translate(0, 64)">
+    <rect x="0" y="0" width="240" height="836" fill="#F5EFEB" stroke="#EAE3D8"/>
+    <text x="48" y="50" font-size="13" font-weight="500" fill="#635C54">📊 แดชบอร์ดภาพรวม</text>
+    <text x="48" y="98" font-size="13" font-weight="500" fill="#635C54">🥐 สต็อกเบเกอรี่</text>
+    
+    <!-- ACTIVE TAB: Menu & Pricing (FR-02) -->
+    <rect x="16" y="120" width="208" height="42" rx="10" fill="#231710"/>
+    <text x="48" y="146" font-size="13" font-weight="700" fill="#FFFFFF">☕ จัดการเมนู &amp; ราคา</text>
+    
+    <text x="48" y="192" font-size="13" font-weight="500" fill="#635C54">🧾 ประวัติการขาย &amp; Void</text>
+    <text x="48" y="238" font-size="13" font-weight="500" fill="#635C54">👥 จัดการสิทธิ์พนักงาน</text>
+  </g>
+
+  <!-- MAIN MENU PRICING VIEW (1152px) -->
+  <g transform="translate(264, 88)">
+    <text x="0" y="20" font-size="20" font-weight="800" fill="#1E1B18">จัดการรายการเมนู &amp; กำหนดราคาขาย (FR-02)</text>
+    <text x="0" y="40" font-size="12" fill="#635C54">แก้ไขราคาขายหน้าร้าน เปิด/ปิดการจำหน่ายเมนูเครื่องดื่มและเบเกอรี่ (ซิงค์อัตโนมัติไปยัง POS &amp; Mobile)</text>
+
+    <!-- Top Action Bar -->
+    <g transform="translate(560, 4)">
+      <!-- Search Input -->
+      <rect x="0" y="0" width="240" height="38" rx="10" fill="#FFFFFF" stroke="#EAE3D8"/>
+      <text x="14" y="24" font-size="12" fill="#968E85">🔍 ค้นหาชื่อเมนู, รหัส...</text>
+      
+      <!-- Filter Button -->
+      <rect x="252" y="0" width="130" height="38" rx="10" fill="#F5EFEB" stroke="#EAE3D8"/>
+      <text x="317" y="24" font-size="12" font-weight="600" fill="#1E1B18" text-anchor="middle">ทุกหมวด (8) ▾</text>
+
+      <!-- Add Menu Button -->
+      <rect x="394" y="0" width="170" height="38" rx="10" fill="#C85A32"/>
+      <text x="479" y="24" font-size="12" font-weight="700" fill="#FFFFFF" text-anchor="middle">+ เพิ่มเมนูใหม่</text>
+    </g>
+
+    <!-- Table Container -->
+    <g transform="translate(0, 64)">
+      <rect x="0" y="0" width="1144" height="700" rx="16" fill="#FFFFFF" stroke="#EAE3D8"/>
+
+      <!-- Table Header -->
+      <rect x="20" y="20" width="1104" height="40" rx="8" fill="#F5EFEB"/>
+      <text x="36" y="45" font-size="12" font-weight="700" fill="#635C54">รหัส</text>
+      <text x="120" y="45" font-size="12" font-weight="700" fill="#635C54">ชื่อเมนู / รายละเอียด</text>
+      <text x="440" y="45" font-size="12" font-weight="700" fill="#635C54">หมวดหมู่</text>
+      <text x="570" y="45" font-size="12" font-weight="700" fill="#635C54">ต้นทุน</text>
+      <text x="680" y="45" font-size="12" font-weight="700" fill="#635C54">ราคาขายหน้าร้าน (FR-02)</text>
+      <text x="860" y="45" font-size="12" font-weight="700" fill="#635C54">สถานะจำหน่าย</text>
+      <text x="1010" y="45" font-size="12" font-weight="700" fill="#635C54">การจัดการ</text>
+
+      <!-- Row 1: Iced Espresso (SHOWING ACTIVE INLINE EDITING STATE) -->
+      <g transform="translate(20, 70)">
+        <rect x="0" y="0" width="1104" height="70" rx="8" fill="#FFF9F5" stroke="#C85A32" stroke-width="1.5"/>
+        <text x="16" y="32" font-size="12" font-family="'JetBrains Mono',monospace" font-weight="700" fill="#C85A32">CF-01</text>
+        
+        <!-- Thumbnail & Name -->
+        <rect x="100" y="13" width="44" height="44" rx="8" fill="#EAE3D8"/>
+        <text x="122" y="40" font-size="20" text-anchor="middle">☕</text>
+        <text x="156" y="30" font-size="13" font-weight="700" fill="#1E1B18">เอสเพรสโซ่เย็น (Iced Espresso)</text>
+        <text x="156" y="48" font-size="11" fill="#635C54">เมล็ดคั่วกลาง บราซิล-เชียงราย เข้มข้นกลมกล่อม</text>
+
+        <!-- Category -->
+        <rect x="420" y="24" width="80" height="22" rx="6" fill="#F5EFEB"/>
+        <text x="460" y="39" font-size="11" font-weight="600" fill="#1E1B18" text-anchor="middle">กาแฟสด</text>
+
+        <!-- Cost -->
+        <text x="550" y="39" font-size="13" font-family="'JetBrains Mono',monospace" fill="#968E85">฿22.00</text>
+
+        <!-- INLINE EDITING INPUT BOX (FR-02) -->
+        <g transform="translate(660, 16)">
+          <rect x="0" y="0" width="85" height="38" rx="8" fill="#FFFFFF" stroke="#C85A32" stroke-width="2"/>
+          <text x="10" y="24" font-size="14" font-family="'JetBrains Mono',monospace" font-weight="800" fill="#C85A32">฿65.00</text>
+          
+          <!-- Save Button -->
+          <rect x="92" y="0" width="56" height="38" rx="8" fill="#3B6E4C"/>
+          <text x="120" y="24" font-size="12" font-weight="700" fill="#FFFFFF" text-anchor="middle">✓ บันทึก</text>
+
+          <!-- Cancel Button -->
+          <rect x="154" y="0" width="36" height="38" rx="8" fill="#F5EFEB" stroke="#EAE3D8"/>
+          <text x="172" y="24" font-size="12" font-weight="700" fill="#635C54" text-anchor="middle">✕</text>
+        </g>
+
+        <!-- Status Active -->
+        <rect x="880" y="24" width="86" height="22" rx="6" fill="#EAF4ED"/>
+        <text x="923" y="39" font-size="11" font-weight="700" fill="#3B6E4C" text-anchor="middle">● เปิดขาย</text>
+
+        <!-- Action Menu -->
+        <text x="1040" y="39" font-size="12" font-weight="700" fill="#C85A32">กำลังแก้ไข...</text>
+      </g>
+
+      <!-- Row 2: Orange Americano -->
+      <g transform="translate(20, 146)">
+        <text x="16" y="32" font-size="12" font-family="'JetBrains Mono',monospace" fill="#635C54">CF-02</text>
+        <rect x="100" y="10" width="44" height="44" rx="8" fill="#EAE3D8"/>
+        <text x="122" y="37" font-size="20" text-anchor="middle">🍊</text>
+        <text x="156" y="28" font-size="13" font-weight="600" fill="#1E1B18">อเมริกาโน่น้ำส้ม (Orange Americano)</text>
+        <text x="156" y="46" font-size="11" fill="#635C54">ช็อตเอสเพรสโซ่เข้มผสมน้ำส้มคั้นสดแท้</text>
+
+        <rect x="420" y="20" width="80" height="22" rx="6" fill="#F5EFEB"/>
+        <text x="460" y="35" font-size="11" font-weight="600" fill="#1E1B18" text-anchor="middle">กาแฟสด</text>
+        <text x="550" y="35" font-size="13" font-family="'JetBrains Mono',monospace" fill="#968E85">฿35.00</text>
+        <text x="660" y="35" font-size="14" font-family="'JetBrains Mono',monospace" font-weight="800" fill="#1E1B18">฿85.00</text>
+
+        <rect x="880" y="20" width="86" height="22" rx="6" fill="#EAF4ED"/>
+        <text x="923" y="35" font-size="11" font-weight="700" fill="#3B6E4C" text-anchor="middle">● เปิดขาย</text>
+        
+        <rect x="1000" y="15" width="80" height="30" rx="8" fill="#F5EFEB" stroke="#EAE3D8"/>
+        <text x="1040" y="35" font-size="11" font-weight="600" fill="#1E1B18" text-anchor="middle">✏️ แก้ราคา</text>
+        <line x1="0" y1="62" x2="1104" y2="62" stroke="#F5EFEB"/>
+      </g>
+
+      <!-- Row 3: Hot Cappuccino -->
+      <g transform="translate(20, 214)">
+        <text x="16" y="32" font-size="12" font-family="'JetBrains Mono',monospace" fill="#635C54">CF-03</text>
+        <rect x="100" y="10" width="44" height="44" rx="8" fill="#EAE3D8"/>
+        <text x="122" y="37" font-size="20" text-anchor="middle">☕</text>
+        <text x="156" y="28" font-size="13" font-weight="600" fill="#1E1B18">คาปูชิโน่ร้อน (Hot Cappuccino)</text>
+        <text x="156" y="46" font-size="11" fill="#635C54">ฟองนมเนียนนุ่ม โรยผงโกโก้พรีเมียม</text>
+
+        <rect x="420" y="20" width="80" height="22" rx="6" fill="#F5EFEB"/>
+        <text x="460" y="35" font-size="11" font-weight="600" fill="#1E1B18" text-anchor="middle">กาแฟสด</text>
+        <text x="550" y="35" font-size="13" font-family="'JetBrains Mono',monospace" fill="#968E85">฿20.00</text>
+        <text x="660" y="35" font-size="14" font-family="'JetBrains Mono',monospace" font-weight="800" fill="#1E1B18">฿60.00</text>
+
+        <rect x="880" y="20" width="86" height="22" rx="6" fill="#EAF4ED"/>
+        <text x="923" y="35" font-size="11" font-weight="700" fill="#3B6E4C" text-anchor="middle">● เปิดขาย</text>
+        
+        <rect x="1000" y="15" width="80" height="30" rx="8" fill="#F5EFEB" stroke="#EAE3D8"/>
+        <text x="1040" y="35" font-size="11" font-weight="600" fill="#1E1B18" text-anchor="middle">✏️ แก้ราคา</text>
+        <line x1="0" y1="62" x2="1104" y2="62" stroke="#F5EFEB"/>
+      </g>
+
+      <!-- Row 4: Uji Matcha Latte -->
+      <g transform="translate(20, 282)">
+        <text x="16" y="32" font-size="12" font-family="'JetBrains Mono',monospace" fill="#635C54">NC-01</text>
+        <rect x="100" y="10" width="44" height="44" rx="8" fill="#EAE3D8"/>
+        <text x="122" y="37" font-size="20" text-anchor="middle">🍵</text>
+        <text x="156" y="28" font-size="13" font-weight="600" fill="#1E1B18">มัทฉะลาเต้อูจิ (Uji Matcha Latte)</text>
+        <text x="156" y="46" font-size="11" fill="#635C54">ผงมัทฉะเกรดพิธีการแท้จากเกียวโต หอมละมุน</text>
+
+        <rect x="420" y="20" width="115" height="22" rx="6" fill="#F5EFEB"/>
+        <text x="477" y="35" font-size="11" font-weight="600" fill="#1E1B18" text-anchor="middle">ชา &amp; เครื่องดื่ม</text>
+        <text x="550" y="35" font-size="13" font-family="'JetBrains Mono',monospace" fill="#968E85">฿38.00</text>
+        <text x="660" y="35" font-size="14" font-family="'JetBrains Mono',monospace" font-weight="800" fill="#1E1B18">฿85.00</text>
+
+        <rect x="880" y="20" width="86" height="22" rx="6" fill="#EAF4ED"/>
+        <text x="923" y="35" font-size="11" font-weight="700" fill="#3B6E4C" text-anchor="middle">● เปิดขาย</text>
+        
+        <rect x="1000" y="15" width="80" height="30" rx="8" fill="#F5EFEB" stroke="#EAE3D8"/>
+        <text x="1040" y="35" font-size="11" font-weight="600" fill="#1E1B18" text-anchor="middle">✏️ แก้ราคา</text>
+        <line x1="0" y1="62" x2="1104" y2="62" stroke="#F5EFEB"/>
+      </g>
+
+      <!-- Row 5: Signature Thai Tea -->
+      <g transform="translate(20, 350)">
+        <text x="16" y="32" font-size="12" font-family="'JetBrains Mono',monospace" fill="#635C54">NC-02</text>
+        <rect x="100" y="10" width="44" height="44" rx="8" fill="#EAE3D8"/>
+        <text x="122" y="37" font-size="20" text-anchor="middle">🧋</text>
+        <text x="156" y="28" font-size="13" font-weight="600" fill="#1E1B18">ชาไทยการันต์เย็น (Signature Thai Tea)</text>
+        <text x="156" y="46" font-size="11" fill="#635C54">ใบชาคั่วสูตรลับของร้าน หอมกรุ่นหวานมัน</text>
+
+        <rect x="420" y="20" width="115" height="22" rx="6" fill="#F5EFEB"/>
+        <text x="477" y="35" font-size="11" font-weight="600" fill="#1E1B18" text-anchor="middle">ชา &amp; เครื่องดื่ม</text>
+        <text x="550" y="35" font-size="13" font-family="'JetBrains Mono',monospace" fill="#968E85">฿18.00</text>
+        <text x="660" y="35" font-size="14" font-family="'JetBrains Mono',monospace" font-weight="800" fill="#1E1B18">฿60.00</text>
+
+        <rect x="880" y="20" width="86" height="22" rx="6" fill="#EAF4ED"/>
+        <text x="923" y="35" font-size="11" font-weight="700" fill="#3B6E4C" text-anchor="middle">● เปิดขาย</text>
+        
+        <rect x="1000" y="15" width="80" height="30" rx="8" fill="#F5EFEB" stroke="#EAE3D8"/>
+        <text x="1040" y="35" font-size="11" font-weight="600" fill="#1E1B18" text-anchor="middle">✏️ แก้ราคา</text>
+        <line x1="0" y1="62" x2="1104" y2="62" stroke="#F5EFEB"/>
+      </g>
+
+      <!-- Row 6: Butter Croissant AOP -->
+      <g transform="translate(20, 418)">
+        <text x="16" y="32" font-size="12" font-family="'JetBrains Mono',monospace" fill="#635C54">BK-01</text>
+        <rect x="100" y="10" width="44" height="44" rx="8" fill="#EAE3D8"/>
+        <text x="122" y="37" font-size="20" text-anchor="middle">🥐</text>
+        <text x="156" y="28" font-size="13" font-weight="600" fill="#1E1B18">ครัวซองต์เนยสด AOP (France)</text>
+        <text x="156" y="46" font-size="11" fill="#635C54">เนยสดแท้ฝรั่งเศส (สต็อกคลัง: 4 ชิ้น)</text>
+
+        <rect x="420" y="20" width="95" height="22" rx="6" fill="#F5EFEB"/>
+        <text x="467" y="35" font-size="11" font-weight="600" fill="#1E1B18" text-anchor="middle">🥐 เบเกอรี่สด</text>
+        <text x="550" y="35" font-size="13" font-family="'JetBrains Mono',monospace" fill="#968E85">฿42.00</text>
+        <text x="660" y="35" font-size="14" font-family="'JetBrains Mono',monospace" font-weight="800" fill="#1E1B18">฿85.00</text>
+
+        <rect x="880" y="20" width="86" height="22" rx="6" fill="#FFF5E6"/>
+        <text x="923" y="35" font-size="11" font-weight="700" fill="#C97D28" text-anchor="middle">● ใกล้หมด</text>
+        
+        <rect x="1000" y="15" width="80" height="30" rx="8" fill="#F5EFEB" stroke="#EAE3D8"/>
+        <text x="1040" y="35" font-size="11" font-weight="600" fill="#1E1B18" text-anchor="middle">✏️ แก้ราคา</text>
+        <line x1="0" y1="62" x2="1104" y2="62" stroke="#F5EFEB"/>
+      </g>
+
+      <!-- Row 7: Strawberry Danish -->
+      <g transform="translate(20, 486)">
+        <text x="16" y="32" font-size="12" font-family="'JetBrains Mono',monospace" fill="#635C54">BK-02</text>
+        <rect x="100" y="10" width="44" height="44" rx="8" fill="#EAE3D8"/>
+        <text x="122" y="37" font-size="20" text-anchor="middle">🍓</text>
+        <text x="156" y="28" font-size="13" font-weight="600" fill="#1E1B18">เดนิชสตรอว์เบอร์รี (Strawberry Danish)</text>
+        <text x="156" y="46" font-size="11" fill="#635C54">ซอสคัสตาร์ดวานิลลาและผลสด (สต็อก: 3 ชิ้น)</text>
+
+        <rect x="420" y="20" width="95" height="22" rx="6" fill="#F5EFEB"/>
+        <text x="467" y="35" font-size="11" font-weight="600" fill="#1E1B18" text-anchor="middle">🥐 เบเกอรี่สด</text>
+        <text x="550" y="35" font-size="13" font-family="'JetBrains Mono',monospace" fill="#968E85">฿48.00</text>
+        <text x="660" y="35" font-size="14" font-family="'JetBrains Mono',monospace" font-weight="800" fill="#1E1B18">฿95.00</text>
+
+        <rect x="880" y="20" width="86" height="22" rx="6" fill="#FFF5E6"/>
+        <text x="923" y="35" font-size="11" font-weight="700" fill="#C97D28" text-anchor="middle">● ใกล้หมด</text>
+        
+        <rect x="1000" y="15" width="80" height="30" rx="8" fill="#F5EFEB" stroke="#EAE3D8"/>
+        <text x="1040" y="35" font-size="11" font-weight="600" fill="#1E1B18" text-anchor="middle">✏️ แก้ราคา</text>
+        <line x1="0" y1="62" x2="1104" y2="62" stroke="#F5EFEB"/>
+      </g>
+
+      <!-- Row 8: Burnt Cheesecake (OUT OF STOCK) -->
+      <g transform="translate(20, 554)">
+        <text x="16" y="32" font-size="12" font-family="'JetBrains Mono',monospace" fill="#635C54">BK-03</text>
+        <rect x="100" y="10" width="44" height="44" rx="8" fill="#EAE3D8"/>
+        <text x="122" y="37" font-size="20" text-anchor="middle">🍰</text>
+        <text x="156" y="28" font-size="13" font-weight="600" fill="#968E85">บาสก์ชีสเค้กหน้าไหม้ (Burnt Cheesecake)</text>
+        <text x="156" y="46" font-size="11" fill="#BA3C34">ครีมชีสแท้เข้มข้น (สต็อกหมด: 0 ชิ้น)</text>
+
+        <rect x="420" y="20" width="95" height="22" rx="6" fill="#F5EFEB"/>
+        <text x="467" y="35" font-size="11" font-weight="600" fill="#968E85" text-anchor="middle">🍰 ของหวาน</text>
+        <text x="550" y="35" font-size="13" font-family="'JetBrains Mono',monospace" fill="#968E85">฿65.00</text>
+        <text x="660" y="35" font-size="14" font-family="'JetBrains Mono',monospace" font-weight="800" fill="#968E85">฿125.00</text>
+
+        <rect x="880" y="20" width="86" height="22" rx="6" fill="#FDF0EF"/>
+        <text x="923" y="35" font-size="11" font-weight="700" fill="#BA3C34" text-anchor="middle">✕ ของหมด</text>
+        
+        <rect x="1000" y="15" width="80" height="30" rx="8" fill="#F5EFEB" stroke="#EAE3D8"/>
+        <text x="1040" y="35" font-size="11" font-weight="600" fill="#1E1B18" text-anchor="middle">✏️ แก้ราคา</text>
+        <line x1="0" y1="62" x2="1104" y2="62" stroke="#F5EFEB"/>
+      </g>
+
+      <!-- Pagination / Footer Info -->
+      <g transform="translate(20, 645)">
+        <text x="16" y="22" font-size="12" fill="#635C54">แสดง 1-8 จากทั้งหมด 8 เมนู (ซิงค์ราคา Real-time แล้ว)</text>
+        <rect x="940" y="4" width="70" height="28" rx="6" fill="#F5EFEB" stroke="#EAE3D8"/>
+        <text x="975" y="22" font-size="11" font-weight="600" fill="#968E85" text-anchor="middle">← ก่อนหน้า</text>
+        <rect x="1020" y="4" width="70" height="28" rx="6" fill="#F5EFEB" stroke="#EAE3D8"/>
+        <text x="1055" y="22" font-size="11" font-weight="600" fill="#968E85" text-anchor="middle">ถัดไป →</text>
+      </g>
+    </g>
+  </g>
+</svg>

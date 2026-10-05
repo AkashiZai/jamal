@@ -1,0 +1,35 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 393 852" width="393" height="852" style="background:#FBF8F4; font-family:'Plus Jakarta Sans','Sarabun',sans-serif;">
+  <defs>
+    <filter id="shadow" x="-5%" y="-5%" width="110%" height="110%">
+      <feDropShadow dx="0" dy="4" stdDeviation="12" flood-color="#231710" flood-opacity="0.08"/>
+    </filter>
+    <filter id="modalShadow" x="-10%" y="-10%" width="120%" height="120%">
+      <feDropShadow dx="0" dy="16" stdDeviation="24" flood-color="#1A120B" flood-opacity="0.3"/>
+    </filter>
+  </defs>
+  <!-- Phone Status Bar -->
+  <rect x="0" y="0" width="393" height="44" fill="#1A120B"/>
+  <text x="32" y="28" font-size="14" font-weight="700" fill="#FFFFFF">9:41</text>
+  <rect x="140" y="8" width="113" height="28" rx="14" fill="#000000"/>
+
+  <!-- Header -->
+  <rect x="0" y="44" width="393" height="56" fill="#FFFFFF" stroke="#EAE3D8"/>
+  <text x="20" y="70" font-size="11" font-family="'JetBrains Mono',monospace" font-weight="bold" fill="#C85A32">โต๊ะ 04 • สั่งทานที่ร้าน</text>
+  <text x="20" y="88" font-size="15" font-weight="800" fill="#1E1B18">JAMAL CAFÉ</text>
+
+  <!-- CALLOUT READY BANNER (EMERALD GREEN PULSE) -->
+  <g transform="translate(16, 112)" filter="url(#shadow)">
+    <rect x="0" y="0" width="361" height="84" rx="18" fill="#3B6E4C" stroke="#A8D5B5" stroke-width="2"/>
+    <text x="20" y="34" font-size="16" font-family="'JetBrains Mono',monospace" font-weight="900" fill="#FFFFFF">✨ คิวของคุณ: #A03 พร้อมรับแล้ว!</text>
+    <rect x="250" y="16" width="95" height="24" rx="8" fill="#FFFFFF"/>
+    <text x="297" y="32" font-size="11" font-weight="bold" fill="#3B6E4C" text-anchor="middle">พร้อมรับสินค้า</text>
+    <text x="20" y="62" font-size="12" fill="#EAF4ED">เชิญรับเครื่องดื่มและเบเกอรี่ได้ที่เคาน์เตอร์บาร์ได้เลยค่ะ</text>
+  </g>
+
+  <!-- Product list placeholder -->
+  <g transform="translate(16, 216)">
+    <rect x="0" y="0" width="361" height="96" rx="14" fill="#FFFFFF" stroke="#EAE3D8"/>
+    <text x="96" y="36" font-size="14" font-weight="bold">เอสเพรสโซ่เย็น (Iced Espresso)</text>
+    <text x="96" y="68" font-size="15" font-family="'JetBrains Mono',monospace" font-weight="bold" fill="#C85A32">฿65.00</text>
+  </g>
+</svg>

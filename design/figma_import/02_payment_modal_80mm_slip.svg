@@ -1,0 +1,175 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 1194 834" width="1194" height="834" style="background:#EDE7DF; font-family:'Plus Jakarta Sans','Sarabun',sans-serif;">
+  <defs>
+    <filter id="shadow" x="-5%" y="-5%" width="110%" height="110%">
+      <feDropShadow dx="0" dy="16" stdDeviation="24" flood-color="#1A120B" flood-opacity="0.3"/>
+    </filter>
+  </defs>
+
+  <!-- Dimmed Backdrop -->
+  <rect x="0" y="0" width="1194" height="834" fill="#1A120B" fill-opacity="0.55"/>
+
+  <!-- Main Modal Container (920 x 640) - Centered on 1194 x 834 iPad screen -->
+  <g transform="translate(137, 97)" filter="url(#shadow)">
+    <rect x="0" y="0" width="920" height="640" rx="24" fill="#FFFFFF" stroke="#EAE3D8" stroke-width="1"/>
+
+    <!-- ================= LEFT: CASH PAYMENT VIEW (526px wide) ================= -->
+    <g transform="translate(32, 32)">
+      <!-- Title & Close Button -->
+      <text x="0" y="20" font-size="16" font-weight="800" fill="#1E1B18">หน้าต่างชำระเงิน (Payment)</text>
+      <circle cx="510" cy="14" r="14" fill="#F5EFEB"/>
+      <text x="510" y="19" font-size="12" font-weight="700" fill="#635C54" text-anchor="middle">✕</text>
+
+      <!-- Payment Method Switcher Tabs (Aligned with PromptPay screen) -->
+      <g transform="translate(0, 40)">
+        <rect x="0" y="0" width="526" height="44" rx="12" fill="#F5EFEB"/>
+        <!-- Active Cash Tab -->
+        <rect x="4" y="4" width="257" height="36" rx="10" fill="#FFFFFF"/>
+        <text x="132" y="26" font-size="13" font-weight="700" fill="#1E1B18" text-anchor="middle">💵 เงินสด (Cash)</text>
+        <!-- Inactive PromptPay Tab -->
+        <rect x="265" y="4" width="257" height="36" rx="10" fill="transparent"/>
+        <text x="393" y="26" font-size="13" font-weight="600" fill="#635C54" text-anchor="middle">📱 PromptPay QR</text>
+      </g>
+
+      <!-- Net Amount Box (Exact match with PromptPay QR) -->
+      <g transform="translate(0, 100)">
+        <rect x="0" y="0" width="526" height="74" rx="16" fill="#FDFBF7" stroke="#EAE3D8"/>
+        <text x="20" y="28" font-size="12" font-weight="500" fill="#635C54">ยอดที่ต้องชำระ (Net Amount)</text>
+        <text x="20" y="58" font-size="28" font-weight="800" font-family="'JetBrains Mono',monospace" fill="#1E1B18">฿165.00</text>
+      </g>
+
+      <!-- Tendered Display & Quick Banknotes -->
+      <g transform="translate(0, 186)">
+        <text x="0" y="14" font-size="12" font-weight="700" fill="#1E1B18">ยอดเงินที่รับมา (Tendered)</text>
+        <text x="526" y="14" font-size="18" font-family="'JetBrains Mono',monospace" font-weight="900" fill="#C85A32" text-anchor="end">฿500.00</text>
+
+        <!-- Quick Banknote Pills -->
+        <g transform="translate(0, 22)">
+          <!-- Exact -->
+          <rect x="0" y="0" width="124" height="34" rx="10" fill="#F5EFEB" stroke="#EAE3D8"/>
+          <text x="62" y="22" font-size="12" font-weight="700" fill="#1E1B18" text-anchor="middle">พอดี</text>
+
+          <!-- 100 -->
+          <rect x="134" y="0" width="124" height="34" rx="10" fill="#F5EFEB" stroke="#EAE3D8"/>
+          <text x="196" y="22" font-size="12" font-weight="700" font-family="'JetBrains Mono',monospace" fill="#1E1B18" text-anchor="middle">฿100</text>
+
+          <!-- 500 (ACTIVE) -->
+          <rect x="268" y="0" width="124" height="34" rx="10" fill="#C85A32"/>
+          <text x="330" y="22" font-size="12" font-weight="800" font-family="'JetBrains Mono',monospace" fill="#FFFFFF" text-anchor="middle">฿500</text>
+
+          <!-- 1000 -->
+          <rect x="402" y="0" width="124" height="34" rx="10" fill="#F5EFEB" stroke="#EAE3D8"/>
+          <text x="464" y="22" font-size="12" font-weight="700" font-family="'JetBrains Mono',monospace" fill="#1E1B18" text-anchor="middle">฿1,000</text>
+        </g>
+      </g>
+
+      <!-- Numpad Keypad (12 keys, 3 cols x 4 rows) -->
+      <g transform="translate(0, 240)">
+        <!-- Row 1: 1, 2, 3 -->
+        <g transform="translate(0, 0)">
+          <rect x="0" y="0" width="168" height="42" rx="10" fill="#FFFFFF" stroke="#EAE3D8"/>
+          <text x="84" y="27" font-size="16" font-family="'JetBrains Mono',monospace" font-weight="700" fill="#1E1B18" text-anchor="middle">1</text>
+          <rect x="179" y="0" width="168" height="42" rx="10" fill="#FFFFFF" stroke="#EAE3D8"/>
+          <text x="263" y="27" font-size="16" font-family="'JetBrains Mono',monospace" font-weight="700" fill="#1E1B18" text-anchor="middle">2</text>
+          <rect x="358" y="0" width="168" height="42" rx="10" fill="#FFFFFF" stroke="#EAE3D8"/>
+          <text x="442" y="27" font-size="16" font-family="'JetBrains Mono',monospace" font-weight="700" fill="#1E1B18" text-anchor="middle">3</text>
+        </g>
+        <!-- Row 2: 4, 5, 6 -->
+        <g transform="translate(0, 48)">
+          <rect x="0" y="0" width="168" height="42" rx="10" fill="#FFFFFF" stroke="#EAE3D8"/>
+          <text x="84" y="27" font-size="16" font-family="'JetBrains Mono',monospace" font-weight="700" fill="#1E1B18" text-anchor="middle">4</text>
+          <rect x="179" y="0" width="168" height="42" rx="10" fill="#FFFFFF" stroke="#EAE3D8"/>
+          <text x="263" y="27" font-size="16" font-family="'JetBrains Mono',monospace" font-weight="700" fill="#1E1B18" text-anchor="middle">5</text>
+          <rect x="358" y="0" width="168" height="42" rx="10" fill="#FFFFFF" stroke="#EAE3D8"/>
+          <text x="442" y="27" font-size="16" font-family="'JetBrains Mono',monospace" font-weight="700" fill="#1E1B18" text-anchor="middle">6</text>
+        </g>
+        <!-- Row 3: 7, 8, 9 -->
+        <g transform="translate(0, 96)">
+          <rect x="0" y="0" width="168" height="42" rx="10" fill="#FFFFFF" stroke="#EAE3D8"/>
+          <text x="84" y="27" font-size="16" font-family="'JetBrains Mono',monospace" font-weight="700" fill="#1E1B18" text-anchor="middle">7</text>
+          <rect x="179" y="0" width="168" height="42" rx="10" fill="#FFFFFF" stroke="#EAE3D8"/>
+          <text x="263" y="27" font-size="16" font-family="'JetBrains Mono',monospace" font-weight="700" fill="#1E1B18" text-anchor="middle">8</text>
+          <rect x="358" y="0" width="168" height="42" rx="10" fill="#FFFFFF" stroke="#EAE3D8"/>
+          <text x="442" y="27" font-size="16" font-family="'JetBrains Mono',monospace" font-weight="700" fill="#1E1B18" text-anchor="middle">9</text>
+        </g>
+        <!-- Row 4: C, 0, 00 -->
+        <g transform="translate(0, 144)">
+          <rect x="0" y="0" width="168" height="42" rx="10" fill="#FDF2ED" stroke="#F6D1C1"/>
+          <text x="84" y="27" font-size="15" font-family="'JetBrains Mono',monospace" font-weight="800" fill="#BA3C34" text-anchor="middle">C</text>
+          <rect x="179" y="0" width="168" height="42" rx="10" fill="#FFFFFF" stroke="#EAE3D8"/>
+          <text x="263" y="27" font-size="16" font-family="'JetBrains Mono',monospace" font-weight="700" fill="#1E1B18" text-anchor="middle">0</text>
+          <rect x="358" y="0" width="168" height="42" rx="10" fill="#FFFFFF" stroke="#EAE3D8"/>
+          <text x="442" y="27" font-size="16" font-family="'JetBrains Mono',monospace" font-weight="700" fill="#1E1B18" text-anchor="middle">00</text>
+        </g>
+      </g>
+
+      <!-- Change Due Box -->
+      <g transform="translate(0, 438)">
+        <rect x="0" y="0" width="526" height="62" rx="16" fill="#F2F9F4" stroke="#C5E6D0"/>
+        <text x="20" y="37" font-size="13" font-weight="700" fill="#2E6930">เงินทอน (Change Due)</text>
+        <text x="506" y="39" font-size="24" font-weight="900" font-family="'JetBrains Mono',monospace" fill="#2E6930" text-anchor="end">฿335.00</text>
+      </g>
+
+      <!-- Confirm Button (Exact position as PromptPay) -->
+      <g transform="translate(0, 520)">
+        <rect x="0" y="0" width="526" height="52" rx="16" fill="#3B6E4C"/>
+        <text x="263" y="32" font-size="14" font-weight="800" fill="#FFFFFF" text-anchor="middle">✓ ยืนยันชำระเงิน &amp; สั่งพิมพ์สลิป</text>
+      </g>
+    </g>
+
+    <!-- ================= RIGHT: 80MM THERMAL SLIP (328px wide) ================= -->
+    <g transform="translate(592, 0)">
+      <rect x="0" y="0" width="328" height="640" rx="24" fill="#F5EFEB"/>
+      <line x1="0" y1="0" x2="0" y2="640" stroke="#EAE3D8" stroke-width="1"/>
+
+      <!-- Thermal Paper (260px wide) -->
+      <g transform="translate(34, 40)">
+        <rect x="0" y="0" width="260" height="550" rx="8" fill="#FFFFFF" stroke="#EAE3D8"/>
+        
+        <!-- Header -->
+        <text x="130" y="32" font-size="13" font-weight="800" font-family="'JetBrains Mono',monospace" fill="#1E1B18" text-anchor="middle">JAMAL CAFÉ &amp; BAKERY</text>
+        <text x="130" y="48" font-size="10" font-family="'JetBrains Mono',monospace" fill="#635C54" text-anchor="middle">สาขา 001 สุขุมวิท 23 กทม.</text>
+        <text x="130" y="62" font-size="9" font-family="'JetBrains Mono',monospace" fill="#968E85" text-anchor="middle">TAX ID: 0-1055-69001-23-4</text>
+        <line x1="12" y1="74" x2="248" y2="74" stroke="#968E85" stroke-dasharray="3 3"/>
+
+        <!-- Meta -->
+        <text x="12" y="92" font-size="10" font-family="'JetBrains Mono',monospace" fill="#635C54">บิล: #JM-2026-084</text>
+        <text x="248" y="92" font-size="10" font-family="'JetBrains Mono',monospace" fill="#635C54" text-anchor="end">โต๊ะ: หน้าร้าน</text>
+        <text x="12" y="108" font-size="10" font-family="'JetBrains Mono',monospace" fill="#635C54">22/09/2026 14:45</text>
+        <text x="248" y="108" font-size="10" font-family="'JetBrains Mono',monospace" fill="#635C54" text-anchor="end">แคชเชียร์: Zai</text>
+        <line x1="12" y1="120" x2="248" y2="120" stroke="#968E85" stroke-dasharray="3 3"/>
+
+        <!-- Items -->
+        <text x="12" y="142" font-size="11" font-weight="700" font-family="'JetBrains Mono',monospace" fill="#1E1B18">1x เอสเพรสโซ่เย็น</text>
+        <text x="248" y="142" font-size="11" font-family="'JetBrains Mono',monospace" fill="#1E1B18" text-anchor="end">80.00</text>
+        <text x="24" y="158" font-size="9" font-family="'JetBrains Mono',monospace" fill="#635C54">↳ หวาน 25% • นมโอ๊ต</text>
+
+        <text x="12" y="180" font-size="11" font-weight="700" font-family="'JetBrains Mono',monospace" fill="#1E1B18">1x ครัวซองต์เนยสด AOP</text>
+        <text x="248" y="180" font-size="11" font-family="'JetBrains Mono',monospace" fill="#1E1B18" text-anchor="end">85.00</text>
+        <text x="24" y="196" font-size="9" font-family="'JetBrains Mono',monospace" fill="#635C54">↳ อบอุ่นร้อน</text>
+        <line x1="12" y1="214" x2="248" y2="214" stroke="#968E85" stroke-dasharray="3 3"/>
+
+        <!-- Totals -->
+        <text x="12" y="238" font-size="11" font-family="'JetBrains Mono',monospace" fill="#635C54">ยอดรวม (Subtotal)</text>
+        <text x="248" y="238" font-size="11" font-family="'JetBrains Mono',monospace" fill="#1E1B18" text-anchor="end">฿154.21</text>
+
+        <text x="12" y="256" font-size="10" font-family="'JetBrains Mono',monospace" fill="#635C54">VAT 7% (Included)</text>
+        <text x="248" y="256" font-size="10" font-family="'JetBrains Mono',monospace" fill="#1E1B18" text-anchor="end">฿10.79</text>
+
+        <text x="12" y="280" font-size="13" font-weight="800" font-family="'JetBrains Mono',monospace" fill="#1E1B18">ยอดสุทธิ (Total)</text>
+        <text x="248" y="280" font-size="14" font-weight="800" font-family="'JetBrains Mono',monospace" fill="#C85A32" text-anchor="end">฿165.00</text>
+
+        <text x="12" y="304" font-size="11" font-family="'JetBrains Mono',monospace" fill="#2E6930">เงินสดรับมา</text>
+        <text x="248" y="304" font-size="11" font-weight="700" font-family="'JetBrains Mono',monospace" fill="#2E6930" text-anchor="end">฿500.00</text>
+
+        <text x="12" y="322" font-size="11" font-family="'JetBrains Mono',monospace" fill="#2E6930">เงินทอน (Change)</text>
+        <text x="248" y="322" font-size="11" font-weight="700" font-family="'JetBrains Mono',monospace" fill="#2E6930" text-anchor="end">฿335.00</text>
+        <line x1="12" y1="336" x2="248" y2="336" stroke="#968E85" stroke-dasharray="3 3"/>
+
+        <!-- Footer Barcode -->
+        <text x="130" y="366" font-size="10" font-family="'JetBrains Mono',monospace" fill="#635C54" text-anchor="middle">ขอบคุณที่ใช้บริการ</text>
+        <text x="130" y="390" font-size="12" font-family="'JetBrains Mono',monospace" letter-spacing="3" fill="#968E85" text-anchor="middle">||||| |||||| ||||| ||||</text>
+        <text x="130" y="406" font-size="8" font-family="'JetBrains Mono',monospace" fill="#968E85" text-anchor="middle">JM-20260922-084</text>
+      </g>
+    </g>
+  </g>
+</svg>

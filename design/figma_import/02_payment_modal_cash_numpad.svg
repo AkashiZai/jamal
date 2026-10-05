@@ -1,0 +1,60 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 1194 834" width="1194" height="834" style="background:#EDE7DF; font-family:'Plus Jakarta Sans','Sarabun',sans-serif;">
+  <defs>
+    <filter id="shadow" x="-5%" y="-5%" width="110%" height="110%">
+      <feDropShadow dx="0" dy="4" stdDeviation="12" flood-color="#231710" flood-opacity="0.08"/>
+    </filter>
+    <filter id="modalShadow" x="-10%" y="-10%" width="120%" height="120%">
+      <feDropShadow dx="0" dy="16" stdDeviation="24" flood-color="#1A120B" flood-opacity="0.3"/>
+    </filter>
+  </defs>
+  <!-- Backdrop Dimmed -->
+  <rect x="0" y="0" width="1194" height="834" fill="#1A120B" fill-opacity="0.55"/>
+
+  <!-- Modal Centered (920 x 640) -->
+  <g transform="translate(137, 97)" filter="url(#shadow)">
+    <rect x="0" y="0" width="920" height="640" rx="24" fill="#FFFFFF" stroke="#EAE3D8"/>
+
+    <!-- Left: Cash Numpad (526px) -->
+    <g transform="translate(32, 32)">
+      <text x="0" y="20" font-size="16" font-weight="800">หน้าต่างชำระเงิน (Cash Calculator)</text>
+      
+      <!-- Net Amount -->
+      <rect x="0" y="44" width="526" height="64" rx="14" fill="#FDFBF7" stroke="#EAE3D8"/>
+      <text x="20" y="70" font-size="12" fill="#635C54">ยอดที่ต้องชำระ (Total Due)</text>
+      <text x="20" y="94" font-size="24" font-family="'JetBrains Mono',monospace" font-weight="800">฿235.00</text>
+
+      <!-- Cash Received (฿500 Entered) -->
+      <rect x="0" y="120" width="526" height="64" rx="14" fill="#EEF5F8" stroke="#8EC0E4" stroke-width="2"/>
+      <text x="20" y="146" font-size="12" font-weight="bold" fill="#2E6171">เงินสดที่รับมา (Cash Received)</text>
+      <text x="20" y="172" font-size="26" font-family="'JetBrains Mono',monospace" font-weight="900" fill="#2E6171">฿500.00</text>
+
+      <!-- Change Due Box -->
+      <rect x="0" y="196" width="526" height="54" rx="14" fill="#EAF4ED" stroke="#3B6E4C" stroke-width="2"/>
+      <text x="20" y="230" font-size="13" font-weight="bold" fill="#3B6E4C">เงินทอน (Change Due): ฿265.00</text>
+
+      <!-- Confirm Button -->
+      <rect x="0" y="510" width="526" height="54" rx="16" fill="#3B6E4C"/>
+      <text x="263" y="543" font-size="15" font-weight="800" fill="#FFFFFF" text-anchor="middle">✓ ยืนยันรับเงิน &amp; สั่งพิมพ์สลิป 80mm</text>
+    </g>
+
+    <!-- Right: 80mm Thermal Receipt Preview -->
+    <line x1="590" y1="0" x2="590" y2="640" stroke="#EAE3D8"/>
+    <g transform="translate(620, 32)">
+      <rect x="0" y="0" width="270" height="576" rx="8" fill="#FFFFFF" stroke="#EAE3D8" filter="url(#shadow)"/>
+      <text x="135" y="40" font-size="14" font-weight="bold" text-anchor="middle">JAMAL CAFÉ</text>
+      <text x="135" y="60" font-size="10" fill="#635C54" text-anchor="middle">ใบเสร็จรับเงิน (Tax Receipt)</text>
+      <line x1="16" y1="75" x2="254" y2="75" stroke="#EAE3D8"/>
+      
+      <text x="20" y="100" font-size="10" font-family="'JetBrains Mono',monospace">1x เอสเพรสโซ่เย็น  ฿65.00</text>
+      <text x="20" y="125" font-size="10" font-family="'JetBrains Mono',monospace">1x ครัวซองต์ AOP   ฿85.00</text>
+      <text x="20" y="150" font-size="10" font-family="'JetBrains Mono',monospace">1x มัทฉะลาเต้    ฿85.00</text>
+      
+      <line x1="16" y1="170" x2="254" y2="170" stroke="#EAE3D8"/>
+      <text x="20" y="195" font-size="12" font-weight="bold" font-family="'JetBrains Mono',monospace">ยอดรวมสุทธิ   ฿235.00</text>
+      <text x="20" y="218" font-size="10" font-family="'JetBrains Mono',monospace">รับเงินสด      ฿500.00</text>
+      <text x="20" y="238" font-size="11" font-weight="bold" font-family="'JetBrains Mono',monospace" fill="#3B6E4C">เงินทอน       ฿265.00</text>
+
+      <text x="135" y="540" font-size="10" fill="#968E85" text-anchor="middle">ขอบคุณที่ใช้บริการ (FR-06)</text>
+    </g>
+  </g>
+</svg>

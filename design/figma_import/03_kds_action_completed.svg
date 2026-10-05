@@ -1,0 +1,52 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 1194 834" width="1194" height="834" style="background:#FBF8F4; font-family:'Plus Jakarta Sans','Sarabun',sans-serif;">
+  <!-- TOP APP BAR -->
+  <rect x="0" y="0" width="1194" height="64" fill="#1A120B"/>
+  <rect x="20" y="16" width="32" height="32" rx="8" fill="#3B6E4C"/>
+  <text x="28" y="38" font-size="14" font-weight="bold" fill="#FFFFFF">☕</text>
+  <text x="64" y="38" font-size="16" font-weight="bold" fill="#FFFFFF">JAMAL KITCHEN &amp; BARISTA KDS</text>
+  <rect x="940" y="16" width="230" height="32" rx="8" fill="#3B6E4C"/>
+  <text x="1055" y="37" font-size="12" font-weight="bold" fill="#FFFFFF" text-anchor="middle">🔔 ขานเรียกคิว #A03 แล้ว</text>
+
+  <!-- Column 1: Pending -->
+  <g transform="translate(20, 80)">
+    <rect x="0" y="0" width="370" height="734" rx="16" fill="#FDFBF7" stroke="#EAE3D8"/>
+    <rect x="0" y="0" width="370" height="52" rx="16" fill="#FFF5E6"/>
+    <text x="38" y="30" font-size="14" font-weight="bold" fill="#7A4B13">รอดำเนินการ • 1</text>
+  </g>
+
+  <!-- Column 2: In Progress (Now 0) -->
+  <g transform="translate(412, 80)">
+    <rect x="0" y="0" width="370" height="734" rx="16" fill="#FDFBF7" stroke="#EAE3D8"/>
+    <rect x="0" y="0" width="370" height="52" rx="16" fill="#EEF5F8"/>
+    <text x="38" y="30" font-size="14" font-weight="bold" fill="#1C4450">กำลังชง/อบ • 0</text>
+    <text x="185" y="200" font-size="13" fill="#968E85" text-anchor="middle">ไม่มีเครื่องดื่มค้างชง</text>
+  </g>
+
+  <!-- Column 3: Ready (Now 2 Tickets: A03 and A02!) -->
+  <g transform="translate(804, 80)">
+    <rect x="0" y="0" width="370" height="734" rx="16" fill="#FDFBF7" stroke="#A8D5B5" stroke-width="2"/>
+    <rect x="0" y="0" width="370" height="52" rx="16" fill="#EAF4ED"/>
+    <circle cx="25" cy="26" r="5" fill="#3B6E4C"/>
+    <text x="38" y="30" font-size="14" font-weight="bold" fill="#254731">พร้อมรับที่เคาน์เตอร์ (Ready) • 2</text>
+
+    <!-- Ticket A03 (Newly Ready) -->
+    <g transform="translate(16, 68)">
+      <rect x="0" y="0" width="338" height="150" rx="12" fill="#FFFFFF" stroke="#A8D5B5" stroke-width="2"/>
+      <text x="16" y="28" font-size="18" font-family="'JetBrains Mono',monospace" font-weight="800" fill="#3B6E4C">#คิว A03</text>
+      <rect x="220" y="12" width="102" height="22" rx="6" fill="#EAF4ED"/>
+      <text x="230" y="27" font-size="10" font-weight="bold" fill="#3B6E4C">✨ พร้อมเสิร์ฟ</text>
+      <text x="16" y="64" font-size="13" font-weight="700">2x มัทฉะลาเต้อูจิ</text>
+      <rect x="16" y="96" width="306" height="38" rx="8" fill="#F5EFEB" stroke="#EAE3D8"/>
+      <text x="90" y="120" font-size="12" font-weight="bold" fill="#1E1B18">ลูกค้ารับแล้ว (ปิดออเดอร์)</text>
+    </g>
+
+    <!-- Ticket A02 -->
+    <g transform="translate(16, 232)">
+      <rect x="0" y="0" width="338" height="150" rx="12" fill="#FFFFFF" stroke="#EAE3D8"/>
+      <text x="16" y="28" font-size="18" font-family="'JetBrains Mono',monospace" font-weight="800">#คิว A02</text>
+      <text x="16" y="64" font-size="13" font-weight="700">1x ชาไทยการันต์เย็น</text>
+      <rect x="16" y="96" width="306" height="38" rx="8" fill="#F5EFEB" stroke="#EAE3D8"/>
+      <text x="90" y="120" font-size="12" font-weight="bold" fill="#1E1B18">ลูกค้ารับแล้ว (ปิดออเดอร์)</text>
+    </g>
+  </g>
+</svg>

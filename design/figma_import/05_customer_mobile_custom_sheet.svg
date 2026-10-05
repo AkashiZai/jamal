@@ -1,0 +1,57 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 393 852" width="393" height="852" style="background:#FBF8F4; font-family:'Plus Jakarta Sans','Sarabun',sans-serif;">
+  <defs>
+    <filter id="shadow" x="-5%" y="-5%" width="110%" height="110%">
+      <feDropShadow dx="0" dy="4" stdDeviation="12" flood-color="#231710" flood-opacity="0.08"/>
+    </filter>
+    <filter id="modalShadow" x="-10%" y="-10%" width="120%" height="120%">
+      <feDropShadow dx="0" dy="16" stdDeviation="24" flood-color="#1A120B" flood-opacity="0.3"/>
+    </filter>
+  </defs>
+  <!-- Dimmed Backdrop -->
+  <rect x="0" y="0" width="393" height="852" fill="#1A120B" fill-opacity="0.55"/>
+
+  <!-- Bottom Sheet Drawer (393 x 480) -->
+  <g transform="translate(0, 372)" filter="url(#modalShadow)">
+    <rect x="0" y="0" width="393" height="480" rx="32" fill="#FFFFFF"/>
+    <rect x="165" y="12" width="64" height="5" rx="3" fill="#D8CEC2"/>
+
+    <!-- Product Title -->
+    <text x="24" y="52" font-size="17" font-weight="800" fill="#1E1B18">ปรับแต่ง: เอสเพรสโซ่เย็น</text>
+    <text x="24" y="74" font-size="13" font-weight="bold" font-family="'JetBrains Mono',monospace" fill="#C85A32">ราคาเริ่มต้น ฿65.00</text>
+    <circle cx="355" cy="46" r="14" fill="#F5EFEB"/>
+    <text x="355" y="50" font-size="12" font-weight="bold" fill="#635C54" text-anchor="middle">✕</text>
+
+    <!-- Sweetness Level -->
+    <g transform="translate(24, 100)">
+      <text x="0" y="14" font-size="12" font-weight="700">ระดับความหวาน (Sweetness)</text>
+      <!-- Pills -->
+      <rect x="0" y="24" width="75" height="38" rx="10" fill="#F5EFEB"/>
+      <text x="37" y="48" font-size="12" font-weight="bold" text-anchor="middle">0%</text>
+
+      <rect x="85" y="24" width="75" height="38" rx="10" fill="#FDF2ED" stroke="#C85A32" stroke-width="2"/>
+      <text x="122" y="48" font-size="12" font-weight="bold" fill="#C85A32" text-anchor="middle">25%</text>
+
+      <rect x="170" y="24" width="75" height="38" rx="10" fill="#F5EFEB"/>
+      <text x="207" y="48" font-size="12" font-weight="bold" text-anchor="middle">50%</text>
+
+      <rect x="255" y="24" width="75" height="38" rx="10" fill="#F5EFEB"/>
+      <text x="292" y="48" font-size="12" font-weight="bold" text-anchor="middle">100%</text>
+    </g>
+
+    <!-- Milk Options -->
+    <g transform="translate(24, 196)">
+      <text x="0" y="14" font-size="12" font-weight="700">ชนิดนม (Milk Option)</text>
+      <rect x="0" y="24" width="110" height="38" rx="10" fill="#F5EFEB"/>
+      <text x="55" y="48" font-size="11" font-weight="bold" text-anchor="middle">นมสดปกติ</text>
+
+      <rect x="118" y="24" width="118" height="38" rx="10" fill="#FDF2ED" stroke="#C85A32" stroke-width="2"/>
+      <text x="177" y="48" font-size="11" font-weight="bold" fill="#C85A32" text-anchor="middle">นมโอ๊ต (+15฿)</text>
+    </g>
+
+    <!-- Add to Cart Button -->
+    <g transform="translate(24, 380)">
+      <rect x="0" y="0" width="345" height="52" rx="16" fill="#C85A32"/>
+      <text x="172" y="32" font-size="14" font-weight="800" fill="#FFFFFF" text-anchor="middle">เพิ่มลงในตะกร้า • ฿80.00 →</text>
+    </g>
+  </g>
+</svg>

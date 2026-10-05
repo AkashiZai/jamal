@@ -1,0 +1,100 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 393 852" width="393" height="852" style="background:#FBF8F4; font-family:'Plus Jakarta Sans','Sarabun',sans-serif;">
+  <!-- PHONE STATUS BAR -->
+  <rect x="0" y="0" width="393" height="44" fill="#1A120B"/>
+  <text x="32" y="28" font-size="14" font-weight="700" fill="#FFFFFF">9:41</text>
+  <rect x="140" y="8" width="113" height="28" rx="14" fill="#000000"/>
+  <circle cx="340" cy="24" r="3" fill="#FFFFFF"/>
+  <circle cx="350" cy="24" r="3" fill="#FFFFFF"/>
+  <rect x="360" y="18" width="16" height="10" rx="2" fill="#FFFFFF"/>
+
+  <!-- HEADER -->
+  <rect x="0" y="44" width="393" height="56" fill="#FFFFFF" stroke="#EAE3D8"/>
+  <text x="20" y="70" font-size="11" font-family="'JetBrains Mono',monospace" font-weight="bold" fill="#C85A32">โต๊ะ 04 • สั่งทานที่ร้าน</text>
+  <text x="20" y="88" font-size="15" font-weight="800" fill="#1E1B18">JAMAL CAFÉ</text>
+  <rect x="300" y="60" width="73" height="24" rx="12" fill="#EAF4ED"/>
+  <text x="312" y="76" font-size="11" font-weight="700" fill="#3B6E4C">เปิดบริการ</text>
+
+  <!-- LIVE QUEUE TRACKING BANNER -->
+  <g transform="translate(16, 112)">
+    <rect x="0" y="0" width="361" height="66" rx="14" fill="#1A120B"/>
+    <text x="16" y="28" font-size="14" font-family="'JetBrains Mono',monospace" font-weight="800" fill="#FFFFFF">คิวของคุณ: #A03</text>
+    <rect x="240" y="14" width="105" height="22" rx="6" fill="#2563EB"/>
+    <text x="250" y="29" font-size="10" font-weight="bold" fill="#FFFFFF">กำลังจัดเตรียม (3 น.)</text>
+    <text x="16" y="50" font-size="11" fill="#968E85">บาริสต้ากำลังชงเครื่องดื่มให้คุณอย่างพิถีพิถัน</text>
+  </g>
+
+  <!-- CATEGORY PILLS -->
+  <g transform="translate(16, 192)">
+    <rect x="0" y="0" width="80" height="32" rx="8" fill="#231710"/>
+    <text x="14" y="21" font-size="12" font-weight="bold" fill="#FFFFFF">เมนูยอดนิยม</text>
+
+    <rect x="88" y="0" width="70" height="32" rx="8" fill="#FFFFFF" stroke="#EAE3D8"/>
+    <text x="102" y="21" font-size="12" font-weight="500" fill="#635C54">กาแฟสด</text>
+
+    <rect x="166" y="0" width="90" height="32" rx="8" fill="#FFFFFF" stroke="#EAE3D8"/>
+    <text x="178" y="21" font-size="12" font-weight="500" fill="#635C54">ชา &amp; นมสด</text>
+
+    <rect x="264" y="0" width="75" height="32" rx="8" fill="#FFFFFF" stroke="#EAE3D8"/>
+    <text x="278" y="21" font-size="12" font-weight="500" fill="#635C54">เบเกอรี่</text>
+  </g>
+
+  <!-- PRODUCT LIST -->
+  <g transform="translate(16, 240)">
+    <!-- Item 1 -->
+    <g transform="translate(0, 0)">
+      <rect x="0" y="0" width="361" height="96" rx="14" fill="#FFFFFF" stroke="#EAE3D8"/>
+      <rect x="12" y="12" width="72" height="72" rx="10" fill="#EAE3D8"/>
+      <text x="36" y="55" font-size="28">☕</text>
+      <text x="96" y="32" font-size="14" font-weight="700" fill="#1E1B18">เอสเพรสโซ่เย็น</text>
+      <text x="96" y="50" font-size="11" fill="#635C54">Iced Espresso (คั่วกลาง)</text>
+      <text x="96" y="74" font-size="15" font-family="'JetBrains Mono',monospace" font-weight="800" fill="#C85A32">฿65.00</text>
+      <rect x="280" y="54" width="69" height="30" rx="8" fill="#1A120B"/>
+      <text x="294" y="73" font-size="11" font-weight="bold" fill="#FFFFFF">+ สั่ง</text>
+    </g>
+
+    <!-- Item 2 -->
+    <g transform="translate(0, 110)">
+      <rect x="0" y="0" width="361" height="96" rx="14" fill="#FFFFFF" stroke="#EAE3D8"/>
+      <rect x="12" y="12" width="72" height="72" rx="10" fill="#EAE3D8"/>
+      <text x="36" y="55" font-size="28">🥐</text>
+      <text x="96" y="32" font-size="14" font-weight="700" fill="#1E1B18">ครัวซองต์เนยสด AOP</text>
+      <text x="96" y="50" font-size="11" fill="#635C54">เนยแท้นำเข้า อบสดใหม่</text>
+      <text x="96" y="74" font-size="15" font-family="'JetBrains Mono',monospace" font-weight="800" fill="#C85A32">฿85.00</text>
+      <rect x="280" y="54" width="69" height="30" rx="8" fill="#1A120B"/>
+      <text x="294" y="73" font-size="11" font-weight="bold" fill="#FFFFFF">+ สั่ง</text>
+    </g>
+
+    <!-- Item 3 -->
+    <g transform="translate(0, 220)">
+      <rect x="0" y="0" width="361" height="96" rx="14" fill="#FFFFFF" stroke="#EAE3D8"/>
+      <rect x="12" y="12" width="72" height="72" rx="10" fill="#EAE3D8"/>
+      <text x="36" y="55" font-size="28">🍵</text>
+      <text x="96" y="32" font-size="14" font-weight="700" fill="#1E1B18">มัทฉะลาเต้อูจิ</text>
+      <text x="96" y="50" font-size="11" fill="#635C54">ผงมัทฉะแท้เกียวโต</text>
+      <text x="96" y="74" font-size="15" font-family="'JetBrains Mono',monospace" font-weight="800" fill="#C85A32">฿85.00</text>
+      <rect x="280" y="54" width="69" height="30" rx="8" fill="#1A120B"/>
+      <text x="294" y="73" font-size="11" font-weight="bold" fill="#FFFFFF">+ สั่ง</text>
+    </g>
+
+    <!-- Item 4 (Out of Stock) -->
+    <g transform="translate(0, 330)">
+      <rect x="0" y="0" width="361" height="96" rx="14" fill="#FFFFFF" stroke="#EAE3D8" opacity="0.6"/>
+      <rect x="12" y="12" width="72" height="72" rx="10" fill="#EAE3D8"/>
+      <text x="36" y="55" font-size="28">🍰</text>
+      <text x="96" y="32" font-size="14" font-weight="700" fill="#968E85">บาสก์ชีสเค้กหน้าไหม้</text>
+      <text x="96" y="50" font-size="11" fill="#968E85">ชีสเค้กสูตรสเปน</text>
+      <text x="96" y="74" font-size="15" font-family="'JetBrains Mono',monospace" font-weight="800" fill="#968E85">฿125.00</text>
+      <rect x="260" y="54" width="89" height="30" rx="8" fill="#BA3C34"/>
+      <text x="272" y="73" font-size="10" font-weight="bold" fill="#FFFFFF">สินค้าหมด</text>
+    </g>
+  </g>
+
+  <!-- STICKY BOTTOM CART (393px) -->
+  <g transform="translate(0, 770)">
+    <rect x="0" y="0" width="393" height="82" fill="#FFFFFF" stroke="#EAE3D8"/>
+    <text x="24" y="30" font-size="11" fill="#635C54">ยอดรวม 2 รายการในตะกร้า</text>
+    <text x="24" y="52" font-size="18" font-family="'JetBrains Mono',monospace" font-weight="800" fill="#1E1B18">฿165.00</text>
+    <rect x="230" y="16" width="140" height="48" rx="12" fill="#C85A32"/>
+    <text x="254" y="44" font-size="13" font-weight="bold" fill="#FFFFFF">ดูตะกร้า (2) →</text>
+  </g>
+</svg>

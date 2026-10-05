@@ -416,8 +416,7 @@ flowchart TD
 * **เส้นทางไฟล์**: [`frontend/src/pages/LoginPage.jsx`](./frontend/src/pages/LoginPage.jsx)
 * **คำอธิบาย**: หน้าต่างสำหรับเข้าสู่ระบบพร้อมตัวเลือกบทบาท (แคชเชียร์, บาริสต้า, ผู้ดูแลร้าน) และแป้นกรอกรหัส PIN 4 หลัก รองรับการตรวจสอบสิทธิ์และระบบความปลอดภัย Timeout 15 นาที (NFR-04)
 
-<!-- ใส่ภาพ Screenshot หน้าจอ Login ด้านล่างนี้ -->
-<img width="1200" alt="Screen_01_Login" src="https://github.com/user-attachments/assets/placeholder-login.png" />
+<img width="100%" alt="Screen_01_Login" src="./docs/screenshots/01_login.png" />
 
 ---
 
@@ -425,8 +424,7 @@ flowchart TD
 * **เส้นทางไฟล์**: [`frontend/src/pages/PosPage.jsx`](./frontend/src/pages/PosPage.jsx)
 * **คำอธิบาย**: หน้าจอขายหน้าร้านสำหรับ iPad 11" แสดงหมวดหมู่สินค้า การ์ดเมนูกาแฟ/เบเกอรี่ ช่องค้นหา ตะกร้าสินค้าด้านขวา และปุ่มพักบิล/คิดเงิน พร้อมป๊อปอัปปรับแต่งความหวานและชนิดนม (FR-04, NFR-01, NFR-02)
 
-<!-- ใส่ภาพ Screenshot หน้าจอ POS ด้านล่างนี้ -->
-<img width="1200" alt="Screen_02_POS" src="https://github.com/user-attachments/assets/placeholder-pos.png" />
+<img width="100%" alt="Screen_02_POS" src="./docs/screenshots/02_cashier_pos.png" />
 
 ---
 
@@ -434,8 +432,7 @@ flowchart TD
 * **เส้นทางไฟล์**: [`frontend/src/pages/PosPage.jsx`](./frontend/src/pages/PosPage.jsx)
 * **คำอธิบาย**: หน้าต่างคิดเงินสดพร้อมแป้น Numpad, ปุ่มลัดธนบัตร (฿100, ฿500, ฿1,000, พอดี), ระบบคำนวณเงินทอนอัตโนมัติ และพรีวิวใบเสร็จรับเงินขนาด 80mm พร้อมพิมพ์สลิป (FR-05, FR-06)
 
-<!-- ใส่ภาพ Screenshot หน้าจอ Payment & Slip ด้านล่างนี้ -->
-<img width="1200" alt="Screen_03_Payment_Slip" src="https://github.com/user-attachments/assets/placeholder-payment.png" />
+<img width="100%" alt="Screen_03_Payment_Slip" src="./docs/screenshots/03_payment_slip.png" />
 
 ---
 
@@ -443,8 +440,7 @@ flowchart TD
 * **เส้นทางไฟล์**: [`frontend/src/pages/KitchenKdsPage.jsx`](./frontend/src/pages/KitchenKdsPage.jsx)
 * **คำอธิบาย**: กระดานคิวออเดอร์แบบ 3 คอลัมน์ (รอดำเนินการ ➔ กำลังชง/อบ ➔ พร้อมเสิร์ฟ) มีเสียงเตือนออเดอร์ใหม่ และปุ่มกดเปลี่ยนสถานะงานแบบ Real-time (TOR Operator 1-5)
 
-<!-- ใส่ภาพ Screenshot หน้าจอ KDS ด้านล่างนี้ -->
-<img width="1200" alt="Screen_04_Kitchen_KDS" src="https://github.com/user-attachments/assets/placeholder-kds.png" />
+<img width="100%" alt="Screen_04_Kitchen_KDS" src="./docs/screenshots/04_kitchen_kds.png" />
 
 ---
 
@@ -452,8 +448,7 @@ flowchart TD
 * **เส้นทางไฟล์**: [`frontend/src/pages/AdminDashboardPage.jsx`](./frontend/src/pages/AdminDashboardPage.jsx)
 * **คำอธิบาย**: แดชบอร์ดสรุปยอดขายรวมประจำวัน สัดส่วนเงินสด/โอนเงิน สินค้าขายดี Top 5, ตารางควบคุมสต็อกเบเกอรี่, ป๊อปอัปเพิ่มเมนูใหม่/แก้ไขราคา (FR-02), ป๊อปอัปเพิ่มบัญชีพนักงาน และระบบขออนุมัติ Void บิล (FR-07, FR-08)
 
-<!-- ใส่ภาพ Screenshot หน้าจอ Admin Dashboard ด้านล่างนี้ -->
-<img width="1200" alt="Screen_05_Admin_Dashboard" src="https://github.com/user-attachments/assets/placeholder-admin.png" />
+<img width="100%" alt="Screen_05_Admin_Dashboard" src="./docs/screenshots/05_admin_dashboard.png" />
 
 ---
 
@@ -461,8 +456,8 @@ flowchart TD
 * **เส้นทางไฟล์**: [`frontend/src/pages/CustomerMobilePage.jsx`](./frontend/src/pages/CustomerMobilePage.jsx)
 * **คำอธิบาย**: หน้าจอมือถือ (Viewport 393×852) สำหรับลูกค้าสแกนดูเมนู ปรับแต่งความหวาน สั่งสินค้า และติดตามสถานะคิวคำสั่งซื้อ (#A03) แบบ Real-time (TOR User 1-5)
 
-<!-- ใส่ภาพ Screenshot หน้าจอ Mobile ด้านล่างนี้ -->
-<img width="1200" alt="Screen_06_Customer_Mobile" src="https://github.com/user-attachments/assets/placeholder-mobile.png" />
+<!-- ตัวอย่างหน้าจอ Mobile สำหรับลูกค้า -->
+<p align="center"><em>(แสดงผลในรูปแบบ Responsive Mobile Web ผ่าน Viewport 393×852)</em></p>
 
 ---
 

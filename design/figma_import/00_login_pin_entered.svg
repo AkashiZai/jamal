@@ -1,0 +1,68 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 1194 834" width="1194" height="834" style="background:#EDE7DF; font-family:'Plus Jakarta Sans','Sarabun',sans-serif;">
+  <defs>
+    <filter id="shadow" x="-5%" y="-5%" width="110%" height="110%">
+      <feDropShadow dx="0" dy="8" stdDeviation="16" flood-color="#231710" flood-opacity="0.12"/>
+    </filter>
+  </defs>
+
+  <!-- Centered Login Card -->
+  <g transform="translate(377, 100)" filter="url(#shadow)">
+    <rect x="0" y="0" width="440" height="634" rx="24" fill="#FFFFFF" stroke="#EAE3D8" stroke-width="1"/>
+
+    <!-- Brand Logo JM -->
+    <rect x="188" y="40" width="64" height="64" rx="16" fill="#1A120B"/>
+    <text x="204" y="80" font-size="22" font-weight="900" fill="#FFFFFF" letter-spacing="1">JM</text>
+
+    <!-- Header Titles -->
+    <text x="220" y="138" font-size="20" font-weight="800" fill="#1E1B18" text-anchor="middle">เข้าสู่ระบบ JAMAL POS</text>
+    <text x="220" y="160" font-size="12" font-weight="500" fill="#635C54" text-anchor="middle">Café &amp; Bakery Management System</text>
+
+    <!-- Role Selector Tabs -->
+    <g transform="translate(32, 185)">
+      <rect x="0" y="0" width="376" height="42" rx="12" fill="#F5EFEB"/>
+      <rect x="4" y="4" width="120" height="34" rx="8" fill="#C85A32"/>
+      <text x="64" y="26" font-size="12" font-weight="700" fill="#FFFFFF" text-anchor="middle">แคชเชียร์</text>
+      <text x="188" y="26" font-size="12" font-weight="600" fill="#635C54" text-anchor="middle">บาริสต้า/ครัว</text>
+      <text x="312" y="26" font-size="12" font-weight="600" fill="#635C54" text-anchor="middle">เจ้าของร้าน</text>
+    </g>
+
+    <!-- Staff ID Field -->
+    <g transform="translate(32, 250)">
+      <text x="0" y="14" font-size="12" font-weight="700" fill="#1E1B18">รหัสพนักงาน หรือชื่อผู้ใช้</text>
+      <rect x="0" y="22" width="376" height="44" rx="12" fill="#FDFBF7" stroke="#EAE3D8" stroke-width="1"/>
+      <text x="16" y="49" font-size="13" font-weight="600" fill="#1E1B18">cashier_zai</text>
+    </g>
+
+    <!-- PIN 4 Digit Field (ENTERED STATE: 4 DOTS) -->
+    <g transform="translate(32, 335)">
+      <text x="0" y="14" font-size="12" font-weight="700" fill="#1E1B18">รหัสผ่าน หรือ PIN 4 หลัก</text>
+      <text x="376" y="14" font-size="11" font-weight="600" fill="#C85A32" text-anchor="end">ลืมรหัสผ่าน?</text>
+      <rect x="0" y="22" width="376" height="44" rx="12" fill="#FDF2ED" stroke="#C85A32" stroke-width="2"/>
+      <!-- PIN Bullets -->
+      <g transform="translate(18, 44)">
+        <circle cx="10" cy="0" r="5" fill="#C85A32"/>
+        <circle cx="30" cy="0" r="5" fill="#C85A32"/>
+        <circle cx="50" cy="0" r="5" fill="#C85A32"/>
+        <circle cx="70" cy="0" r="5" fill="#C85A32"/>
+      </g>
+    </g>
+
+    <!-- Sign In Button (ACTIVE STATE) -->
+    <g transform="translate(32, 430)">
+      <rect x="0" y="0" width="376" height="52" rx="16" fill="#C85A32"/>
+      <text x="188" y="32" font-size="14" font-weight="700" fill="#FFFFFF" text-anchor="middle">เข้าสู่ระบบ (Sign In) →</text>
+    </g>
+
+    <!-- Security Policy Footnote -->
+    <g transform="translate(220, 520)">
+      <text x="0" y="0" font-size="10" fill="#968E85" text-anchor="middle">🔒 ระบบความปลอดภัย: Timeout Logout อัตโนมัติ</text>
+      <text x="0" y="16" font-size="10" fill="#968E85" text-anchor="middle">เมื่อไม่ใช้งานเกิน 15 นาที (NFR-04)</text>
+    </g>
+
+    <!-- Demo Hint -->
+    <rect x="32" y="565" width="376" height="38" rx="10" fill="#F5EFEB" stroke="#EAE3D8"/>
+    <text x="220" y="589" font-size="11" font-weight="600" fill="#635C54" text-anchor="middle">
+      กด <tspan font-weight="bold" fill="#C85A32">Sign In</tspan> เพื่อเข้าสู่หน้าจอขาย POS
+    </text>
+  </g>
+</svg>

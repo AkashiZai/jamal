@@ -1,0 +1,89 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 1194 834" width="1194" height="834" style="background:#FBF8F4; font-family:'Plus Jakarta Sans','Sarabun',sans-serif;">
+  <!-- TOP APP BAR -->
+  <rect x="0" y="0" width="1194" height="64" fill="#1A120B"/>
+  <rect x="20" y="16" width="32" height="32" rx="8" fill="#3B6E4C"/>
+  <text x="28" y="38" font-size="14" font-weight="bold" fill="#FFFFFF">☕</text>
+  <text x="64" y="38" font-size="16" font-weight="bold" fill="#FFFFFF">JAMAL KITCHEN &amp; BARISTA KDS</text>
+  <text x="1060" y="38" font-size="12" fill="#968E85">3 คิวกำลังดำเนินการ</text>
+
+  <!-- KANBAN 3 COLUMNS -->
+  <!-- Column 1: Pending (รอดำเนินการ) -->
+  <g transform="translate(20, 80)">
+    <rect x="0" y="0" width="370" height="734" rx="16" fill="#FDFBF7" stroke="#EAE3D8"/>
+    <!-- Col Header -->
+    <rect x="0" y="0" width="370" height="52" rx="16" fill="#FFF5E6"/>
+    <circle cx="25" cy="26" r="5" fill="#C97D28"/>
+    <text x="38" y="30" font-size="14" font-weight="bold" fill="#7A4B13">รอดำเนินการ (Pending) • 1</text>
+
+    <!-- Ticket 1 -->
+    <g transform="translate(16, 68)">
+      <rect x="0" y="0" width="338" height="190" rx="12" fill="#FFFFFF" stroke="#EAE3D8"/>
+      <text x="16" y="28" font-size="18" font-family="'JetBrains Mono',monospace" font-weight="800" fill="#1E1B18">#คิว A04</text>
+      <text x="230" y="26" font-size="11" font-family="'JetBrains Mono',monospace" fill="#968E85">14:40 (1 นาที)</text>
+      
+      <line x1="16" y1="40" x2="322" y2="40" stroke="#F5EFEB"/>
+
+      <text x="16" y="64" font-size="13" font-weight="700" fill="#1E1B18">1x เอสเพรสโซ่เย็น</text>
+      <text x="24" y="80" font-size="11" font-weight="600" fill="#C85A32">↳ หวาน 25% • นมโอ๊ต</text>
+
+      <text x="16" y="106" font-size="13" font-weight="700" fill="#1E1B18">1x ครัวซองต์เนยสด AOP</text>
+      <text x="24" y="122" font-size="11" fill="#635C54">↳ อบอุ่นร้อน</text>
+
+      <!-- Action Button -->
+      <rect x="16" y="140" width="306" height="38" rx="8" fill="#1A120B"/>
+      <text x="105" y="164" font-size="12" font-weight="bold" fill="#FFFFFF">รับทำออเดอร์นี้ →</text>
+    </g>
+  </g>
+
+  <!-- Column 2: Brewing / Cooking (กำลังทำ) -->
+  <g transform="translate(412, 80)">
+    <rect x="0" y="0" width="370" height="734" rx="16" fill="#FDFBF7" stroke="#EAE3D8"/>
+    <!-- Col Header -->
+    <rect x="0" y="0" width="370" height="52" rx="16" fill="#EEF5F8"/>
+    <circle cx="25" cy="26" r="5" fill="#2E6171"/>
+    <text x="38" y="30" font-size="14" font-weight="bold" fill="#1C4450">กำลังชง/อบ (In Progress) • 1</text>
+
+    <!-- Ticket 2 -->
+    <g transform="translate(16, 68)">
+      <rect x="0" y="0" width="338" height="170" rx="12" fill="#FFFFFF" stroke="#8EC0E4" stroke-width="2"/>
+      <text x="16" y="28" font-size="18" font-family="'JetBrains Mono',monospace" font-weight="800" fill="#1E1B18">#คิว A03</text>
+      <rect x="210" y="12" width="112" height="22" rx="6" fill="#EEF5F8"/>
+      <text x="218" y="27" font-size="10" font-family="'JetBrains Mono',monospace" font-weight="bold" fill="#2E6171">กำลังทำ (3 นาที)</text>
+      
+      <line x1="16" y1="40" x2="322" y2="40" stroke="#F5EFEB"/>
+
+      <text x="16" y="64" font-size="13" font-weight="700" fill="#1E1B18">2x มัทฉะลาเต้อูจิ</text>
+      <text x="24" y="80" font-size="11" font-weight="600" fill="#3B6E4C">↳ หวาน 50% • นมสดปกติ</text>
+
+      <!-- Action Button -->
+      <rect x="16" y="116" width="306" height="38" rx="8" fill="#3B6E4C"/>
+      <text x="95" y="140" font-size="12" font-weight="bold" fill="#FFFFFF">✓ ทำเสร็จแล้ว (พร้อมเสิร์ฟ)</text>
+    </g>
+  </g>
+
+  <!-- Column 3: Ready / Completed (พร้อมเสิร์ฟ) -->
+  <g transform="translate(804, 80)">
+    <rect x="0" y="0" width="370" height="734" rx="16" fill="#FDFBF7" stroke="#EAE3D8"/>
+    <!-- Col Header -->
+    <rect x="0" y="0" width="370" height="52" rx="16" fill="#EAF4ED"/>
+    <circle cx="25" cy="26" r="5" fill="#3B6E4C"/>
+    <text x="38" y="30" font-size="14" font-weight="bold" fill="#254731">พร้อมรับที่เคาน์เตอร์ (Ready) • 1</text>
+
+    <!-- Ticket 3 -->
+    <g transform="translate(16, 68)">
+      <rect x="0" y="0" width="338" height="160" rx="12" fill="#FFFFFF" stroke="#A8D5B5"/>
+      <text x="16" y="28" font-size="18" font-family="'JetBrains Mono',monospace" font-weight="800" fill="#3B6E4C">#คิว A02</text>
+      <rect x="230" y="12" width="92" height="22" rx="6" fill="#EAF4ED"/>
+      <text x="240" y="27" font-size="10" font-weight="bold" fill="#3B6E4C">ขานเรียกแล้ว</text>
+      
+      <line x1="16" y1="40" x2="322" y2="40" stroke="#F5EFEB"/>
+
+      <text x="16" y="64" font-size="13" font-weight="700" fill="#1E1B18">1x ชาไทยการันต์เย็น</text>
+      <text x="24" y="80" font-size="11" fill="#635C54">↳ หวานปกติ 100%</text>
+
+      <!-- Action Button -->
+      <rect x="16" y="108" width="306" height="38" rx="8" fill="#F5EFEB" stroke="#EAE3D8"/>
+      <text x="90" y="132" font-size="12" font-weight="bold" fill="#1E1B18">ลูกค้ารับแล้ว (ปิดออเดอร์)</text>
+    </g>
+  </g>
+</svg>

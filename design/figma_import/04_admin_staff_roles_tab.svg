@@ -1,0 +1,258 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 1440 900" width="1440" height="900" style="background:#FBF8F4; font-family:'Plus Jakarta Sans','Sarabun',sans-serif;">
+  <!-- TOP ADMIN BAR -->
+  <rect x="0" y="0" width="1440" height="64" fill="#1A120B"/>
+  <rect x="24" y="16" width="32" height="32" rx="8" fill="#C85A32"/>
+  <text x="31" y="38" font-size="14" font-weight="bold" fill="#FFFFFF">JM</text>
+  <text x="68" y="38" font-size="16" font-weight="bold" fill="#FFFFFF">JAMAL CAFÉ — ADMIN PORTAL</text>
+  <text x="1260" y="38" font-size="13" fill="#968E85">ผู้ดูแลระบบ (Admin Zai)</text>
+
+  <!-- SIDEBAR NAVIGATION (240px) -->
+  <g transform="translate(0, 64)">
+    <rect x="0" y="0" width="240" height="836" fill="#F5EFEB" stroke="#EAE3D8"/>
+    <text x="48" y="50" font-size="13" font-weight="500" fill="#635C54">📊 แดชบอร์ดภาพรวม</text>
+    <text x="48" y="98" font-size="13" font-weight="500" fill="#635C54">🥐 สต็อกเบเกอรี่</text>
+    <text x="48" y="146" font-size="13" font-weight="500" fill="#635C54">☕ จัดการเมนู &amp; ราคา</text>
+    <text x="48" y="192" font-size="13" font-weight="500" fill="#635C54">🧾 ประวัติการขาย &amp; Void</text>
+
+    <!-- ACTIVE TAB: Staff & Permissions (FR-01) -->
+    <rect x="16" y="212" width="208" height="42" rx="10" fill="#231710"/>
+    <text x="48" y="238" font-size="13" font-weight="700" fill="#FFFFFF">👥 จัดการสิทธิ์พนักงาน</text>
+  </g>
+
+  <!-- MAIN STAFF VIEW (1152px) -->
+  <g transform="translate(264, 88)">
+    <text x="0" y="20" font-size="20" font-weight="800" fill="#1E1B18">จัดการบัญชีพนักงาน &amp; กำหนดสิทธิ์การใช้งาน (FR-01)</text>
+    <text x="0" y="40" font-size="12" fill="#635C54">กำหนดบทบาท (Roles) รหัส PIN และสิทธิ์การเข้าถึงฟังก์ชันสำคัญในร้านสำหรับ Admin, Cashier, และ Barista</text>
+
+    <!-- Top Action Button -->
+    <g transform="translate(934, 4)">
+      <rect x="0" y="0" width="210" height="38" rx="10" fill="#C85A32"/>
+      <text x="105" y="24" font-size="12" font-weight="700" fill="#FFFFFF" text-anchor="middle">+ เพิ่มบัญชีพนักงานใหม่</text>
+    </g>
+
+    <!-- TOP SECTION: 3 STAFF ROLE CARDS -->
+    <g transform="translate(0, 60)">
+      <!-- Card 1: Admin Zai -->
+      <g transform="translate(0, 0)">
+        <rect x="0" y="0" width="365" height="195" rx="16" fill="#FFFFFF" stroke="#EAE3D8"/>
+        <circle cx="48" cy="48" r="24" fill="#231710"/>
+        <text x="48" y="55" font-size="18" text-anchor="middle">👑</text>
+        
+        <text x="86" y="42" font-size="15" font-weight="800" fill="#1E1B18">Zai (คุณทราย)</text>
+        <rect x="86" y="50" width="130" height="20" rx="6" fill="#EAF4ED"/>
+        <text x="151" y="64" font-size="10" font-weight="700" fill="#3B6E4C" text-anchor="middle">เจ้าของร้าน (Admin)</text>
+
+        <!-- Status -->
+        <circle cx="330" cy="36" r="4" fill="#22C55E"/>
+        <text x="320" y="40" font-size="10" font-weight="600" fill="#3B6E4C" text-anchor="end">Online</text>
+
+        <!-- Details -->
+        <rect x="20" y="86" width="325" height="54" rx="8" fill="#FDFBF7" stroke="#EAE3D8"/>
+        <text x="32" y="106" font-size="11" fill="#635C54">Username: <tspan font-family="'JetBrains Mono',monospace" font-weight="700" fill="#1E1B18">admin</tspan></text>
+        <text x="180" y="106" font-size="11" fill="#635C54">PIN: <tspan font-family="'JetBrains Mono',monospace" font-weight="700" fill="#C85A32">•••• 1234</tspan></text>
+        <text x="32" y="126" font-size="10" fill="#635C54">สิทธิ์: จัดการราคา (FR-02), อนุมัติ Void (FR-07), เติมสต็อก</text>
+
+        <!-- Card Footer -->
+        <line x1="20" y1="152" x2="345" y2="152" stroke="#F5EFEB"/>
+        <text x="24" y="174" font-size="11" fill="#968E85">เข้ากะ: กะเช้า (07:45 - 16:00)</text>
+        <text x="340" y="174" font-size="11" font-weight="700" fill="#C85A32" text-anchor="end">⚙️ ตั้งค่าสิทธิ์</text>
+      </g>
+
+      <!-- Card 2: Cashier Nook -->
+      <g transform="translate(389, 0)">
+        <rect x="0" y="0" width="365" height="195" rx="16" fill="#FFFFFF" stroke="#EAE3D8"/>
+        <circle cx="48" cy="48" r="24" fill="#C85A32"/>
+        <text x="48" y="55" font-size="18" text-anchor="middle">🛍️</text>
+        
+        <text x="86" y="42" font-size="15" font-weight="800" fill="#1E1B18">Nook (คุณนุ๊ก)</text>
+        <rect x="86" y="50" width="130" height="20" rx="6" fill="#FFF5E6"/>
+        <text x="151" y="64" font-size="10" font-weight="700" fill="#C97D28" text-anchor="middle">แคชเชียร์ (Cashier)</text>
+
+        <!-- Status -->
+        <circle cx="330" cy="36" r="4" fill="#22C55E"/>
+        <text x="320" y="40" font-size="10" font-weight="600" fill="#3B6E4C" text-anchor="end">Online</text>
+
+        <!-- Details -->
+        <rect x="20" y="86" width="325" height="54" rx="8" fill="#FDFBF7" stroke="#EAE3D8"/>
+        <text x="32" y="106" font-size="11" fill="#635C54">Username: <tspan font-family="'JetBrains Mono',monospace" font-weight="700" fill="#1E1B18">cashier1</tspan></text>
+        <text x="180" y="106" font-size="11" fill="#635C54">PIN: <tspan font-family="'JetBrains Mono',monospace" font-weight="700" fill="#C85A32">•••• 0000</tspan></text>
+        <text x="32" y="126" font-size="10" fill="#635C54">สิทธิ์: รับออเดอร์, คิดเงิน, พักบิล (ไม่อนุญาต Void บิลเอง)</text>
+
+        <!-- Card Footer -->
+        <line x1="20" y1="152" x2="345" y2="152" stroke="#F5EFEB"/>
+        <text x="24" y="174" font-size="11" fill="#968E85">ประจำจุด: POS หน้าร้าน (เครื่อง 1)</text>
+        <text x="340" y="174" font-size="11" font-weight="700" fill="#C85A32" text-anchor="end">⚙️ ตั้งค่าสิทธิ์</text>
+      </g>
+
+      <!-- Card 3: Barista View -->
+      <g transform="translate(778, 0)">
+        <rect x="0" y="0" width="365" height="195" rx="16" fill="#FFFFFF" stroke="#EAE3D8"/>
+        <circle cx="48" cy="48" r="24" fill="#2E6171"/>
+        <text x="48" y="55" font-size="18" text-anchor="middle">☕</text>
+        
+        <text x="86" y="42" font-size="15" font-weight="800" fill="#1E1B18">View (คุณวิว)</text>
+        <rect x="86" y="50" width="130" height="20" rx="6" fill="#EEF5F8"/>
+        <text x="151" y="64" font-size="10" font-weight="700" fill="#2E6171" text-anchor="middle">บาริสต้า (Kitchen)</text>
+
+        <!-- Status -->
+        <circle cx="330" cy="36" r="4" fill="#22C55E"/>
+        <text x="320" y="40" font-size="10" font-weight="600" fill="#3B6E4C" text-anchor="end">Online</text>
+
+        <!-- Details -->
+        <rect x="20" y="86" width="325" height="54" rx="8" fill="#FDFBF7" stroke="#EAE3D8"/>
+        <text x="32" y="106" font-size="11" fill="#635C54">Username: <tspan font-family="'JetBrains Mono',monospace" font-weight="700" fill="#1E1B18">barista1</tspan></text>
+        <text x="180" y="106" font-size="11" fill="#635C54">PIN: <tspan font-family="'JetBrains Mono',monospace" font-weight="700" fill="#C85A32">•••• 8888</tspan></text>
+        <text x="32" y="126" font-size="10" fill="#635C54">สิทธิ์: ดูจอ KDS ครัว, กดรับชง, กดเสร็จพร้อมเสิร์ฟ</text>
+
+        <!-- Card Footer -->
+        <line x1="20" y1="152" x2="345" y2="152" stroke="#F5EFEB"/>
+        <text x="24" y="174" font-size="11" fill="#968E85">ประจำจุด: บาร์กาแฟ &amp; จอ KDS</text>
+        <text x="340" y="174" font-size="11" font-weight="700" fill="#C85A32" text-anchor="end">⚙️ ตั้งค่าสิทธิ์</text>
+      </g>
+    </g>
+
+    <!-- BOTTOM SECTION: ROLE PERMISSION MATRIX & AUDIT LOG -->
+    <g transform="translate(0, 275)">
+      <!-- Left: Permission Matrix (680px) -->
+      <g transform="translate(0, 0)">
+        <rect x="0" y="0" width="680" height="485" rx="16" fill="#FFFFFF" stroke="#EAE3D8"/>
+        <text x="24" y="32" font-size="15" font-weight="800" fill="#1E1B18">ตารางเมทริกซ์กำหนดสิทธิ์ตามบทบาท (Role Permission Matrix)</text>
+        <text x="24" y="48" font-size="11" fill="#635C54">ระบบควบคุมสิทธิ์ระดับฟังก์ชัน (RBAC) ป้องกันการเข้าถึงโดยไม่ได้รับอนุญาต</text>
+
+        <!-- Matrix Header -->
+        <rect x="20" y="64" width="640" height="34" rx="8" fill="#F5EFEB"/>
+        <text x="32" y="86" font-size="11" font-weight="700" fill="#635C54">ฟังก์ชัน / สิทธิ์การใช้งานในระบบ</text>
+        <text x="380" y="86" font-size="11" font-weight="700" fill="#C85A32" text-anchor="middle">Cashier</text>
+        <text x="490" y="86" font-size="11" font-weight="700" fill="#2E6171" text-anchor="middle">Barista (KDS)</text>
+        <text x="600" y="86" font-size="11" font-weight="700" fill="#3B6E4C" text-anchor="middle">Admin</text>
+
+        <!-- Row 1: POS Checkout -->
+        <g transform="translate(20, 108)">
+          <text x="12" y="18" font-size="12" font-weight="600" fill="#1E1B18">1. ขายหน้าร้าน &amp; รับชำระเงิน (Cash/QR)</text>
+          <text x="360" y="18" font-size="14" font-weight="bold" fill="#3B6E4C" text-anchor="middle">✓</text>
+          <text x="470" y="18" font-size="14" font-weight="bold" fill="#BA3C34" text-anchor="middle">✕</text>
+          <text x="580" y="18" font-size="14" font-weight="bold" fill="#3B6E4C" text-anchor="middle">✓</text>
+          <line x1="0" y1="32" x2="640" y2="32" stroke="#F5EFEB"/>
+        </g>
+
+        <!-- Row 2: KDS Screen -->
+        <g transform="translate(20, 150)">
+          <text x="12" y="18" font-size="12" font-weight="600" fill="#1E1B18">2. รับงานชง &amp; อัปเดตสถานะคิวครัว (KDS)</text>
+          <text x="360" y="18" font-size="14" font-weight="bold" fill="#BA3C34" text-anchor="middle">✕</text>
+          <text x="470" y="18" font-size="14" font-weight="bold" fill="#3B6E4C" text-anchor="middle">✓</text>
+          <text x="580" y="18" font-size="14" font-weight="bold" fill="#3B6E4C" text-anchor="middle">✓</text>
+          <line x1="0" y1="32" x2="640" y2="32" stroke="#F5EFEB"/>
+        </g>
+
+        <!-- Row 3: Sales Report -->
+        <g transform="translate(20, 192)">
+          <text x="12" y="18" font-size="12" font-weight="600" fill="#1E1B18">3. ดูรายงานยอดขาย &amp; แดชบอร์ดรายได้ (FR-08)</text>
+          <text x="360" y="18" font-size="14" font-weight="bold" fill="#BA3C34" text-anchor="middle">✕</text>
+          <text x="470" y="18" font-size="14" font-weight="bold" fill="#BA3C34" text-anchor="middle">✕</text>
+          <text x="580" y="18" font-size="14" font-weight="bold" fill="#3B6E4C" text-anchor="middle">✓</text>
+          <line x1="0" y1="32" x2="640" y2="32" stroke="#F5EFEB"/>
+        </g>
+
+        <!-- Row 4: Menu Pricing -->
+        <g transform="translate(20, 234)">
+          <text x="12" y="18" font-size="12" font-weight="600" fill="#1E1B18">4. จัดการเมนู &amp; กำหนดราคาขาย (FR-02)</text>
+          <text x="360" y="18" font-size="14" font-weight="bold" fill="#BA3C34" text-anchor="middle">✕</text>
+          <text x="470" y="18" font-size="14" font-weight="bold" fill="#BA3C34" text-anchor="middle">✕</text>
+          <text x="580" y="18" font-size="14" font-weight="bold" fill="#3B6E4C" text-anchor="middle">✓</text>
+          <line x1="0" y1="32" x2="640" y2="32" stroke="#F5EFEB"/>
+        </g>
+
+        <!-- Row 5: Void Authorization -->
+        <g transform="translate(20, 276)">
+          <text x="12" y="18" font-size="12" font-weight="600" fill="#1E1B18">5. อนุมัติการ Void / ยกเลิกบิลขาย (FR-07)</text>
+          <text x="360" y="18" font-size="11" font-weight="bold" fill="#C97D28" text-anchor="middle">ร้องขอได้</text>
+          <text x="470" y="18" font-size="14" font-weight="bold" fill="#BA3C34" text-anchor="middle">✕</text>
+          <text x="580" y="18" font-size="11" font-weight="bold" fill="#3B6E4C" text-anchor="middle">✓ (PIN ผู้จัดการ)</text>
+          <line x1="0" y1="32" x2="640" y2="32" stroke="#F5EFEB"/>
+        </g>
+
+        <!-- Row 6: Restock Bakery -->
+        <g transform="translate(20, 318)">
+          <text x="12" y="18" font-size="12" font-weight="600" fill="#1E1B18">6. ตัดสต็อก &amp; เติมสต็อกเบเกอรี่ (FR-03)</text>
+          <text x="360" y="18" font-size="14" font-weight="bold" fill="#BA3C34" text-anchor="middle">✕</text>
+          <text x="470" y="18" font-size="14" font-weight="bold" fill="#BA3C34" text-anchor="middle">✕</text>
+          <text x="580" y="18" font-size="14" font-weight="bold" fill="#3B6E4C" text-anchor="middle">✓</text>
+          <line x1="0" y1="32" x2="640" y2="32" stroke="#F5EFEB"/>
+        </g>
+
+        <!-- Row 7: Manage Staff -->
+        <g transform="translate(20, 360)">
+          <text x="12" y="18" font-size="12" font-weight="600" fill="#1E1B18">7. จัดการบัญชีพนักงาน &amp; เปลี่ยน PIN (FR-01)</text>
+          <text x="360" y="18" font-size="14" font-weight="bold" fill="#BA3C34" text-anchor="middle">✕</text>
+          <text x="470" y="18" font-size="14" font-weight="bold" fill="#BA3C34" text-anchor="middle">✕</text>
+          <text x="580" y="18" font-size="14" font-weight="bold" fill="#3B6E4C" text-anchor="middle">✓ (Super Admin)</text>
+          <line x1="0" y1="32" x2="640" y2="32" stroke="#F5EFEB"/>
+        </g>
+
+        <!-- Note -->
+        <rect x="20" y="415" width="640" height="50" rx="10" fill="#FDFBF7" stroke="#EAE3D8"/>
+        <text x="32" y="435" font-size="11" font-weight="bold" fill="#1E1B18">🔒 ระบบความปลอดภัย:</text>
+        <text x="32" y="452" font-size="11" fill="#635C54">การกระทำที่สำคัญ (Void บิล, แก้ไขราคา, เติมสต็อก) มีระบบบันทึก Audit Log ระบุชื่อพนักงานและเวลาอย่างเคร่งครัด</text>
+      </g>
+
+      <!-- Right: Shift & Login Audit Log (444px) -->
+      <g transform="translate(700, 0)">
+        <rect x="0" y="0" width="444" height="485" rx="16" fill="#FFFFFF" stroke="#EAE3D8"/>
+        <text x="24" y="32" font-size="15" font-weight="800" fill="#1E1B18">บันทึกการเข้ากะ &amp; Login ล่าสุด</text>
+        <text x="24" y="48" font-size="11" fill="#635C54">ตรวจสอบการทำงานของพนักงานรายบุคคล</text>
+
+        <!-- Log Item 1 -->
+        <g transform="translate(20, 72)">
+          <rect x="0" y="0" width="404" height="66" rx="10" fill="#FDFBF7" stroke="#EAE3D8"/>
+          <circle cx="24" cy="24" r="14" fill="#EAF4ED"/>
+          <text x="24" y="28" font-size="12" text-anchor="middle">👑</text>
+          <text x="48" y="22" font-size="12" font-weight="700" fill="#1E1B18">Zai (Admin)</text>
+          <text x="48" y="38" font-size="11" fill="#635C54">เข้าสู่ระบบผ่าน iPad 11" (แคชเชียร์หลัก)</text>
+          <text x="388" y="22" font-size="11" font-family="'JetBrains Mono',monospace" fill="#968E85" text-anchor="end">07:45</text>
+          <rect x="330" y="34" width="58" height="18" rx="4" fill="#EAF4ED"/>
+          <text x="359" y="47" font-size="9" font-weight="700" fill="#3B6E4C" text-anchor="middle">สำเร็จ</text>
+        </g>
+
+        <!-- Log Item 2 -->
+        <g transform="translate(20, 146)">
+          <rect x="0" y="0" width="404" height="66" rx="10" fill="#FDFBF7" stroke="#EAE3D8"/>
+          <circle cx="24" cy="24" r="14" fill="#FFF5E6"/>
+          <text x="24" y="28" font-size="12" text-anchor="middle">🛍️</text>
+          <text x="48" y="22" font-size="12" font-weight="700" fill="#1E1B18">Nook (Cashier)</text>
+          <text x="48" y="38" font-size="11" fill="#635C54">เริ่มกะขายหน้าร้าน (เปิดลิ้นชักเงินสด)</text>
+          <text x="388" y="22" font-size="11" font-family="'JetBrains Mono',monospace" fill="#968E85" text-anchor="end">08:00</text>
+          <rect x="330" y="34" width="58" height="18" rx="4" fill="#EAF4ED"/>
+          <text x="359" y="47" font-size="9" font-weight="700" fill="#3B6E4C" text-anchor="middle">สำเร็จ</text>
+        </g>
+
+        <!-- Log Item 3 -->
+        <g transform="translate(20, 220)">
+          <rect x="0" y="0" width="404" height="66" rx="10" fill="#FDFBF7" stroke="#EAE3D8"/>
+          <circle cx="24" cy="24" r="14" fill="#EEF5F8"/>
+          <text x="24" y="28" font-size="12" text-anchor="middle">☕</text>
+          <text x="48" y="22" font-size="12" font-weight="700" fill="#1E1B18">View (Barista)</text>
+          <text x="48" y="38" font-size="11" fill="#635C54">เปิดใช้งานหน้าจอ KDS คิวครัว (Station 1)</text>
+          <text x="388" y="22" font-size="11" font-family="'JetBrains Mono',monospace" fill="#968E85" text-anchor="end">08:02</text>
+          <rect x="330" y="34" width="58" height="18" rx="4" fill="#EAF4ED"/>
+          <text x="359" y="47" font-size="9" font-weight="700" fill="#3B6E4C" text-anchor="middle">สำเร็จ</text>
+        </g>
+
+        <!-- Log Item 4: Void Audit Action -->
+        <g transform="translate(20, 294)">
+          <rect x="0" y="0" width="404" height="66" rx="10" fill="#FDFBF7" stroke="#BA3C34" stroke-width="1"/>
+          <circle cx="24" cy="24" r="14" fill="#FDF0EF"/>
+          <text x="24" y="28" font-size="12" text-anchor="middle">🛡️</text>
+          <text x="48" y="22" font-size="12" font-weight="700" fill="#BA3C34">อนุมัติ Void บิล #A01 (FR-07)</text>
+          <text x="48" y="38" font-size="11" fill="#635C54">ผู้ขอ: Nook • ผู้อนุมัติ: Admin Zai (ใส่ PIN)</text>
+          <text x="388" y="22" font-size="11" font-family="'JetBrains Mono',monospace" fill="#968E85" text-anchor="end">14:15</text>
+          <rect x="330" y="34" width="58" height="18" rx="4" fill="#FDF0EF"/>
+          <text x="359" y="47" font-size="9" font-weight="700" fill="#BA3C34" text-anchor="middle">Voided</text>
+        </g>
+
+        <!-- Button: Full Audit Log -->
+        <rect x="20" y="420" width="404" height="42" rx="10" fill="#F5EFEB" stroke="#EAE3D8"/>
+        <text x="222" y="446" font-size="12" font-weight="700" fill="#1E1B18" text-anchor="middle">📜 ดูประวัติการเข้าใช้งานทั้งหมด (Full Audit Log)</text>
+      </g>
+    </g>
+  </g>
+</svg>

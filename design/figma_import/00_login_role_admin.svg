@@ -1,0 +1,66 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 1194 834" width="1194" height="834" style="background:#EDE7DF; font-family:'Plus Jakarta Sans','Sarabun',sans-serif;">
+  <defs>
+    <filter id="shadow" x="-5%" y="-5%" width="110%" height="110%">
+      <feDropShadow dx="0" dy="4" stdDeviation="12" flood-color="#231710" flood-opacity="0.08"/>
+    </filter>
+    <filter id="modalShadow" x="-10%" y="-10%" width="120%" height="120%">
+      <feDropShadow dx="0" dy="16" stdDeviation="24" flood-color="#1A120B" flood-opacity="0.3"/>
+    </filter>
+  </defs>
+  <!-- Top App Bar -->
+  <rect x="0" y="0" width="1194" height="56" fill="#1A120B"/>
+  <rect x="20" y="12" width="32" height="32" rx="8" fill="#C85A32"/>
+  <text x="27" y="34" font-size="14" font-weight="900" fill="#FFFFFF">JM</text>
+  <text x="64" y="34" font-size="15" font-weight="800" fill="#FFFFFF">JAMAL CAFÉ &amp; BAKERY</text>
+  <text x="1080" y="34" font-size="11" fill="#968E85">ระบบความปลอดภัย (FR-01)</text>
+
+  <!-- Centered Login Card -->
+  <g transform="translate(377, 85)" filter="url(#shadow)">
+    <rect x="0" y="0" width="440" height="660" rx="24" fill="#FFFFFF" stroke="#EAE3D8" stroke-width="1"/>
+
+    <!-- Brand Logo JM -->
+    <rect x="188" y="35" width="64" height="64" rx="16" fill="#C85A32"/>
+    <text x="204" y="75" font-size="22" font-weight="900" fill="#FFFFFF" letter-spacing="1">JM</text>
+
+    <!-- Header Titles -->
+    <text x="220" y="130" font-size="20" font-weight="800" fill="#1E1B18" text-anchor="middle">เข้าสู่ระบบผู้ดูแล (Admin Portal)</text>
+    <text x="220" y="152" font-size="12" font-weight="500" fill="#635C54" text-anchor="middle">Café &amp; Bakery Management System</text>
+
+    <!-- Role Selector Tabs (Admin Active) -->
+    <g transform="translate(32, 185)">
+      <rect x="0" y="0" width="376" height="42" rx="12" fill="#F5EFEB"/>
+      <text x="64" y="26" font-size="12" font-weight="600" fill="#635C54" text-anchor="middle">แคชเชียร์</text>
+      <text x="188" y="26" font-size="12" font-weight="600" fill="#635C54" text-anchor="middle">บาริสต้า/ครัว</text>
+      <!-- Active Admin -->
+      <rect x="252" y="4" width="120" height="34" rx="8" fill="#C85A32"/>
+      <text x="312" y="26" font-size="12" font-weight="700" fill="#FFFFFF" text-anchor="middle">เจ้าของร้าน</text>
+    </g>
+
+    <!-- Staff ID Field -->
+    <g transform="translate(32, 255)">
+      <text x="0" y="14" font-size="12" font-weight="700" fill="#1E1B18">รหัสพนักงาน หรือชื่อผู้ใช้</text>
+      <rect x="0" y="22" width="376" height="44" rx="12" fill="#FDFBF7" stroke="#EAE3D8" stroke-width="1"/>
+      <text x="16" y="49" font-size="13" font-weight="700" fill="#1E1B18">admin_boss (Admin Zai)</text>
+    </g>
+
+    <!-- PIN 4 Digit Field (9999 Ready) -->
+    <g transform="translate(32, 345)">
+      <text x="0" y="14" font-size="12" font-weight="700" fill="#1E1B18">รหัสผ่าน หรือ Master PIN</text>
+      <rect x="0" y="22" width="376" height="48" rx="12" fill="#FDFBF7" stroke="#3B6E4C" stroke-width="2"/>
+      <text x="16" y="52" font-size="24" font-family="'JetBrains Mono',monospace" font-weight="900" fill="#3B6E4C" letter-spacing="8">● ● ● ●</text>
+      <text x="360" y="52" font-size="11" font-weight="bold" fill="#3B6E4C" text-anchor="end">พร้อมเข้าสู่ระบบ</text>
+    </g>
+
+    <!-- Sign In Button -->
+    <g transform="translate(32, 445)">
+      <rect x="0" y="0" width="376" height="52" rx="16" fill="#C85A32"/>
+      <text x="188" y="32" font-size="14" font-weight="700" fill="#FFFFFF" text-anchor="middle">เข้าสู่หน้าแผงควบคุม Admin ➔</text>
+    </g>
+
+    <!-- Security Policy Footnote -->
+    <g transform="translate(220, 545)">
+      <text x="0" y="0" font-size="10" fill="#968E85" text-anchor="middle">🔒 สิทธิ์ระดับ Admin: จัดการเมนู, สต็อก และอนุมัติ Void</text>
+      <text x="0" y="16" font-size="10" fill="#968E85" text-anchor="middle">(FR-01, FR-02, FR-03, FR-07)</text>
+    </g>
+  </g>
+</svg>

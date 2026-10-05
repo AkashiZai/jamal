@@ -1,0 +1,34 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 1194 834" width="1194" height="834" style="background:#EDE7DF; font-family:'Plus Jakarta Sans','Sarabun',sans-serif;">
+  <defs>
+    <filter id="shadow" x="-5%" y="-5%" width="110%" height="110%">
+      <feDropShadow dx="0" dy="4" stdDeviation="12" flood-color="#231710" flood-opacity="0.08"/>
+    </filter>
+    <filter id="modalShadow" x="-10%" y="-10%" width="120%" height="120%">
+      <feDropShadow dx="0" dy="16" stdDeviation="24" flood-color="#1A120B" flood-opacity="0.3"/>
+    </filter>
+  </defs>
+  <!-- Base POS Screen with Empty Cart -->
+  <rect x="0" y="0" width="1194" height="56" fill="#1A120B"/>
+  <rect x="20" y="12" width="32" height="32" rx="8" fill="#C85A32"/>
+  <text x="27" y="34" font-size="14" font-weight="900" fill="#FFFFFF">JM</text>
+  <text x="64" y="34" font-size="15" font-weight="800" fill="#FFFFFF">JAMAL CAFÉ &amp; BAKERY</text>
+
+  <!-- Container -->
+  <g transform="translate(20, 68)" opacity="0.6">
+    <rect x="0" y="0" width="1154" height="746" rx="20" fill="#FBF8F4" stroke="#EAE3D8"/>
+  </g>
+
+  <!-- FLOATING VOID SUCCESS TOAST (CENTER TOP) -->
+  <g transform="translate(347, 90)" filter="url(#modalShadow)">
+    <rect x="0" y="0" width="500" height="74" rx="18" fill="#FFFFFF" stroke="#3B6E4C" stroke-width="2"/>
+    <rect x="16" y="17" width="40" height="40" rx="10" fill="#EAF4ED"/>
+    <text x="36" y="43" font-size="20" text-anchor="middle">🛡️</text>
+    
+    <text x="68" y="34" font-size="14" font-weight="800" fill="#3B6E4C">อนุมัติ Void บิลสำเร็จ (Void Approved)</text>
+    <text x="68" y="54" font-size="12" fill="#635C54">ผู้จัดการ Admin Zai ยืนยันรหัสผ่าน • เคลียร์บิลและบันทึก Audit Log แล้ว</text>
+
+    <!-- Close button -->
+    <circle cx="474" cy="24" r="10" fill="#F5EFEB"/>
+    <text x="474" y="28" font-size="10" font-weight="bold" fill="#635C54" text-anchor="middle">✕</text>
+  </g>
+</svg>

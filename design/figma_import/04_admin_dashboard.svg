@@ -1,0 +1,149 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 1440 900" width="1440" height="900" style="background:#FBF8F4; font-family:'Plus Jakarta Sans','Sarabun',sans-serif;">
+  <!-- TOP ADMIN BAR -->
+  <rect x="0" y="0" width="1440" height="64" fill="#1A120B"/>
+  <rect x="24" y="16" width="32" height="32" rx="8" fill="#C85A32"/>
+  <text x="31" y="38" font-size="14" font-weight="bold" fill="#FFFFFF">JM</text>
+  <text x="68" y="38" font-size="16" font-weight="bold" fill="#FFFFFF">JAMAL CAFÉ — ADMIN PORTAL</text>
+  <text x="1260" y="38" font-size="13" fill="#968E85">ผู้ดูแลระบบ (Admin Zai)</text>
+
+  <!-- SIDEBAR NAVIGATION (240px) -->
+  <g transform="translate(0, 64)">
+    <rect x="0" y="0" width="240" height="836" fill="#F5EFEB" stroke="#EAE3D8"/>
+    
+    <rect x="16" y="24" width="208" height="42" rx="10" fill="#231710"/>
+    <text x="48" y="50" font-size="13" font-weight="700" fill="#FFFFFF">📊 แดชบอร์ด (Dashboard)</text>
+
+    <text x="48" y="98" font-size="13" font-weight="500" fill="#635C54">🥐 สต็อกเบเกอรี่ (Inventory)</text>
+    <text x="48" y="142" font-size="13" font-weight="500" fill="#635C54">☕ จัดการเมนู &amp; ราคา</text>
+    <text x="48" y="186" font-size="13" font-weight="500" fill="#635C54">🧾 ประวัติการขาย &amp; Void</text>
+    <text x="48" y="230" font-size="13" font-weight="500" fill="#635C54">👥 จัดการสิทธิ์พนักงาน</text>
+  </g>
+
+  <!-- MAIN DASHBOARD CONTENT (1152px) -->
+  <g transform="translate(264, 88)">
+    <text x="0" y="20" font-size="20" font-weight="800" fill="#1E1B18">ภาพรวมยอดขาย &amp; สต็อกสินค้าประจำวัน</text>
+    <text x="0" y="40" font-size="12" fill="#635C54">ข้อมูลสรุปแบบ Real-time ณ วันที่ 22 กันยายน 2569</text>
+
+    <!-- 4 KPI CARDS -->
+    <g transform="translate(0, 60)">
+      <!-- Card 1 -->
+      <rect x="0" y="0" width="268" height="110" rx="14" fill="#FFFFFF" stroke="#EAE3D8"/>
+      <text x="20" y="32" font-size="12" fill="#635C54">ยอดขายรวมวันนี้</text>
+      <text x="20" y="68" font-size="24" font-family="'JetBrains Mono',monospace" font-weight="800" fill="#1E1B18">฿14,250.00</text>
+      <text x="20" y="92" font-size="11" font-weight="600" fill="#3B6E4C">↑ +12% เทียบกับเมื่อวาน</text>
+
+      <!-- Card 2 -->
+      <rect x="292" y="0" width="268" height="110" rx="14" fill="#FFFFFF" stroke="#EAE3D8"/>
+      <text x="312" y="32" font-size="12" fill="#635C54">จำนวนบิลทั้งหมด</text>
+      <text x="312" y="68" font-size="24" font-family="'JetBrains Mono',monospace" font-weight="800" fill="#1E1B18">84 บิล</text>
+      <text x="312" y="92" font-size="11" fill="#635C54">เฉลี่ย ฿169.64 ต่อบิล</text>
+
+      <!-- Card 3 -->
+      <rect x="584" y="0" width="268" height="110" rx="14" fill="#FFFFFF" stroke="#EAE3D8"/>
+      <text x="604" y="32" font-size="12" fill="#635C54">สัดส่วนชำระเงิน (FR-08)</text>
+      <rect x="604" y="48" width="100" height="22" rx="6" fill="#EEF5F8"/>
+      <text x="612" y="63" font-size="10" font-family="'JetBrains Mono',monospace" font-weight="bold" fill="#2E6171">PromptPay 64%</text>
+      <rect x="712" y="48" width="80" height="22" rx="6" fill="#EAF4ED"/>
+      <text x="720" y="63" font-size="10" font-family="'JetBrains Mono',monospace" font-weight="bold" fill="#3B6E4C">เงินสด 36%</text>
+      <text x="604" y="92" font-size="11" fill="#635C54">กระทบยอดตรง ไม่พบบิลค้าง</text>
+
+      <!-- Card 4 -->
+      <rect x="876" y="0" width="268" height="110" rx="14" fill="#FFFFFF" stroke="#C85A32"/>
+      <text x="896" y="32" font-size="12" fill="#635C54">เตือนสต็อกเบเกอรี่ (FR-03)</text>
+      <text x="896" y="68" font-size="24" font-family="'JetBrains Mono',monospace" font-weight="800" fill="#C85A32">2 รายการ</text>
+      <text x="896" y="92" font-size="11" font-weight="bold" fill="#BA3C34">เหลือน้อยกว่า 5 ชิ้น</text>
+    </g>
+
+    <!-- BAKERY INVENTORY TABLE (FR-03) -->
+    <g transform="translate(0, 196)">
+      <rect x="0" y="0" width="1144" height="340" rx="16" fill="#FFFFFF" stroke="#EAE3D8"/>
+      <text x="24" y="36" font-size="15" font-weight="700" fill="#1E1B18">ระบบควบคุมและตัดสต็อกเบเกอรี่รายวัน (Bakery Stock Tracking)</text>
+      
+      <!-- Table Header -->
+      <rect x="24" y="56" width="1096" height="36" rx="8" fill="#F5EFEB"/>
+      <text x="40" y="79" font-size="12" font-weight="700" fill="#635C54">SKU</text>
+      <text x="140" y="79" font-size="12" font-weight="700" fill="#635C54">ชื่อสินค้า</text>
+      <text x="400" y="79" font-size="12" font-weight="700" fill="#635C54">ราคา</text>
+      <text x="520" y="79" font-size="12" font-weight="700" fill="#635C54">รับเข้าเช้า</text>
+      <text x="640" y="79" font-size="12" font-weight="700" fill="#635C54">ขายแล้ว</text>
+      <text x="760" y="79" font-size="12" font-weight="700" fill="#635C54">คงเหลือจริง</text>
+      <text x="900" y="79" font-size="12" font-weight="700" fill="#635C54">สถานะ</text>
+
+      <!-- Row 1 -->
+      <text x="40" y="125" font-size="12" font-family="'JetBrains Mono',monospace" fill="#635C54">BK-01</text>
+      <text x="140" y="125" font-size="13" font-weight="600" fill="#1E1B18">ครัวซองต์เนยสด AOP (France)</text>
+      <text x="400" y="125" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="bold" fill="#C85A32">฿85.00</text>
+      <text x="530" y="125" font-size="13" font-family="'JetBrains Mono',monospace">15</text>
+      <text x="650" y="125" font-size="13" font-family="'JetBrains Mono',monospace">11</text>
+      <text x="770" y="125" font-size="14" font-family="'JetBrains Mono',monospace" font-weight="bold" fill="#C97D28">4 ชิ้น</text>
+      <rect x="890" y="110" width="80" height="22" rx="6" fill="#FFF5E6"/>
+      <text x="900" y="125" font-size="10" font-weight="bold" fill="#C97D28">ใกล้หมด</text>
+      <line x1="24" y1="145" x2="1120" y2="145" stroke="#F5EFEB"/>
+
+      <!-- Row 2 -->
+      <text x="40" y="175" font-size="12" font-family="'JetBrains Mono',monospace" fill="#635C54">BK-02</text>
+      <text x="140" y="175" font-size="13" font-weight="600" fill="#1E1B18">เดนิชสตรอว์เบอร์รี (Strawberry Danish)</text>
+      <text x="400" y="175" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="bold" fill="#C85A32">฿95.00</text>
+      <text x="530" y="175" font-size="13" font-family="'JetBrains Mono',monospace">10</text>
+      <text x="650" y="175" font-size="13" font-family="'JetBrains Mono',monospace">7</text>
+      <text x="770" y="175" font-size="14" font-family="'JetBrains Mono',monospace" font-weight="bold" fill="#C97D28">3 ชิ้น</text>
+      <rect x="890" y="160" width="80" height="22" rx="6" fill="#FFF5E6"/>
+      <text x="900" y="175" font-size="10" font-weight="bold" fill="#C97D28">ใกล้หมด</text>
+      <line x1="24" y1="195" x2="1120" y2="195" stroke="#F5EFEB"/>
+
+      <!-- Row 3 -->
+      <text x="40" y="225" font-size="12" font-family="'JetBrains Mono',monospace" fill="#635C54">BK-03</text>
+      <text x="140" y="225" font-size="13" font-weight="600" fill="#1E1B18">บาสก์ชีสเค้กหน้าไหม้ (Burnt Cheesecake)</text>
+      <text x="400" y="225" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="bold" fill="#968E85">฿125.00</text>
+      <text x="530" y="225" font-size="13" font-family="'JetBrains Mono',monospace">8</text>
+      <text x="650" y="225" font-size="13" font-family="'JetBrains Mono',monospace">8</text>
+      <text x="770" y="225" font-size="14" font-family="'JetBrains Mono',monospace" font-weight="bold" fill="#BA3C34">0 ชิ้น</text>
+      <rect x="890" y="210" width="80" height="22" rx="6" fill="#FDF0EF"/>
+      <text x="900" y="225" font-size="10" font-weight="bold" fill="#BA3C34">หมด (Out)</text>
+      <line x1="24" y1="245" x2="1120" y2="245" stroke="#F5EFEB"/>
+
+      <!-- Row 4 -->
+      <text x="40" y="275" font-size="12" font-family="'JetBrains Mono',monospace" fill="#635C54">BK-04</text>
+      <text x="140" y="275" font-size="13" font-weight="600" fill="#1E1B18">เค้กแครอทครีมชีส (Carrot Cake)</text>
+      <text x="400" y="275" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="bold" fill="#C85A32">฿95.00</text>
+      <text x="530" y="275" font-size="13" font-family="'JetBrains Mono',monospace">12</text>
+      <text x="650" y="275" font-size="13" font-family="'JetBrains Mono',monospace">4</text>
+      <text x="770" y="275" font-size="14" font-family="'JetBrains Mono',monospace" font-weight="bold" fill="#3B6E4C">8 ชิ้น</text>
+      <rect x="890" y="260" width="80" height="22" rx="6" fill="#EAF4ED"/>
+      <text x="900" y="275" font-size="10" font-weight="bold" fill="#3B6E4C">พร้อมขาย</text>
+    </g>
+
+    <!-- TOP 5 BEST SELLERS ROW -->
+    <g transform="translate(0, 560)">
+      <rect x="0" y="0" width="1144" height="150" rx="16" fill="#FFFFFF" stroke="#EAE3D8"/>
+      <text x="24" y="32" font-size="14" font-weight="700" fill="#1E1B18">🏆 5 อันดับเมนูขายดีประจำวัน (Top 5 Best Sellers)</text>
+      
+      <g transform="translate(24, 48)">
+        <rect x="0" y="0" width="208" height="74" rx="10" fill="#FDFBF7" stroke="#EAE3D8"/>
+        <text x="16" y="24" font-size="10" font-weight="bold" fill="#C97D28">#1 เมนูขายดี</text>
+        <text x="16" y="44" font-size="13" font-weight="700" fill="#1E1B18">เอสเพรสโซ่เย็น</text>
+        <text x="16" y="62" font-size="11" font-family="'JetBrains Mono',monospace" fill="#635C54">38 แก้ว • ฿2,470</text>
+
+        <rect x="224" y="0" width="208" height="74" rx="10" fill="#FDFBF7" stroke="#EAE3D8"/>
+        <text x="240" y="24" font-size="10" font-weight="bold" fill="#635C54">#2 เมนูขายดี</text>
+        <text x="240" y="44" font-size="13" font-weight="700" fill="#1E1B18">มัทฉะลาเต้อูจิ</text>
+        <text x="240" y="62" font-size="11" font-family="'JetBrains Mono',monospace" fill="#635C54">26 แก้ว • ฿2,210</text>
+
+        <rect x="448" y="0" width="208" height="74" rx="10" fill="#FDFBF7" stroke="#EAE3D8"/>
+        <text x="464" y="24" font-size="10" font-weight="bold" fill="#635C54">#3 เมนูขายดี</text>
+        <text x="464" y="44" font-size="13" font-weight="700" fill="#1E1B18">ครัวซองต์เนยสด AOP</text>
+        <text x="464" y="62" font-size="11" font-family="'JetBrains Mono',monospace" fill="#635C54">21 ชิ้น • ฿1,785</text>
+
+        <rect x="672" y="0" width="208" height="74" rx="10" fill="#FDFBF7" stroke="#EAE3D8"/>
+        <text x="688" y="24" font-size="10" font-weight="bold" fill="#635C54">#4 เมนูขายดี</text>
+        <text x="688" y="44" font-size="13" font-weight="700" fill="#1E1B18">อเมริกาโน่น้ำส้ม</text>
+        <text x="688" y="62" font-size="11" font-family="'JetBrains Mono',monospace" fill="#635C54">18 แก้ว • ฿1,530</text>
+
+        <rect x="896" y="0" width="208" height="74" rx="10" fill="#FDFBF7" stroke="#EAE3D8"/>
+        <text x="912" y="24" font-size="10" font-weight="bold" fill="#635C54">#5 เมนูขายดี</text>
+        <text x="912" y="44" font-size="13" font-weight="700" fill="#1E1B18">เค้กแครอทครีมชีส</text>
+        <text x="912" y="62" font-size="11" font-family="'JetBrains Mono',monospace" fill="#635C54">12 ชิ้น • ฿1,140</text>
+      </g>
+    </g>
+  </g>
+</svg>

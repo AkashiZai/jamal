@@ -1,0 +1,42 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 393 852" width="393" height="852" style="background:#FBF8F4; font-family:'Plus Jakarta Sans','Sarabun',sans-serif;">
+  <defs>
+    <filter id="shadow" x="-5%" y="-5%" width="110%" height="110%">
+      <feDropShadow dx="0" dy="4" stdDeviation="12" flood-color="#231710" flood-opacity="0.08"/>
+    </filter>
+    <filter id="modalShadow" x="-10%" y="-10%" width="120%" height="120%">
+      <feDropShadow dx="0" dy="16" stdDeviation="24" flood-color="#1A120B" flood-opacity="0.3"/>
+    </filter>
+  </defs>
+  <!-- Phone Status Bar -->
+  <rect x="0" y="0" width="393" height="44" fill="#1A120B"/>
+  <text x="32" y="28" font-size="14" font-weight="700" fill="#FFFFFF">9:41</text>
+  <rect x="140" y="8" width="113" height="28" rx="14" fill="#000000"/>
+
+  <!-- Success Card -->
+  <g transform="translate(20, 80)" filter="url(#shadow)">
+    <rect x="0" y="0" width="353" height="480" rx="28" fill="#FFFFFF" stroke="#3B6E4C" stroke-width="2"/>
+    
+    <circle cx="176" cy="70" r="36" fill="#EAF4ED"/>
+    <text x="176" y="80" font-size="32" text-anchor="middle">🎉</text>
+
+    <text x="176" y="140" font-size="20" font-weight="900" fill="#1E1B18" text-anchor="middle">สั่งซื้อสำเร็จแล้ว!</text>
+    <text x="176" y="165" font-size="12" fill="#635C54" text-anchor="middle">ออเดอร์ถูกส่งไปยังบาริสต้าเรียบร้อยแล้ว</text>
+
+    <!-- Big Queue Ticket -->
+    <g transform="translate(24, 190)">
+      <rect x="0" y="0" width="305" height="120" rx="18" fill="#1A120B"/>
+      <text x="152" y="36" font-size="12" fill="#968E85" text-anchor="middle">หมายเลขคิวของคุณ</text>
+      <text x="152" y="84" font-size="38" font-family="'JetBrains Mono',monospace" font-weight="900" fill="#FFFFFF" text-anchor="middle">#A05</text>
+      <rect x="100" y="92" width="105" height="20" rx="6" fill="#C97D28"/>
+      <text x="152" y="106" font-size="10" font-weight="bold" fill="#FFFFFF" text-anchor="middle">รอดำเนินการ (รอชง)</text>
+    </g>
+
+    <text x="176" y="360" font-size="12" font-weight="600" fill="#635C54" text-anchor="middle">โต๊ะ 04 • สั่งทานที่ร้าน • 2 รายการ</text>
+
+    <!-- Return to Menu Button -->
+    <g transform="translate(24, 396)">
+      <rect x="0" y="0" width="305" height="50" rx="14" fill="#C85A32"/>
+      <text x="152" y="31" font-size="14" font-weight="800" fill="#FFFFFF" text-anchor="middle">ดูเมนูเพิ่มเติม ➔</text>
+    </g>
+  </g>
+</svg>

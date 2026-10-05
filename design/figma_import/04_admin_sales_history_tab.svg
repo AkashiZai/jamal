@@ -1,0 +1,63 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 1440 900" width="1440" height="900" style="background:#FBF8F4; font-family:'Plus Jakarta Sans','Sarabun',sans-serif;">
+  <!-- TOP ADMIN BAR -->
+  <rect x="0" y="0" width="1440" height="64" fill="#1A120B"/>
+  <rect x="24" y="16" width="32" height="32" rx="8" fill="#C85A32"/>
+  <text x="31" y="38" font-size="14" font-weight="bold" fill="#FFFFFF">JM</text>
+  <text x="68" y="38" font-size="16" font-weight="bold" fill="#FFFFFF">JAMAL CAFÉ — ADMIN PORTAL</text>
+
+  <!-- SIDEBAR NAVIGATION (Sales History Tab ACTIVE) -->
+  <g transform="translate(0, 64)">
+    <rect x="0" y="0" width="240" height="836" fill="#F5EFEB" stroke="#EAE3D8"/>
+    <text x="48" y="50" font-size="13" font-weight="500" fill="#635C54">📊 แดชบอร์ดภาพรวม</text>
+    <text x="48" y="98" font-size="13" font-weight="500" fill="#635C54">🥐 สต็อกเบเกอรี่</text>
+    <text x="48" y="146" font-size="13" font-weight="500" fill="#635C54">☕ จัดการเมนู &amp; ราคา</text>
+    <!-- ACTIVE Sales History -->
+    <rect x="16" y="166" width="208" height="42" rx="10" fill="#231710"/>
+    <text x="48" y="192" font-size="13" font-weight="700" fill="#FFFFFF">🧾 ประวัติการขาย &amp; Void</text>
+    <text x="48" y="238" font-size="13" font-weight="500" fill="#635C54">👥 จัดการสิทธิ์พนักงาน</text>
+  </g>
+
+  <!-- MAIN SALES HISTORY VIEW -->
+  <g transform="translate(264, 88)">
+    <text x="0" y="20" font-size="20" font-weight="800" fill="#1E1B18">รายงานประวัติการขายและบันทึก Void Audit (FR-07, FR-08)</text>
+    <text x="0" y="40" font-size="12" fill="#635C54">บันทึกธุรกรรมย้อนหลัง ตรวจสอบสลิป และรายการที่ถูกยกเลิกบิล</text>
+
+    <rect x="0" y="60" width="1144" height="480" rx="16" fill="#FFFFFF" stroke="#EAE3D8"/>
+    <rect x="24" y="80" width="1096" height="40" rx="8" fill="#F5EFEB"/>
+    <text x="40" y="105" font-size="12" font-weight="bold">เลขที่บิล</text>
+    <text x="200" y="105" font-size="12" font-weight="bold">เวลา</text>
+    <text x="280" y="105" font-size="12" font-weight="bold">คิว</text>
+    <text x="360" y="105" font-size="12" font-weight="bold">รายการสินค้า</text>
+    <text x="640" y="105" font-size="12" font-weight="bold">ชำระโดย</text>
+    <text x="760" y="105" font-size="12" font-weight="bold">ยอดเงิน</text>
+    <text x="880" y="105" font-size="12" font-weight="bold">สถานะ</text>
+    <text x="1000" y="105" font-size="12" font-weight="bold">บันทึกผู้อนุมัติ</text>
+
+    <!-- Row 1: Paid -->
+    <g transform="translate(24, 130)">
+      <text x="16" y="24" font-size="12" font-family="'JetBrains Mono',monospace">INV-20260922-0084</text>
+      <text x="176" y="24" font-size="12">14:40</text>
+      <text x="256" y="24" font-size="12" font-weight="bold">#A04</text>
+      <text x="336" y="24" font-size="12">เอสเพรสโซ่เย็น, ครัวซองต์ AOP</text>
+      <text x="616" y="24" font-size="12">PromptPay</text>
+      <text x="736" y="24" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="bold">฿150.00</text>
+      <rect x="856" y="8" width="70" height="24" rx="6" fill="#EAF4ED"/>
+      <text x="866" y="24" font-size="10" font-weight="bold" fill="#3B6E4C">ชำระสำเร็จ</text>
+      <text x="976" y="24" font-size="11" fill="#635C54">Zai (แคชเชียร์)</text>
+      <line x1="0" y1="44" x2="1096" y2="44" stroke="#F5EFEB"/>
+    </g>
+
+    <!-- Row 2: VOIDED BILL (FR-07) -->
+    <g transform="translate(24, 184)">
+      <text x="16" y="24" font-size="12" font-family="'JetBrains Mono',monospace" fill="#BA3C34">INV-20260922-0080</text>
+      <text x="176" y="24" font-size="12">13:58</text>
+      <text x="256" y="24" font-size="12" font-weight="bold">#V99</text>
+      <text x="336" y="24" font-size="12">คาปูชิโน่ร้อน, เค้กแครอท</text>
+      <text x="616" y="24" font-size="12">เงินสด</text>
+      <text x="736" y="24" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="bold">฿155.00</text>
+      <rect x="856" y="8" width="70" height="24" rx="6" fill="#FDF0EF"/>
+      <text x="872" y="24" font-size="10" font-weight="bold" fill="#BA3C34">Voided</text>
+      <text x="976" y="24" font-size="11" font-weight="bold" fill="#BA3C34">Admin Zai (FR-07)</text>
+    </g>
+  </g>
+</svg>

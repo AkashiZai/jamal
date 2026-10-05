@@ -1,0 +1,72 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 1440 900" width="1440" height="900" style="background:#FBF8F4; font-family:'Plus Jakarta Sans','Sarabun',sans-serif;">
+  <!-- TOP ADMIN BAR -->
+  <rect x="0" y="0" width="1440" height="64" fill="#1A120B"/>
+  <rect x="24" y="16" width="32" height="32" rx="8" fill="#C85A32"/>
+  <text x="31" y="38" font-size="14" font-weight="bold" fill="#FFFFFF">JM</text>
+  <text x="68" y="38" font-size="16" font-weight="bold" fill="#FFFFFF">JAMAL CAFÉ — ADMIN PORTAL</text>
+  <text x="1260" y="38" font-size="13" fill="#968E85">ผู้ดูแลระบบ (Admin Zai)</text>
+
+  <!-- SIDEBAR NAVIGATION (Bakery Inventory Tab ACTIVE) -->
+  <g transform="translate(0, 64)">
+    <rect x="0" y="0" width="240" height="836" fill="#F5EFEB" stroke="#EAE3D8"/>
+    <text x="48" y="50" font-size="13" font-weight="500" fill="#635C54">📊 แดชบอร์ดภาพรวม</text>
+    <!-- ACTIVE TAB: Inventory -->
+    <rect x="16" y="74" width="208" height="42" rx="10" fill="#231710"/>
+    <text x="48" y="100" font-size="13" font-weight="700" fill="#FFFFFF">🥐 สต็อกเบเกอรี่ (Inventory)</text>
+    <text x="48" y="146" font-size="13" font-weight="500" fill="#635C54">☕ จัดการเมนู &amp; ราคา</text>
+    <text x="48" y="190" font-size="13" font-weight="500" fill="#635C54">🧾 ประวัติการขาย &amp; Void</text>
+    <text x="48" y="234" font-size="13" font-weight="500" fill="#635C54">👥 จัดการสิทธิ์พนักงาน</text>
+  </g>
+
+  <!-- MAIN INVENTORY VIEW (1152px) -->
+  <g transform="translate(264, 88)">
+    <text x="0" y="20" font-size="20" font-weight="800" fill="#1E1B18">ระบบควบคุมและเติมสต็อกเบเกอรี่รายวัน (FR-03)</text>
+    <text x="0" y="40" font-size="12" fill="#635C54">ตัดสต็อกอัตโนมัติเมื่อขายออก และบล็อกการขายทันทีเมื่อของหมด</text>
+
+    <!-- Table Container -->
+    <rect x="0" y="60" width="1144" height="480" rx="16" fill="#FFFFFF" stroke="#EAE3D8"/>
+    <rect x="24" y="80" width="1096" height="40" rx="8" fill="#F5EFEB"/>
+    <text x="40" y="105" font-size="12" font-weight="bold">SKU</text>
+    <text x="140" y="105" font-size="12" font-weight="bold">ชื่อสินค้า</text>
+    <text x="400" y="105" font-size="12" font-weight="bold">ราคา</text>
+    <text x="520" y="105" font-size="12" font-weight="bold">รับเข้าเช้า</text>
+    <text x="640" y="105" font-size="12" font-weight="bold">คงเหลือจริง</text>
+    <text x="760" y="105" font-size="12" font-weight="bold">สถานะ</text>
+    <text x="920" y="105" font-size="12" font-weight="bold">ปุ่มเติมสต็อกด่วน</text>
+
+    <!-- Row 1: Croissant -->
+    <g transform="translate(24, 130)">
+      <text x="16" y="24" font-size="13" font-family="'JetBrains Mono',monospace">BK-01</text>
+      <text x="116" y="24" font-size="13" font-weight="600">ครัวซองต์เนยสด AOP</text>
+      <text x="376" y="24" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="bold" fill="#C85A32">฿85.00</text>
+      <text x="506" y="24" font-size="13" font-family="'JetBrains Mono',monospace">15 ชิ้น</text>
+      <text x="626" y="24" font-size="14" font-family="'JetBrains Mono',monospace" font-weight="bold" fill="#C97D28">4 ชิ้น</text>
+      <rect x="736" y="8" width="80" height="24" rx="6" fill="#FFF5E6"/>
+      <text x="746" y="24" font-size="10" font-weight="bold" fill="#C97D28">ใกล้หมด</text>
+
+      <!-- Restock Buttons -->
+      <rect x="896" y="6" width="60" height="28" rx="6" fill="#C85A32"/>
+      <text x="926" y="24" font-size="11" font-weight="bold" fill="#FFFFFF" text-anchor="middle">+ 5 ชิ้น</text>
+      <rect x="964" y="6" width="64" height="28" rx="6" fill="#231710"/>
+      <text x="996" y="24" font-size="11" font-weight="bold" fill="#FFFFFF" text-anchor="middle">+ 10 ชิ้น</text>
+      <line x1="0" y1="44" x2="1096" y2="44" stroke="#F5EFEB"/>
+    </g>
+
+    <!-- Row 2: Burnt Cheesecake (OUT OF STOCK) -->
+    <g transform="translate(24, 184)">
+      <text x="16" y="24" font-size="13" font-family="'JetBrains Mono',monospace">BK-03</text>
+      <text x="116" y="24" font-size="13" font-weight="600">บาสก์ชีสเค้กหน้าไหม้</text>
+      <text x="376" y="24" font-size="13" font-family="'JetBrains Mono',monospace" font-weight="bold" fill="#968E85">฿125.00</text>
+      <text x="506" y="24" font-size="13" font-family="'JetBrains Mono',monospace">8 ชิ้น</text>
+      <text x="626" y="24" font-size="14" font-family="'JetBrains Mono',monospace" font-weight="bold" fill="#BA3C34">0 ชิ้น</text>
+      <rect x="736" y="8" width="80" height="24" rx="6" fill="#FDF0EF"/>
+      <text x="746" y="24" font-size="10" font-weight="bold" fill="#BA3C34">หมด (Out)</text>
+
+      <!-- Restock Buttons -->
+      <rect x="896" y="6" width="60" height="28" rx="6" fill="#C85A32"/>
+      <text x="926" y="24" font-size="11" font-weight="bold" fill="#FFFFFF" text-anchor="middle">+ 5 ชิ้น</text>
+      <rect x="964" y="6" width="64" height="28" rx="6" fill="#231710"/>
+      <text x="996" y="24" font-size="11" font-weight="bold" fill="#FFFFFF" text-anchor="middle">+ 10 ชิ้น</text>
+    </g>
+  </g>
+</svg>

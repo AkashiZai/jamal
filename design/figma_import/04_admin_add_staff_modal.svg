@@ -1,0 +1,98 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 1440 900" width="1440" height="900" style="background:#FBF8F4; font-family:'Plus Jakarta Sans','Sarabun',sans-serif;">
+  <defs>
+    <filter id="modalShadow" x="-10%" y="-10%" width="120%" height="120%">
+      <feDropShadow dx="0" dy="16" stdDeviation="24" flood-color="#1A120B" flood-opacity="0.3"/>
+    </filter>
+  </defs>
+  <!-- Dimmed Backdrop -->
+  <rect x="0" y="0" width="1440" height="900" fill="#1A120B" fill-opacity="0.6"/>
+
+  <!-- Modal Centered (520 x 580) -->
+  <g transform="translate(460, 160)" filter="url(#modalShadow)">
+    <rect x="0" y="0" width="520" height="580" rx="24" fill="#FFFFFF" stroke="#EAE3D8"/>
+
+    <!-- Header -->
+    <text x="36" y="44" font-size="18" font-weight="800">เพิ่มบัญชีพนักงานใหม่ (Add Staff Account)</text>
+    <text x="36" y="68" font-size="12" fill="#635C54">ข้อกำหนด FR-01: กำหนดบทบาทและรหัส PIN 4 หลักสำหรับเข้าใช้งานระบบ</text>
+    <line x1="36" y1="84" x2="484" y2="84" stroke="#EAE3D8"/>
+
+    <!-- Form Body -->
+    <!-- Field 1: Staff Name -->
+    <g transform="translate(36, 105)">
+      <text x="0" y="14" font-size="12" font-weight="700">ชื่อ-นามสกุลพนักงาน *</text>
+      <rect x="0" y="22" width="448" height="42" rx="10" fill="#FDFBF7" stroke="#EAE3D8"/>
+      <text x="14" y="48" font-size="13" fill="#1E1B18">แพรวพรรณ จิตอาสา (คุณแพรว)</text>
+    </g>
+
+    <!-- Field 2: Role Selection (3 Radio Cards) -->
+    <g transform="translate(36, 185)">
+      <text x="0" y="14" font-size="12" font-weight="700">บทบาท / สิทธิ์การใช้งาน (Role) *</text>
+      
+      <!-- Option 1: Cashier (Selected) -->
+      <g transform="translate(0, 24)">
+        <rect x="0" y="0" width="142" height="74" rx="10" fill="#FFF9F5" stroke="#C85A32" stroke-width="1.5"/>
+        <text x="14" y="24" font-size="16">🛍️</text>
+        <text x="14" y="44" font-size="12" font-weight="700" fill="#C85A32">แคชเชียร์</text>
+        <text x="14" y="60" font-size="10" fill="#635C54">หน้าร้าน / คิดเงิน</text>
+      </g>
+
+      <!-- Option 2: Barista -->
+      <g transform="translate(153, 0)">
+        <rect x="0" y="24" width="142" height="74" rx="10" fill="#FDFBF7" stroke="#EAE3D8"/>
+        <text x="14" y="48" font-size="16">☕</text>
+        <text x="14" y="68" font-size="12" font-weight="600" fill="#1E1B18">บาริสต้า</text>
+        <text x="14" y="84" font-size="10" fill="#635C54">ห้องครัว / จอ KDS</text>
+      </g>
+
+      <!-- Option 3: Admin -->
+      <g transform="translate(306, 0)">
+        <rect x="0" y="24" width="142" height="74" rx="10" fill="#FDFBF7" stroke="#EAE3D8"/>
+        <text x="14" y="48" font-size="16">👑</text>
+        <text x="14" y="68" font-size="12" font-weight="600" fill="#1E1B18">ผู้จัดการ</text>
+        <text x="14" y="84" font-size="10" fill="#635C54">สิทธิ์เต็ม / Void บิล</text>
+      </g>
+    </g>
+
+    <!-- Field 3: Username & Shift -->
+    <g transform="translate(36, 305)">
+      <text x="0" y="14" font-size="12" font-weight="700">ชื่อผู้ใช้งาน (Username) *</text>
+      <rect x="0" y="22" width="214" height="42" rx="10" fill="#FDFBF7" stroke="#EAE3D8"/>
+      <text x="14" y="48" font-size="13" font-family="'JetBrains Mono',monospace" fill="#1E1B18">cashier2</text>
+
+      <text x="234" y="14" font-size="12" font-weight="700">กะการทำงาน</text>
+      <rect x="234" y="22" width="214" height="42" rx="10" fill="#FDFBF7" stroke="#EAE3D8"/>
+      <text x="248" y="48" font-size="12" fill="#1E1B18">กะบ่าย (12:00 - 20:30) ▾</text>
+    </g>
+
+    <!-- Field 4: 4-digit PIN setup -->
+    <g transform="translate(36, 385)">
+      <text x="0" y="14" font-size="12" font-weight="700">กำหนดรหัส PIN เข้าใช้งาน (4 หลัก) *</text>
+      <text x="280" y="14" font-size="11" fill="#635C54">ใช้สำหรับล็อกอินหน้า POS/KDS</text>
+      
+      <g transform="translate(0, 24)">
+        <rect x="0" y="0" width="56" height="50" rx="10" fill="#FFF9F5" stroke="#C85A32" stroke-width="1.5"/>
+        <text x="28" y="32" font-size="20" font-family="'JetBrains Mono',monospace" font-weight="800" fill="#C85A32" text-anchor="middle">2</text>
+
+        <rect x="68" y="0" width="56" height="50" rx="10" fill="#FFF9F5" stroke="#C85A32" stroke-width="1.5"/>
+        <text x="96" y="32" font-size="20" font-family="'JetBrains Mono',monospace" font-weight="800" fill="#C85A32" text-anchor="middle">5</text>
+
+        <rect x="136" y="0" width="56" height="50" rx="10" fill="#FFF9F5" stroke="#C85A32" stroke-width="1.5"/>
+        <text x="164" y="32" font-size="20" font-family="'JetBrains Mono',monospace" font-weight="800" fill="#C85A32" text-anchor="middle">8</text>
+
+        <rect x="204" y="0" width="56" height="50" rx="10" fill="#FFF9F5" stroke="#C85A32" stroke-width="1.5"/>
+        <text x="232" y="32" font-size="20" font-family="'JetBrains Mono',monospace" font-weight="800" fill="#C85A32" text-anchor="middle">0</text>
+
+        <text x="280" y="30" font-size="11" font-weight="bold" fill="#3B6E4C">✓ รหัสปลอดภัย ไม่ซ้ำกับผู้อื่น</text>
+      </g>
+    </g>
+
+    <!-- Action Buttons -->
+    <g transform="translate(36, 500)">
+      <rect x="0" y="0" width="200" height="48" rx="14" fill="#F5EFEB"/>
+      <text x="100" y="29" font-size="13" font-weight="700" fill="#635C54" text-anchor="middle">ยกเลิก</text>
+
+      <rect x="216" y="0" width="232" height="48" rx="14" fill="#C85A32"/>
+      <text x="332" y="29" font-size="13" font-weight="800" fill="#FFFFFF" text-anchor="middle">✓ บันทึกบัญชีพนักงาน</text>
+    </g>
+  </g>
+</svg>

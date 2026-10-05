@@ -1,0 +1,45 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 1440 900" width="1440" height="900" style="background:#FBF8F4; font-family:'Plus Jakarta Sans','Sarabun',sans-serif;">
+  <defs>
+    <filter id="shadow" x="-5%" y="-5%" width="110%" height="110%">
+      <feDropShadow dx="0" dy="4" stdDeviation="12" flood-color="#231710" flood-opacity="0.08"/>
+    </filter>
+    <filter id="modalShadow" x="-10%" y="-10%" width="120%" height="120%">
+      <feDropShadow dx="0" dy="16" stdDeviation="24" flood-color="#1A120B" flood-opacity="0.3"/>
+    </filter>
+  </defs>
+  <!-- Dimmed Backdrop -->
+  <rect x="0" y="0" width="1440" height="900" fill="#1A120B" fill-opacity="0.6"/>
+
+  <!-- Modal Centered (480 x 380) -->
+  <g transform="translate(480, 260)" filter="url(#modalShadow)">
+    <rect x="0" y="0" width="480" height="380" rx="24" fill="#FFFFFF" stroke="#EAE3D8"/>
+
+    <!-- Header -->
+    <text x="32" y="44" font-size="18" font-weight="800">เติมสต็อกสินค้า (Restock)</text>
+    <text x="32" y="68" font-size="12" fill="#635C54">ครัวซองต์เนยสด AOP (France) • SKU: BK-01</text>
+    <line x1="32" y1="84" x2="448" y2="84" stroke="#EAE3D8"/>
+
+    <!-- Current Stock info -->
+    <text x="32" y="120" font-size="13" fill="#635C54">สต็อกคงเหลือปัจจุบัน:</text>
+    <text x="448" y="120" font-size="14" font-family="'JetBrains Mono',monospace" font-weight="bold" fill="#C97D28" text-anchor="end">4 ชิ้น</text>
+
+    <!-- Quantity to Add -->
+    <g transform="translate(32, 140)">
+      <text x="0" y="14" font-size="12" font-weight="700">จำนวนที่ต้องการเติมเข้าสต็อก (+ ชิ้น)</text>
+      <rect x="0" y="24" width="416" height="52" rx="14" fill="#FDFBF7" stroke="#C85A32" stroke-width="2"/>
+      <text x="20" y="58" font-size="22" font-family="'JetBrains Mono',monospace" font-weight="900" fill="#C85A32">+ 10 ชิ้น</text>
+    </g>
+
+    <!-- New Expected Total -->
+    <text x="32" y="250" font-size="13" font-weight="bold" fill="#3B6E4C">ยอดสต็อกใหม่หลังเติม: 14 ชิ้น (สถานะ: พร้อมขาย)</text>
+
+    <!-- Buttons -->
+    <g transform="translate(32, 290)">
+      <rect x="0" y="0" width="190" height="48" rx="14" fill="#F5EFEB"/>
+      <text x="95" y="29" font-size="13" font-weight="700" fill="#635C54" text-anchor="middle">ยกเลิก</text>
+
+      <rect x="206" y="0" width="210" height="48" rx="14" fill="#3B6E4C"/>
+      <text x="311" y="29" font-size="13" font-weight="800" fill="#FFFFFF" text-anchor="middle">✓ ยืนยันการเติมสต็อก</text>
+    </g>
+  </g>
+</svg>
