@@ -448,7 +448,7 @@ flowchart TD
 
 ---
 
-## 13. สรุปผลการประชุมทบทวนการทำงาน (Sprint 2 Retrospective)
+## 13. สรุปผลการประชุมทบทวนการทำงาน (Sprint 2 Retrospective).
 
 * **วัน-เวลาที่ประชุม**: 3 ตุลาคม 2569 (สิ้นสุด Sprint 2)
 * **คลิปวิดีโอสรุปการประชุม Retrospective Sprint 2**: https://www.youtube.com/watch?v=abTyFi0K3_4
