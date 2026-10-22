@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="th">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>☕</text></svg>" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>JAMAL POS — Café &amp; Bakery Management (Node.js Express)</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@500;700&family=Plus+Jakarta+Sans:wght@500;600;700;800&family=Sarabun:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Tailwind CSS CDN with Figma Design Tokens -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              espresso: {
+                950: '#110B07',
+                900: '#1A120B',
+                800: '#231710',
+                700: '#3A271C',
+                600: '#523828',
+              },
+              terracotta: {
+                DEFAULT: '#C85A32',
+                hover: '#B54D27',
+                light: '#FDF2ED',
+              },
+              matcha: {
+                DEFAULT: '#3B6E4C',
+                light: '#EAF4ED',
+                border: '#A8D5B5',
+              },
+              cream: {
+                50: '#FDFBF7',
+                100: '#FBF8F4',
+                200: '#F5EFEB',
+                300: '#EAE3D8',
+              },
+              warmgray: {
+                800: '#1E1B18',
+                600: '#635C54',
+                500: '#7E766D',
+                400: '#968E85',
+                300: '#D8CEC2',
+                200: '#E3DDD5',
+                100: '#F5EFEB',
+              }
+            },
+            fontFamily: {
+              sans: ['"Plus Jakarta Sans"', 'Sarabun', 'sans-serif'],
+              mono: ['"JetBrains Mono"', 'monospace'],
+            }
+          }
+        }
+      };
+    </script>
+    <link rel="stylesheet" href="/style.css" />
+  </head>
+  <body class="bg-cream-100 text-warmgray-800 antialiased selection:bg-terracotta selection:text-white">
+    <div id="app" class="min-h-screen flex flex-col bg-cream-100 font-sans text-espresso-900"></div>
+    <script src="/app.js"></script>
+  </body>
+</html>

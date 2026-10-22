@@ -1,69 +1,26 @@
-# Jamal Café & Bakery - POS Frontend (Complete Suite)
+# Jamal Café & Bakery - POS System (Node.js + Express)
 
-เว็บแอปพลิเคชันระบบแคชเชียร์และจัดการร้าน (Point of Sale) พัฒนาด้วย **React 18 + Vite + Tailwind CSS** ออกแบบตรงตาม Figma Design Tokens & SVGs ครบถ้วนทุกหน้าจอ 100%
+เว็บแอปพลิเคชันระบบแคชเชียร์และจัดการร้าน (Point of Sale) พัฒนาด้วย **Node.js + Express** ล้วน (`server.js` + `public/app.js`) ออกแบบตรงตาม Figma Design Tokens & SVGs ครบถ้วนทุกหน้าจอ 100%
 
 ## วิธีการเปิดใช้งาน (How to run)
 
-1. ติดตั้ง Dependencies (ทำครั้งแรก):
+1. ติดตั้ง Dependencies:
 ```bash
 npm install
 ```
 
-2. เริ่มต้น Dev Server:
+2. เริ่มต้น Express Server:
 ```bash
-npm run dev
+npm start
 ```
 
 เปิด Browser ไปที่: [http://localhost:3000](http://localhost:3000)
 
 ---
 
-## 📱 หน้าจอทั้งหมดในระบบ (Complete Application Suite)
+## โครงสร้างไฟล์ (Project Structure)
 
-ระบบได้รับการพัฒนาแยกไฟล์หน้าจออย่างเป็นสัดส่วน พร้อมแถบ Navigation ด้านบนที่สามารถสลับหน้าจอทดสอบได้ทันที:
-
-### 1. Cashier POS Main Screen (`PosPage.jsx`) — [Figma 01_pos_ipad_screen]
-- ออกแบบขนาดปุ่มและช่องสัมผัสสำหรับ iPad (1194×834)
-- เมนูหมวดหมู่ (กาแฟ, ชา, เบเกอรี่, ของหวาน) และช่องค้นหาแบบเรียลไทม์
-- ป๊อปอัปปรับแต่งระดับความหวาน, นม และท็อปปิ้ง (`CustomizationModal.jsx`)
-- ตะกร้าสินค้าด้านข้างพร้อมคำนวณภาษีมูลค่าเพิ่ม (VAT 7%)
-- ระบบชำระเงินรองรับ PromptPay QR Code และเงินสดพร้อมคำนวณเงินทอน (`PaymentModal.jsx`)
-- สั่งพิมพ์ใบเสร็จความร้อน 80mm Slip Receipt (FR-06)
-- ป๊อปอัปอนุมัติ Void บิลโดย Admin Master PIN (FR-07, `VoidModal.jsx`)
-- เมื่อชำระเงินสำเร็จ ออเดอร์จะถูกส่งไปยัง Kitchen KDS อัตโนมัติ และตัดสต็อกเบเกอรี่ทันที
-
-### 2. Kitchen & Barista KDS Screen (`KitchenKdsPage.jsx`) — [Figma 03_kitchen_kds_queue]
-- หน้าจอสำหรับบาริสต้าและครัวคุมคิวออเดอร์ (TOR Operator 1-5)
-- ระบบ Kanban 3 คอลัมน์แบบ Real-time:
-  1. **รอดำเนินการ (Pending)**: แสดงบัตรคิวพร้อมตัวเลือก Customization ละเอียด และปุ่ม "รับทำออเดอร์นี้ →"
-  2. **กำลังชง/อบ (In Progress)**: แสดงสถานะกำลังปรุง พร้อมระยะเวลา และปุ่ม "✓ ทำเสร็จแล้ว (พร้อมเสิร์ฟ)"
-  3. **พร้อมรับที่เคาน์เตอร์ (Ready)**: แสดงคิวที่พร้อมเสิร์ฟ และปุ่ม "ลูกค้ารับแล้ว (ปิดออเดอร์)"
-- ตัวกรองประเภทสินค้า (ทั้งหมด, เครื่องดื่ม, เบเกอรี่)
-- ระบบเสียงสังเคราะห์แจ้งเตือน (Audio Chime Alert) เมื่อมีออเดอร์ใหม่หรือเปลี่ยนสถานะ
-- ปุ่มจำลองออเดอร์ใหม่เพื่อทดสอบการทำงาน
-
-### 3. Admin Portal & Dashboard (`AdminDashboardPage.jsx`) — [Figma 04_admin_dashboard]
-- แผงควบคุมผู้จัดการร้าน (FR-02, FR-03, FR-07, FR-08, TOR Admin 1-5)
-- **แถบแดชบอร์ดภาพรวม**:
-  - 4 KPI Cards: ยอดขายรวมวันนี้, จำนวนบิล, สัดส่วนชำระเงิน (PromptPay 64% vs เงินสด 36%), การแจ้งเตือนสต็อกเบเกอรี่ต่ำกว่า 5 ชิ้น
-  - ตารางสถานะสต็อกเบเกอรี่พร้อมปุ่มเติมของด่วน (+5, +10)
-  - รายงาน 5 อันดับเมนูขายดีประจำวัน (Top 5 Best Sellers)
-- **แถบสต็อกเบเกอรี่ (FR-03)**: ตรวจสอบและเติมสต็อกสินค้าเบเกอรี่และของหวาน
-- **แถบจัดการเมนู & ราคา (FR-02)**: แก้ไขราคาขายแบบ Inline
-- **แถบประวัติการขาย & Void (FR-08, FR-07)**: บันทึก Audit Log บิลย้อนหลัง และบันทึกประวัติการ Void
-- **แถบจัดการสิทธิ์พนักงาน (FR-01)**: ตรวจสอบรายชื่อและสิทธิ์ของผู้ใช้งานในระบบ
-
-### 4. Customer Mobile Screen (`CustomerMobilePage.jsx`) — [Figma 05_customer_mobile]
-- หน้าจอสำหรับลูกค้าสั่งอาหารผ่านมือถือ (TOR User 1-5)
-- รองรับการแสดงผล 2 โหมด: โหมดกรอบสมาร์ตโฟน (iPhone 393×852 px) และโหมดเต็มจอ Responsive
-- แถบติดตามคิวสด (Live Queue Tracking Banner): แสดงเลขคิวและสถานะการชงของบาริสต้าแบบ Real-time
-- หมวดหมู่สินค้า (เมนูยอดนิยม, กาแฟสด, ชา & นมสด, เบเกอรี่, ของหวาน)
-- หน้าต่างปรับแต่งความหวานและชนิดนมสำหรับมือถือ
-- แถบตะกร้าสินค้าแบบ Sticky Bottom และ Drawer สั่งซื้อระบุหมายเลขโต๊ะ
-- เมื่อสั่งซื้อสำเร็จ คิวจะถูกส่งเข้า Kitchen KDS ทันที
-
-### 5. Login Authentication (`LoginPage.jsx`) — [Figma 00_login_default]
-- ระบบแยกสิทธิ์ผู้ใช้งาน (Cashier, Barista/Operator, Admin)
-- แป้นพิมพ์ตัวเลขสัมผัส 4 หลัก (Touch PIN Keypad)
-- ปุ่ม Demo Auto-fill สำหรับทดสอบแต่ละบทบาท
-- ระบบความปลอดภัยตัด Session Timeout อัตโนมัติเมื่อไม่ใช้งานครบ 15 นาที (NFR-04)
+- `server.js` — Node.js + Express Backend Server พร้อม REST API (`/api/state`, `/api/auth/login`, `/api/orders`, `/api/products`, `/api/sales/:receiptNo/void`, `/api/staff`)
+- `public/index.html` — หน้าเว็บหลักและชุดสี Design Tokens
+- `public/app.js` — ระบบหน้าบ้าน Vanilla JavaScript ครบทั้ง 5 โมดูล (Cashier POS, Kitchen KDS, Admin Dashboard, Customer Mobile, Login)
+- `public/style.css` — สไตล์เพิ่มเติมและระบบพิมพ์ใบเสร็จความร้อน 80mm (`@media print`)

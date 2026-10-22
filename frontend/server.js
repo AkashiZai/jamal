@@ -1,0 +1,516 @@
+const express = require('express');
+const path = require('path');
+
+const app = express();
+const PORT = process.env.PORT || 3000;
+
+app.use(express.json());
+app.use(express.static(path.join(__dirname, 'public')));
+
+// ============================================================================
+// IN-MEMORY STORE (Matches Figma Spec & TOR FR-01 to FR-12)
+// ============================================================================
+
+const CATEGORIES = [
+  { id: 'all', name: 'ทั้งหมด', icon: '☕' },
+  { id: 'coffee', name: 'กาแฟสด', icon: '⚡' },
+  { id: 'non-coffee', name: 'ชา & เครื่องดื่ม', icon: '🍵' },
+  { id: 'bakery', name: '🥐 เบเกอรี่สด', icon: '🥐' },
+  { id: 'dessert', name: '🍰 ของหวาน', icon: '🍰' },
+];
+
+let products = [
+  {
+    id: 'c1',
+    name: 'เอสเพรสโซ่เย็น (Iced Espresso)',
+    category: 'coffee',
+    price: 65.0,
+    desc: 'เมล็ดคั่วกลาง บราซิล-เชียงราย เข้มข้นกลมกล่อม',
+    img: 'https://images.unsplash.com/photo-1517256064527-09c73fc73e38?w=500&q=80',
+    customizable: true,
+    stock: null,
+  },
+  {
+    id: 'c2',
+    name: 'อเมริกาโน่น้ำส้ม (Orange Americano)',
+    category: 'coffee',
+    price: 85.0,
+    desc: 'ช็อตเอสเพรสโซ่เข้มผสมน้ำส้มคั้นสด สดชื่นตื่นตัว',
+    img: 'https://images.unsplash.com/photo-1514432324607-a09d9b4aefdd?w=500&q=80',
+    customizable: true,
+    stock: null,
+  },
+  {
+    id: 'c3',
+    name: 'คาปูชิโน่ร้อน (Hot Cappuccino)',
+    category: 'coffee',
+    price: 60.0,
+    desc: 'ฟองนมเนียนนุ่ม โรยผงโกโก้พรีเมียม',
+    img: 'https://images.unsplash.com/photo-1534778101976-62847782c213?w=500&q=80',
+    customizable: true,
+    stock: null,
+  },
+  {
+    id: 'c4',
+    name: 'มัทฉะลาเต้อูจิ (Uji Matcha Latte)',
+    category: 'non-coffee',
+    price: 85.0,
+    desc: 'ผงมัทฉะเกรดพิธีการแท้จากเกียวโต หอมละมุนเข้มข้น',
+    img: 'https://images.unsplash.com/photo-1536256263959-770b48d82b0a?w=500&q=80',
+    customizable: true,
+    stock: null,
+  },
+  {
+    id: 'c5',
+    name: 'ชาไทยการันต์เย็น (Signature Thai Tea)',
+    category: 'non-coffee',
+    price: 60.0,
+    desc: 'ใบชาคั่วสูตรลับของร้าน หอมกรุ่นหวานมันกำลังดี',
+    img: 'https://images.unsplash.com/photo-1576092768241-dec231879fc3?w=500&q=80',
+    customizable: true,
+    stock: null,
+  },
+  {
+    id: 'b1',
+    name: 'ครัวซองต์เนยสด AOP (Butter Croissant)',
+    category: 'bakery',
+    price: 85.0,
+    desc: 'เนยสดแท้นำเข้าจากฝรั่งเศส กรอบนอกนุ่มฉ่ำเนย',
+    img: 'https://images.unsplash.com/photo-1555507036-ab1f4038808a?w=500&q=80',
+    customizable: false,
+    stock: 4,
+    isBakery: true,
+  },
+  {
+    id: 'b2',
+    name: 'เดนิชสตรอว์เบอร์รี (Strawberry Danish)',
+    category: 'bakery',
+    price: 95.0,
+    desc: 'แป้งเดนิชกรอบ ซอสคัสตาร์ดวานิลลาและผลสตรอว์เบอร์รีสด',
+    img: 'https://images.unsplash.com/photo-1509440159596-0249088772ff?w=500&q=80',
+    customizable: false,
+    stock: 3,
+    isBakery: true,
+  },
+  {
+    id: 'b3',
+    name: 'บาสก์ชีสเค้กหน้าไหม้ (Burnt Cheesecake)',
+    category: 'dessert',
+    price: 125.0,
+    desc: 'ครีมชีสแท้เนื้อเนียนนุ่ม ละลายในปาก หอมคาราเมลไหม้',
+    img: 'https://images.unsplash.com/photo-1533134242443-d4fd215305ad?w=500&q=80',
+    customizable: false,
+    stock: 0,
+    isBakery: true,
+  },
+  {
+    id: 'b4',
+    name: 'เค้กแครอทครีมชีส (Carrot Cake)',
+    category: 'dessert',
+    price: 95.0,
+    desc: 'เนื้อเค้กแครอทนุ่มแน่น หอมเครื่องเทศ ท็อปปิ้งครีมชีสเปรี้ยวหวาน',
+    img: 'https://images.unsplash.com/photo-1621303837174-89787a7d4729?w=500&q=80',
+    customizable: false,
+    stock: 8,
+    isBakery: true,
+  },
+];
+
+let staffAccounts = [
+  {
+    id: 'staff-01',
+    username: 'cashier_zai',
+    pin: '1234',
+    name: 'Zai (กะเช้า)',
+    role: 'cashier',
+    roleName: 'แคชเชียร์',
+  },
+  {
+    id: 'staff-02',
+    username: 'barista_kds',
+    pin: '5678',
+    name: 'อานนท์ (บาริสต้า)',
+    role: 'operator',
+    roleName: 'บาริสต้า/ครัว',
+  },
+  {
+    id: 'staff-03',
+    username: 'admin_boss',
+    pin: '9999',
+    name: 'ผู้จัดการร้าน (Admin)',
+    role: 'admin',
+    roleName: 'เจ้าของร้าน',
+  },
+];
+
+let orders = [
+  {
+    id: 'ord-a04',
+    queueNo: 'A04',
+    createdAt: '14:40',
+    timeElapsed: '1 นาที',
+    status: 'pending',
+    tableNo: '04',
+    channel: 'หน้าร้าน (POS)',
+    cashierName: 'Zai (กะเช้า)',
+    items: [
+      {
+        name: 'เอสเพรสโซ่เย็น',
+        quantity: 1,
+        optionsText: 'หวาน 25% • นมโอ๊ต',
+        isBeverage: true,
+      },
+      {
+        name: 'ครัวซองต์เนยสด AOP',
+        quantity: 1,
+        optionsText: 'อบอุ่นร้อน',
+        isBakery: true,
+      },
+    ],
+    totalAmount: 150.0,
+    paymentMethod: 'PromptPay',
+  },
+  {
+    id: 'ord-a03',
+    queueNo: 'A03',
+    createdAt: '14:37',
+    timeElapsed: 'กำลังทำ (3 นาที)',
+    status: 'in_progress',
+    tableNo: '04',
+    channel: 'Mobile Scan',
+    cashierName: 'ลูกค้าสั่งเอง',
+    items: [
+      {
+        name: 'มัทฉะลาเต้อูจิ',
+        quantity: 2,
+        optionsText: 'หวาน 50% • นมสดปกติ',
+        isBeverage: true,
+      },
+    ],
+    totalAmount: 170.0,
+    paymentMethod: 'PromptPay',
+  },
+  {
+    id: 'ord-a02',
+    queueNo: 'A02',
+    createdAt: '14:32',
+    timeElapsed: 'ขานเรียกแล้ว',
+    status: 'ready',
+    tableNo: '01',
+    channel: 'หน้าร้าน (POS)',
+    cashierName: 'Zai (กะเช้า)',
+    items: [
+      {
+        name: 'ชาไทยการันต์เย็น',
+        quantity: 1,
+        optionsText: 'หวานปกติ 100%',
+        isBeverage: true,
+      },
+    ],
+    totalAmount: 60.0,
+    paymentMethod: 'เงินสด',
+  },
+];
+
+let queueSequence = 5;
+
+let salesStats = {
+  totalSales: 14250.0,
+  totalBills: 84,
+  promptPayShare: 64,
+  cashShare: 36,
+};
+
+let salesHistory = [
+  {
+    receiptNo: 'INV-20260922-0084',
+    time: '14:40',
+    queueNo: 'A04',
+    itemsSummary: 'เอสเพรสโซ่เย็น, ครัวซองต์เนยสด AOP',
+    paymentMethod: 'PromptPay',
+    total: 150.0,
+    status: 'paid',
+    cashier: 'Zai (กะเช้า)',
+  },
+  {
+    receiptNo: 'INV-20260922-0083',
+    time: '14:37',
+    queueNo: 'A03',
+    itemsSummary: 'มัทฉะลาเต้อูจิ (x2)',
+    paymentMethod: 'PromptPay',
+    total: 170.0,
+    status: 'paid',
+    cashier: 'Mobile Scan',
+  },
+  {
+    receiptNo: 'INV-20260922-0082',
+    time: '14:32',
+    queueNo: 'A02',
+    itemsSummary: 'ชาไทยการันต์เย็น',
+    paymentMethod: 'เงินสด',
+    total: 60.0,
+    status: 'paid',
+    cashier: 'Zai (กะเช้า)',
+  },
+  {
+    receiptNo: 'INV-20260922-0081',
+    time: '14:15',
+    queueNo: 'A01',
+    itemsSummary: 'อเมริกาโน่น้ำส้ม, เดนิชสตรอว์เบอร์รี',
+    paymentMethod: 'PromptPay',
+    total: 180.0,
+    status: 'paid',
+    cashier: 'Zai (กะเช้า)',
+  },
+  {
+    receiptNo: 'INV-20260922-0080',
+    time: '13:58',
+    queueNo: 'V99',
+    itemsSummary: 'คาปูชิโน่ร้อน, เค้กแครอท',
+    paymentMethod: 'เงินสด',
+    total: 155.0,
+    status: 'voided',
+    cashier: 'Zai (กะเช้า)',
+    voidBy: 'Admin Zai',
+    voidReason: 'ลูกค้าเปลี่ยนใจ (สั่งผิดเมนู)',
+  },
+];
+
+let customerQueueNo = 'A03';
+
+// ============================================================================
+// REST API ENDPOINTS
+// ============================================================================
+
+app.get('/api/state', (_req, res) => {
+  res.json({
+    categories: CATEGORIES,
+    products,
+    staffAccounts,
+    orders,
+    salesStats,
+    salesHistory,
+    customerQueueNo,
+  });
+});
+
+app.post('/api/auth/login', (req, res) => {
+  const { username, pin } = req.body || {};
+  const matched = staffAccounts.find(
+    (acc) => acc.username.trim().toLowerCase() === String(username || '').trim().toLowerCase()
+  );
+  if (!matched) {
+    return res.status(404).json({ error: 'ไม่พบชื่อผู้ใช้งานนี้ในระบบ' });
+  }
+  if (matched.pin !== String(pin || '')) {
+    return res.status(401).json({ error: 'รหัสผ่าน PIN ไม่ถูกต้อง (ลองใช้: ' + matched.pin + ')' });
+  }
+  res.json({ user: matched });
+});
+
+app.post('/api/orders', (req, res) => {
+  const {
+    items = [],
+    totalAmount = 0,
+    paymentMethod = 'PromptPay',
+    tableNo = 'หน้าร้าน',
+    channel = 'หน้าร้าน (POS)',
+    cashierName = 'Cashier',
+  } = req.body || {};
+
+  const qNum = `A${String(queueSequence).padStart(2, '0')}`;
+  queueSequence += 1;
+
+  const now = new Date();
+  const timeStr = `${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}`;
+
+  const newOrder = {
+    id: `ord-${Date.now()}`,
+    queueNo: qNum,
+    createdAt: timeStr,
+    timeElapsed: 'เพิ่งสั่ง (0 นาที)',
+    status: 'pending',
+    tableNo,
+    channel,
+    cashierName,
+    items: items.map((it) => ({
+      name: it.name,
+      quantity: Number(it.quantity) || 1,
+      optionsText: it.optionsText || (it.category === 'bakery' ? 'อบอุ่นร้อน' : 'ปกติ'),
+      isBeverage: it.category === 'coffee' || it.category === 'non-coffee',
+      isBakery: Boolean(it.isBakery || it.category === 'bakery' || it.category === 'dessert'),
+    })),
+    totalAmount: Number(totalAmount) || 0,
+    paymentMethod,
+  };
+
+  orders = [newOrder, ...orders];
+
+  // Deduct bakery stock (FR-03)
+  products = products.map((p) => {
+    const itemInCart = items.find((it) => it.id === p.id);
+    if (itemInCart && p.stock !== null) {
+      return {
+        ...p,
+        stock: Math.max(0, p.stock - (Number(itemInCart.quantity) || 1)),
+      };
+    }
+    return p;
+  });
+
+  // Update sales stats & history (FR-08)
+  salesStats = {
+    ...salesStats,
+    totalSales: salesStats.totalSales + (Number(totalAmount) || 0),
+    totalBills: salesStats.totalBills + 1,
+  };
+
+  const receiptNo = `INV-${now.getFullYear()}${String(now.getMonth() + 1).padStart(2, '0')}${String(
+    now.getDate()
+  ).padStart(2, '0')}-${String(salesStats.totalBills).padStart(4, '0')}`;
+
+  salesHistory = [
+    {
+      receiptNo,
+      time: timeStr,
+      queueNo: qNum,
+      itemsSummary: items.map((i) => `${i.name} (x${i.quantity})`).join(', '),
+      paymentMethod,
+      total: Number(totalAmount) || 0,
+      status: 'paid',
+      cashier: cashierName,
+    },
+    ...salesHistory,
+  ];
+
+  if (String(channel).includes('Mobile')) {
+    customerQueueNo = qNum;
+  }
+
+  res.status(201).json({ order: newOrder, customerQueueNo });
+});
+
+app.patch('/api/orders/:id/status', (req, res) => {
+  const { id } = req.params;
+  const { status } = req.body || {};
+
+  orders = orders.map((ord) => {
+    if (ord.id === id) {
+      return {
+        ...ord,
+        status,
+        timeElapsed:
+          status === 'in_progress'
+            ? 'กำลังทำ (0 นาที)'
+            : status === 'ready'
+            ? 'พร้อมเสิร์ฟแล้ว'
+            : 'เสร็จสิ้น',
+      };
+    }
+    return ord;
+  });
+
+  res.json({ ok: true, orders });
+});
+
+app.post('/api/products', (req, res) => {
+  const { name, category = 'coffee', price, cost = 0, desc } = req.body || {};
+  if (!name || !price) {
+    return res.status(400).json({ error: 'กรุณาระบุชื่อเมนูและราคา' });
+  }
+  const isBakery = category === 'bakery' || category === 'dessert';
+  const newProduct = {
+    id: `p-${Date.now()}`,
+    name,
+    category,
+    price: Number(price),
+    cost: Number(cost || 0),
+    desc: desc || 'เมนูใหม่ประจำร้าน',
+    img: 'https://images.unsplash.com/photo-1517256064527-09c73fc73e38?w=500&q=80',
+    customizable: category === 'coffee' || category === 'non-coffee',
+    isBakery,
+    stock: isBakery ? 10 : null,
+  };
+  products.push(newProduct);
+  res.status(201).json({ product: newProduct, products });
+});
+
+app.patch('/api/products/:id/price', (req, res) => {
+  const { id } = req.params;
+  const { price } = req.body || {};
+  products = products.map((p) => (p.id === id ? { ...p, price: Number(price) } : p));
+  res.json({ ok: true, products });
+});
+
+app.post('/api/products/:id/restock', (req, res) => {
+  const { id } = req.params;
+  const { amount = 5 } = req.body || {};
+  products = products.map((p) => {
+    if (p.id === id) {
+      return { ...p, stock: (p.stock ?? 0) + Number(amount) };
+    }
+    return p;
+  });
+  res.json({ ok: true, products });
+});
+
+app.post('/api/sales/:receiptNo/void', (req, res) => {
+  const { receiptNo } = req.params;
+  const { adminName = 'Admin Zai', reason = 'ยกเลิกโดยผู้จัดการ' } = req.body || {};
+  salesHistory = salesHistory.map((item) => {
+    if (item.receiptNo === receiptNo) {
+      return {
+        ...item,
+        status: 'voided',
+        voidBy: adminName,
+        voidReason: reason,
+      };
+    }
+    return item;
+  });
+  res.json({ ok: true, salesHistory });
+});
+
+app.post('/api/staff', (req, res) => {
+  const { name, role = 'Cashier', username, pin, shift = 'กะเช้า (07:00 - 15:30)' } = req.body || {};
+  if (!name || !username || !pin) {
+    return res.status(400).json({ error: 'กรุณากรอกข้อมูลให้ครบถ้วน' });
+  }
+  const roleNameMap = {
+    Admin: 'ผู้ดูแลระบบ (เข้าถึงได้ทุกส่วนงาน)',
+    Cashier: 'แคชเชียร์ (ขายหน้าร้าน, คิดเงิน, ปิดกะ)',
+    Barista: 'บาริสต้า (จอคิวครัว KDS, ทำเครื่องดื่ม)',
+  };
+  const normalizedRole =
+    role.toLowerCase() === 'admin'
+      ? 'admin'
+      : role.toLowerCase() === 'barista' || role.toLowerCase() === 'operator'
+      ? 'operator'
+      : 'cashier';
+
+  const newAcc = {
+    id: `staff-${Date.now()}`,
+    name,
+    role: normalizedRole,
+    roleLabel: role,
+    roleName: roleNameMap[role] || role,
+    username,
+    pin: String(pin),
+    shift,
+  };
+  staffAccounts.push(newAcc);
+  res.status(201).json({ staff: newAcc, staffAccounts });
+});
+
+// Fallback to index.html for SPA navigation
+app.get('*', (_req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'index.html'));
+});
+
+if (require.main === module) {
+  app.listen(PORT, () => {
+    console.log(`☕ Jamal Café & Bakery POS (Node.js + Express) running at http://localhost:${PORT}`);
+  });
+}
+
+module.exports = app;

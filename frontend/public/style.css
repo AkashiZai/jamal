@@ -1,19 +1,21 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
-
-@layer base {
-  body {
-    font-family: 'Plus Jakarta Sans', 'Sarabun', sans-serif;
-    background-color: #EDE7DF;
-    color: #1E1B18;
-    -webkit-tap-highlight-color: transparent;
-  }
+body {
+  font-family: 'Plus Jakarta Sans', 'Sarabun', sans-serif;
+  background-color: #EDE7DF;
+  color: #1E1B18;
+  -webkit-tap-highlight-color: transparent;
 }
 
 .tabular-nums {
   font-variant-numeric: tabular-nums;
   font-family: 'JetBrains Mono', monospace;
+}
+
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
 }
 
 /* Custom scrollbar for touch-friendly POS matching Figma */
@@ -32,7 +34,7 @@
 /* 80mm Thermal Receipt Jagged Edge */
 .thermal-receipt {
   background: #FFFFFF;
-  box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
   position: relative;
 }
 .thermal-receipt::after {
@@ -42,13 +44,11 @@
   left: 0;
   right: 0;
   height: 8px;
-  background: radial-gradient(circle, transparent, transparent 50%, #FFFFFF 50%, #FFFFFF 100% );
+  background: radial-gradient(circle, transparent, transparent 50%, #FFFFFF 50%, #FFFFFF 100%);
   background-size: 16px 16px;
 }
 
-/* ========================================================================= */
-/* PRINT STYLES FOR 80MM THERMAL SLIP PRINTER (FR-06)                        */
-/* ========================================================================= */
+/* PRINT STYLES FOR 80MM THERMAL SLIP PRINTER (FR-06) */
 @media print {
   @page {
     size: 80mm auto;
@@ -67,7 +67,6 @@
     print-color-adjust: exact !important;
   }
 
-  /* Thermal Receipt clean styling on print */
   .thermal-receipt {
     box-shadow: none !important;
     border: none !important;
