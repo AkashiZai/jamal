@@ -330,28 +330,27 @@ flowchart TD
     end
 
     %% Frontend Application Layer
-    subgraph FrontendAppLayer ["2. Frontend Application Layer (React + Vite + Tailwind CSS)"]
-        RouterNav["Navigation & Role-based Redirection Router"]
+    subgraph FrontendAppLayer ["2. Web Application Layer (Vanilla HTML5 + JS + Tailwind CSS)"]
+        RouterNav["Navigation & Role-based Redirection Router (public/app.js)"]
         
-        subgraph PageModules ["Page Components"]
-            P_Login["LoginPage.jsx<br/>(PIN Input & Role Switcher)"]
-            P_POS["PosPage.jsx<br/>(Menu, Cart, Numpad, 80mm Slip)"]
-            P_KDS["KitchenKdsPage.jsx<br/>(Kanban Queue 3-Columns)"]
-            P_Admin["AdminDashboardPage.jsx<br/>(Sales, Stock, Pricing, Staff Modals)"]
-            P_Mobile["CustomerMobilePage.jsx<br/>(Mobile Menu, Cart Sheet, Queue Tracker)"]
+        subgraph PageModules ["View Modules (public/app.js)"]
+            P_Login["renderLoginPage()<br/>(PIN Input & Role Switcher)"]
+            P_POS["renderPosPage()<br/>(Menu, Cart, Numpad, 80mm Slip)"]
+            P_KDS["renderKdsPage()<br/>(Kanban Queue 3-Columns)"]
+            P_Admin["renderAdminPage()<br/>(Sales, Stock, Pricing, Staff Modals)"]
+            P_Mobile["renderCustomerMobilePage()<br/>(Mobile Menu, Cart Sheet, Queue Tracker)"]
         end
 
-        subgraph SharedUI ["Shared UI & Components Library"]
-            UI_Navbar["Navbar.jsx"]
+        subgraph SharedUI ["Shared UI & Modals"]
+            UI_Navbar["renderNavbar()"]
             UI_Modals["Customization / Payment / Void Modals"]
-            UI_Slip["80mm Thermal Receipt Generator"]
-            UI_Icons["Lucide Icons Library"]
+            UI_Slip["80mm Thermal Receipt Generator (public/style.css)"]
         end
     end
 
-    %% State & Business Logic Layer
-    subgraph LogicLayer ["3. State & Business Logic Layer (Client State Management)"]
-        AppContext["Central React Context (AppContext.jsx)"]
+    %% Backend & Business Logic Layer
+    subgraph LogicLayer ["3. Backend API & Business Logic Layer (Node.js + Express)"]
+        AppContext["Express REST API Server (frontend/server.js)"]
         SessionSecurity["Session & Security Controller<br/>- 15-Minute Inactivity Auto Logout (NFR-04)"]
         CalculationEngine["Order & Payment Calculation Engine<br/>- Subtotal / VAT 7% / Change Due"]
         QueueStateMachine["Order Lifecycle State Machine<br/>- Pending ➔ Processing ➔ Completed"]
@@ -360,10 +359,9 @@ flowchart TD
 
     %% Data & Foundation Layer
     subgraph DataLayer ["4. Data & Foundations Layer"]
-        MockStore["In-Memory Synchronized Store<br/>- Orders, Active Cart, Menu Items, Stock Ledger"]
+        MockStore["Server In-Memory Store<br/>- Orders, Menu Items, Stock Ledger, Sales History"]
         DesignTokens["Design Tokens Engine (tokens.json)<br/>- Warm Espresso / Cream / Terracotta Theme"]
         PromptPayEngine["PromptPay QR Code Generator Engine"]
-        StorageAdapter["Browser LocalStorage Adapter"]
     end
 
     %% Connections
@@ -378,14 +376,13 @@ flowchart TD
     AppContext <--> MockStore
     SharedUI --> DesignTokens
     CalculationEngine --> PromptPayEngine
-    MockStore <--> StorageAdapter
 ```
 
 #### รายละเอียดโครงสร้างแต่ละชั้น (Layer Breakdown)
 1. **Presentation Layer (ชั้นการแสดงผล)**: รองรับการแสดงผลแบบ Responsive บนอุปกรณ์หลากหลายขนาด ทั้งแท็บเล็ต iPad สำหรับแคชเชียร์/บาริสต้า, จอคอมพิวเตอร์สำหรับผู้จัดการร้าน และมือถือสมาร์ทโฟนสำหรับลูกค้า ตามข้อกำหนด NFR-02 และ NFR-05
-2. **Frontend Application Layer (ชั้นแอปพลิเคชัน)**: พัฒนาด้วย React 18, Vite สำหรับบันเดิลโค้ดอย่างรวดเร็ว และ Tailwind CSS ในการกำหนดสไตล์ UI ตามข้อกำหนด Design System โดยแยกคอมโพเนนต์แต่ละหน้าจออย่างเป็นสัดส่วน
-3. **State & Business Logic Layer (ชั้นตรรกะและการจัดการสถานะ)**: ใช้ React Context (`AppContext`) เป็นตัวกลางซิงค์ข้อมูลระหว่างหน้าจอ พร้อมโมดูลความปลอดภัยจับเวลา 15 นาที (`NFR-04`), กลไกคำนวณเงินและภาษี, เครื่องจักรสถานะออเดอร์ (State Machine), และระบบตัดสต็อกอัตโนมัติ
-4. **Data & Foundations Layer (ชั้นข้อมูลและโครงสร้างพื้นฐาน)**: จัดการคลังข้อมูลจำลอง (In-Memory Store), ระบบสร้าง Dynamic PromptPay QR Code, ไดรเวอร์จำลองการพิมพ์สลิป 80mm และชุดสี Design Tokens
+2. **Web Application Layer (ชั้นหน้าเว็บแอปพลิเคชัน)**: พัฒนาด้วย HTML5, Vanilla JavaScript (`public/app.js`) และ Tailwind CSS ตามข้อกำหนด Design System โดยแยกโมดูลการแสดงผลแต่ละหน้าจออย่างเป็นสัดส่วน
+3. **Backend API & Business Logic Layer (ชั้นตรรกะและ Express Server)**: พัฒนาด้วย **Node.js + Express** (`frontend/server.js`) ให้บริการ REST API สำหรับซิงค์ข้อมูลระหว่างหน้าจอ พร้อมโมดูลความปลอดภัยจับเวลา 15 นาที (`NFR-04`), กลไกคำนวณเงินและภาษี, เครื่องจักรสถานะออเดอร์ (State Machine), และระบบตัดสต็อกอัตโนมัติ
+4. **Data & Foundations Layer (ชั้นข้อมูลและโครงสร้างพื้นฐาน)**: จัดการคลังข้อมูลบนฝั่ง Server, ระบบสร้าง Dynamic PromptPay QR Code, ระบบพิมพ์สลิป 80mm และชุดสี Design Tokens
 
 ---
 
@@ -400,15 +397,15 @@ flowchart TD
 ### 12.2 ภาพหน้าจอระบบจริง (Browser Web Application Screenshots)
 
 #### 1) หน้าจอเข้าสู่ระบบ (Login & PIN Authentication Screen)
-* **เส้นทางไฟล์**: [`frontend/src/pages/LoginPage.jsx`](./frontend/src/pages/LoginPage.jsx)
-* **คำอธิบาย**: หน้าต่างสำหรับเข้าสู่ระบบพร้อมตัวเลือกบทบาท (แคชเชียร์, บาริสต้า, ผู้ดูแลร้าน) และแป้นกรอกรหัส PIN 4 หลัก รองรับการตรวจสอบสิทธิ์และระบบความปลอดภัย Timeout 15 นาที (NFR-04)
+* **เส้นทางไฟล์**: [`frontend/server.js`](./frontend/server.js), [`frontend/public/app.js`](./frontend/public/app.js)
+* **คำอธิบาย**: หน้าต่างสำหรับเข้าสู่ระบบพร้อมตัวเลือกบทบาท (แคชเชียร์, บาริสต้า, ผู้ดูแลร้าน) และแป้นกรอกรหัส PIN 4 หลัก รองรับการตรวจสอบสิทธิ์ผ่าน Express API (`/api/auth/login`) และระบบความปลอดภัย Timeout 15 นาที (NFR-04)
 
 <img width="100%" alt="Screen_01_Login" src="./docs/screenshots/01_login.png" />
 
 ---
 
 #### 2) หน้าจอแคชเชียร์ขายหน้าร้าน (Cashier POS Screen)
-* **เส้นทางไฟล์**: [`frontend/src/pages/PosPage.jsx`](./frontend/src/pages/PosPage.jsx)
+* **เส้นทางไฟล์**: [`frontend/server.js`](./frontend/server.js), [`frontend/public/app.js`](./frontend/public/app.js)
 * **คำอธิบาย**: หน้าจอขายหน้าร้านสำหรับ iPad 11" แสดงหมวดหมู่สินค้า การ์ดเมนูกาแฟ/เบเกอรี่ ช่องค้นหา ตะกร้าสินค้าด้านขวา และปุ่มพักบิล/คิดเงิน พร้อมป๊อปอัปปรับแต่งความหวานและชนิดนม (FR-04, NFR-01, NFR-02)
 
 <img width="100%" alt="Screen_02_POS" src="./docs/screenshots/02_cashier_pos.png" />
@@ -416,7 +413,7 @@ flowchart TD
 ---
 
 #### 3) หน้าจอคิดเงินสดและใบเสร็จความร้อน 80mm (Payment Modal & Receipt Slip)
-* **เส้นทางไฟล์**: [`frontend/src/pages/PosPage.jsx`](./frontend/src/pages/PosPage.jsx)
+* **เส้นทางไฟล์**: [`frontend/server.js`](./frontend/server.js), [`frontend/public/app.js`](./frontend/public/app.js)
 * **คำอธิบาย**: หน้าต่างคิดเงินสดพร้อมแป้น Numpad, ปุ่มลัดธนบัตร (฿100, ฿500, ฿1,000, พอดี), ระบบคำนวณเงินทอนอัตโนมัติ และพรีวิวใบเสร็จรับเงินขนาด 80mm พร้อมพิมพ์สลิป (FR-05, FR-06)
 
 <img width="100%" alt="Screen_03_Payment_Slip" src="./docs/screenshots/03_payment_slip.png" />
@@ -424,15 +421,15 @@ flowchart TD
 ---
 
 #### 4) หน้าจอกระดานคิวห้องครัวและบาริสต้า (Kitchen KDS Kanban Board)
-* **เส้นทางไฟล์**: [`frontend/src/pages/KitchenKdsPage.jsx`](./frontend/src/pages/KitchenKdsPage.jsx)
-* **คำอธิบาย**: กระดานคิวออเดอร์แบบ 3 คอลัมน์ (รอดำเนินการ ➔ กำลังชง/อบ ➔ พร้อมเสิร์ฟ) มีเสียงเตือนออเดอร์ใหม่ และปุ่มกดเปลี่ยนสถานะงานแบบ Real-time (TOR Operator 1-5)
+* **เส้นทางไฟล์**: [`frontend/server.js`](./frontend/server.js), [`frontend/public/app.js`](./frontend/public/app.js)
+* **คำอธิบาย**: กระดานคิวออเดอร์แบบ 3 คอลัมน์ (รอดำเนินการ ➔ กำลังชง/อบ ➔ พร้อมเสิร์ฟ) มีเสียงเตือนออเดอร์ใหม่ และปุ่มกดเปลี่ยนสถานะงานผ่าน Express API (`/api/orders/:id/status`) (TOR Operator 1-5)
 
 <img width="100%" alt="Screen_04_Kitchen_KDS" src="./docs/screenshots/04_kitchen_kds.png" />
 
 ---
 
 #### 5) หน้าจอแผงควบคุมเจ้าของร้าน จัดการสต็อกและเมนู (Admin Dashboard & Inventory)
-* **เส้นทางไฟล์**: [`frontend/src/pages/AdminDashboardPage.jsx`](./frontend/src/pages/AdminDashboardPage.jsx)
+* **เส้นทางไฟล์**: [`frontend/server.js`](./frontend/server.js), [`frontend/public/app.js`](./frontend/public/app.js)
 * **คำอธิบาย**: แดชบอร์ดสรุปยอดขายรวมประจำวัน สัดส่วนเงินสด/โอนเงิน สินค้าขายดี Top 5, ตารางควบคุมสต็อกเบเกอรี่, ป๊อปอัปเพิ่มเมนูใหม่/แก้ไขราคา (FR-02), ป๊อปอัปเพิ่มบัญชีพนักงาน และระบบขออนุมัติ Void บิล (FR-07, FR-08)
 
 <img width="100%" alt="Screen_05_Admin_Dashboard" src="./docs/screenshots/05_admin_dashboard.png" />
@@ -440,7 +437,7 @@ flowchart TD
 ---
 
 #### 6) หน้าจอลูกค้าสั่งอาหารและติดตามคิวบนมือถือ (Customer Mobile Ordering)
-* **เส้นทางไฟล์**: [`frontend/src/pages/CustomerMobilePage.jsx`](./frontend/src/pages/CustomerMobilePage.jsx)
+* **เส้นทางไฟล์**: [`frontend/server.js`](./frontend/server.js), [`frontend/public/app.js`](./frontend/public/app.js)
 * **คำอธิบาย**: หน้าจอมือถือ (Viewport 393×852) สำหรับลูกค้าสแกนดูเมนู ปรับแต่งความหวาน สั่งสินค้า และติดตามสถานะคิวคำสั่งซื้อ (#A03) แบบ Real-time (TOR User 1-5)
 
 <!-- ตัวอย่างหน้าจอ Mobile สำหรับลูกค้า -->
@@ -457,11 +454,11 @@ flowchart TD
 
 ### 1. สิ่งที่ทำได้ดี (What went well)
 1. **การออกแบบ UI และ Asset ใน Figma ครบถ้วนเกินเป้าหมาย**: ทีมสามารถออกแบบและจัดเตรียมไฟล์เวกเตอร์ SVG ได้ครบถ้วนทั้ง 5 โมดูลระบบ รวม 39 หน้าจอ/สถานะเหตุการณ์ ทำให้เห็น Flow การคลิกและ Interaction ที่สมบูรณ์แบบโดยไม่มี Dead Click
-2. **การทำ Design Tokens ทำให้หน้าเว็บสอดคล้องกับดีไซน์ 100%**: การจัดทำไฟล์ `tokens.json` และคู่มือ `FIGMA_SPEC.md` ช่วยให้การเขียน CSS ในหน้าเว็บ React (Vite + Tailwind CSS) มีสี ฟอนต์ และขนาดปุ่มที่ตรงกับ Figma อย่างแม่นยำ
+2. **การทำ Design Tokens ทำให้หน้าเว็บสอดคล้องกับดีไซน์ 100%**: การจัดทำไฟล์ `tokens.json` และคู่มือ `FIGMA_SPEC.md` ช่วยให้การเขียน CSS ในหน้าเว็บ (Node.js + Express) มีสี ฟอนต์ และขนาดปุ่มที่ตรงกับ Figma อย่างแม่นยำ
 3. **การทำงานร่วมกันบน Git และการแบ่งงาน 4 ส่วนชัดเจน**: สมาชิกแต่ละคนรับผิดชอบโมดูลของตนเองตามตารางอย่างเคร่งครัด ทำให้การ Merge โค้ดและการอัปโหลดงานเข้าโฟลเดอร์ `figma page/` ไม่มีข้อขัดแย้ง (Merge Conflict)
 
 ### 2. สิ่งที่ควรปรับปรุง (What could be improved)
-1. **การจำลองข้อมูลระหว่างหน้าจอยังเป็น In-Memory State**: ข้อมูลสินค้า บิลขาย และคิวครัว ยังทำงานอยู่บน React Context ในเบราว์เซอร์ หาก Refresh หน้าเว็บ ข้อมูลบางส่วนจะกลับสู่ค่าเริ่มต้น ควรเร่งพัฒนา Backend REST API และเชื่อมต่อ Database จริงใน Sprint 3
+1. **การจัดเก็บข้อมูลบน Express Server ยังเป็น In-Memory State**: ข้อมูลสินค้า บิลขาย และคิวครัว ทำงานอยู่บนหน่วยความจำของ Node.js Express Server ควรเชื่อมต่อ Database ถาวรใน Sprint 3
 2. **การทดสอบบนอุปกรณ์สัมผัสจริง (Real Hardware Testing)**: การทดสอบส่วนใหญ่ยังทำบนคอมพิวเตอร์ผ่านการจำลองขนาดหน้าจอ (DevTools) ใน Sprint ถัดไปควรนำแท็บเล็ต iPad มาเปิดทดสอบ Touch Target เพื่อประเมินความคล่องตัวในการกดของแคชเชียร์จริง
 3. **การจัดการข้อผิดพลาดของเครือข่าย (Offline Fallback)**: ควรออกแบบระบบรองรับกรณีสัญญาณอินเทอร์เน็ตหลุดชั่วขณะ เพื่อให้หน้าจอขายหน้าร้านยังคงทำงานได้ต่อเนื่องตามข้อกำหนด NFR-03
 
