@@ -475,3 +475,9 @@ flowchart TD
 ```python
 print("Hello World")
 ```
+
+Expected output:
+
+```
+Hello World
+```
