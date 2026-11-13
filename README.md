@@ -473,3 +473,5 @@ flowchart TD
 1. Open an issue that describes the change.
 2. Make your changes in small commits.
 3. Close the issue when the work is done.
+
+Commit messages should start with a type, for example `docs:`, `fix:`, or `feat:`.
