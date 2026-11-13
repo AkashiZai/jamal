@@ -467,3 +467,9 @@ flowchart TD
 2. **ออกแบบและเชื่อมต่อฐานข้อมูล PostgreSQL / Supabase**: สร้างตาราง `users`, `products`, `orders`, `order_items`, `inventory_logs` ตาม ER-Diagram เพื่อบันทึกข้อมูลถาวร
 3. **พัฒนาระบบ Real-time Synchronisation (WebSocket / Supabase Realtime)**: เพื่อให้ออเดอร์ที่ชำระเงินจากหน้า POS เด้งขึ้นบนจอ Kitchen KDS และจอมือถือลูกค้าได้แบบ Real-time โดยไม่ต้อง Refresh
 4. **ทำ Integration Testing**: ทดสอบการทำงานร่วมกันระหว่าง Frontend, Backend และ Database เพื่อเตรียมพร้อมสำหรับส่งมอบใน Phase ถัดไป
+
+## Contributing
+
+1. Open an issue that describes the change.
+2. Make your changes in small commits.
+3. Close the issue when the work is done.
