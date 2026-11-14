@@ -144,6 +144,8 @@ let toppings = [
   { id: 't3', name: 'เพิ่มช็อตเอสเพรสโซ่ (Extra Shot)', price: 20, stock: 30, category: 'topping' },
   { id: 't4', name: 'บุกบราวน์ชูการ์ (Brown Sugar Jelly)', price: 15, stock: 18, category: 'topping' },
 ];
+const CartModel = require('./models/CartModel');
+const cartCatalogHelper = new CartModel();
 
 let staffAccounts = [
   {
@@ -327,24 +329,7 @@ app.get('/api/state', (_req, res) => {
 
 app.get('/api/catalog/search', (req, res) => {
   const { q = '', category = 'all' } = req.query || {};
-  const keyword = String(q).trim().toLowerCase();
-  const matchedProducts = products.filter((prod) => {
-    const matchCat = category === 'all' || prod.category === category;
-    const matchKey =
-      !keyword ||
-      String(prod.name || '').toLowerCase().includes(keyword) ||
-      String(prod.desc || '').toLowerCase().includes(keyword) ||
-      String(prod.category || '').toLowerCase().includes(keyword);
-    return matchCat && matchKey;
-  });
-  const matchedToppings = toppings.filter(
-    (top) => !keyword || String(top.name || '').toLowerCase().includes(keyword)
-  );
-  res.json({
-    products: matchedProducts,
-    toppings: matchedToppings,
-    totalMatches: matchedProducts.length + matchedToppings.length,
-  });
+  res.json(cartCatalogHelper.searchCatalog(products, toppings, q, category));
 });
 
 app.post('/api/auth/login', (req, res) => {
