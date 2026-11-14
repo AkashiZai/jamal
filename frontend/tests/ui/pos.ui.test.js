@@ -17,15 +17,22 @@ test.afterAll(async () => {
   if (server) await new Promise((resolve) => server.close(resolve));
 });
 
-test('UI Case 3: POS searches menu, customizes topping, and verifies cart total', async ({ page }) => {
+test('UI Case 3: POS searches menu and topping, customizes drink, and verifies cash change', async ({ page }) => {
   await page.goto(baseUrl);
   const searchBox = page.getByPlaceholder('ค้นหาชื่อเมนู หรือรหัส...');
-  await searchBox.fill('เอสเพรสโซ่เย็น');
+  await searchBox.fill('โอ๊ต');
+  await expect(page.getByText('ท็อปปิ้งที่ตรงกับคำค้นหา:')).toBeVisible();
 
+  await searchBox.fill('เอสเพรสโซ่เย็น');
   await page.getByText('เอสเพรสโซ่เย็น (Iced Espresso)').first().click();
   await expect(page.getByText('1. ระดับความหวาน (Sweetness Level)')).toBeVisible();
   await page.getByText('เพิ่มช็อตกาแฟ (Extra Espresso Shot)').click();
   await page.getByRole('button', { name: /เพิ่มลงในบิล/ }).click();
 
   await expect(page.getByText('฿85.00').first()).toBeVisible();
+  await page.getByRole('button', { name: /คิดเงิน/ }).click();
+  await page.getByRole('button', { name: '฿100', exact: true }).click();
+
+  await expect(page.getByTestId('pos-change-due')).toHaveText('฿15.00');
+  await expect(page.getByText('฿15.00').first()).toBeVisible();
 });
