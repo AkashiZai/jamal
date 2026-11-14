@@ -298,16 +298,11 @@ app.get('/api/state', (_req, res) => {
 
 app.post('/api/auth/login', (req, res) => {
   const { username, pin } = req.body || {};
-  const matched = staffAccounts.find(
-    (acc) => acc.username.trim().toLowerCase() === String(username || '').trim().toLowerCase()
-  );
-  if (!matched) {
-    return res.status(404).json({ error: 'ไม่พบชื่อผู้ใช้งานนี้ในระบบ' });
+  const result = staffModel.authenticatePin(username, pin);
+  if (!result.ok) {
+    return res.status(result.status).json({ error: result.error });
   }
-  if (matched.pin !== String(pin || '')) {
-    return res.status(401).json({ error: 'รหัสผ่าน PIN ไม่ถูกต้อง (ลองใช้: ' + matched.pin + ')' });
-  }
-  res.json({ user: matched });
+  res.json({ user: result.user });
 });
 
 app.post('/api/auth/social', (req, res) => {
@@ -484,34 +479,12 @@ app.post('/api/sales/:receiptNo/void', (req, res) => {
 });
 
 app.post('/api/staff', (req, res) => {
-  const { name, role = 'Cashier', username, pin, shift = 'กะเช้า (07:00 - 15:30)' } = req.body || {};
-  if (!name || !username || !pin) {
-    return res.status(400).json({ error: 'กรุณากรอกข้อมูลให้ครบถ้วน' });
+  const result = staffModel.addStaff(req.body || {});
+  if (!result.ok) {
+    return res.status(result.status).json({ error: result.error });
   }
-  const roleNameMap = {
-    Admin: 'ผู้ดูแลระบบ (เข้าถึงได้ทุกส่วนงาน)',
-    Cashier: 'แคชเชียร์ (ขายหน้าร้าน, คิดเงิน, ปิดกะ)',
-    Barista: 'บาริสต้า (จอคิวครัว KDS, ทำเครื่องดื่ม)',
-  };
-  const normalizedRole =
-    role.toLowerCase() === 'admin'
-      ? 'admin'
-      : role.toLowerCase() === 'barista' || role.toLowerCase() === 'operator'
-      ? 'operator'
-      : 'cashier';
-
-  const newAcc = {
-    id: `staff-${Date.now()}`,
-    name,
-    role: normalizedRole,
-    roleLabel: role,
-    roleName: roleNameMap[role] || role,
-    username,
-    pin: String(pin),
-    shift,
-  };
-  staffAccounts.push(newAcc);
-  res.status(201).json({ staff: newAcc, staffAccounts });
+  staffAccounts = result.staffAccounts;
+  res.status(201).json({ staff: result.staff, staffAccounts: result.staffAccounts });
 });
 
 // Fallback to index.html for SPA navigation
