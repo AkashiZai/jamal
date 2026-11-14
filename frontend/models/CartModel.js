@@ -53,6 +53,34 @@ class CartModel {
     }
     return this.cart;
   }
+
+  // Calculation Method (ตาม Google Doc): คำนวณ Drink + Toppings, VAT 7% และเงินทอน
+  calculateBill(cashReceived = 0) {
+    const totalAmount = this.cart.reduce(
+      (sum, item) => sum + Number(item.unitPrice) * Number(item.quantity),
+      0
+    );
+    const toppingsTotal = this.cart.reduce(
+      (sum, item) => sum + (Number(item.toppingsPrice) || 0) * Number(item.quantity),
+      0
+    );
+    const totalItemsCount = this.cart.reduce((sum, item) => sum + Number(item.quantity), 0);
+    const subtotal = Number((totalAmount / 1.07).toFixed(2));
+    const vatAmount = Number((totalAmount - subtotal).toFixed(2));
+    const paid = Number(cashReceived) || 0;
+    const changeDue = paid >= totalAmount ? Number((paid - totalAmount).toFixed(2)) : 0;
+
+    return {
+      totalAmount: Number(totalAmount.toFixed(2)),
+      toppingsTotal: Number(toppingsTotal.toFixed(2)),
+      subtotal,
+      vatAmount,
+      totalItemsCount,
+      cashReceived: paid,
+      changeDue,
+      isEnoughCash: paid >= totalAmount,
+    };
+  }
 }
 
 module.exports = CartModel;
