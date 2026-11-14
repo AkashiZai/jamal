@@ -1,5 +1,6 @@
 const express = require('express');
 const path = require('path');
+const StaffModel = require('./models/StaffModel');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -142,6 +143,7 @@ let staffAccounts = [
     roleName: 'เจ้าของร้าน',
   },
 ];
+const staffModel = new StaffModel(staffAccounts);
 
 let orders = [
   {
@@ -306,6 +308,16 @@ app.post('/api/auth/login', (req, res) => {
     return res.status(401).json({ error: 'รหัสผ่าน PIN ไม่ถูกต้อง (ลองใช้: ' + matched.pin + ')' });
   }
   res.json({ user: matched });
+});
+
+app.post('/api/auth/social', (req, res) => {
+  const { provider, email, displayName, role } = req.body || {};
+  const result = staffModel.authenticateSocial({ provider, email, displayName, role });
+  if (!result.ok) {
+    return res.status(result.status).json({ error: result.error });
+  }
+  staffAccounts = staffModel.getAll();
+  res.json({ user: result.user });
 });
 
 app.post('/api/orders', (req, res) => {

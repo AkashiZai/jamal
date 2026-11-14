@@ -305,6 +305,40 @@ window.appActions = {
     render();
   },
 
+  async loginWithSocial(provider) {
+    state.loginError = '';
+    const defaultEmail =
+      state.loginRole === 'admin' ? 'owner.jamal@gmail.com' : `cashier.${provider}@gmail.com`;
+    const email = window.prompt(
+      `กรอกอีเมลบัญชี ${provider === 'gmail' ? 'Google (Gmail)' : 'Facebook'} ของคุณ:`,
+      defaultEmail
+    );
+    if (!email) return;
+
+    const res = await fetch('/api/auth/social', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        provider,
+        email,
+        displayName: `${email.split('@')[0]} (${provider})`,
+        role: state.loginRole,
+      }),
+    });
+    const data = await res.json();
+    if (!res.ok) {
+      state.loginError = data.error || 'เข้าสู่ระบบ Social Login ไม่สำเร็จ';
+      render();
+      return;
+    }
+    state.currentUser = data.user;
+    state.remainingSeconds = SESSION_TIMEOUT_SECONDS;
+    if (data.user.role === 'operator') state.currentPage = 'kds';
+    else if (data.user.role === 'admin') state.currentPage = 'admin';
+    else state.currentPage = 'pos';
+    await fetchState();
+  },
+
   // --- POS ---
   setPosCategory(catId) {
     state.posCategory = catId;
@@ -961,6 +995,32 @@ function renderLoginPage() {
             <span>→</span>
           </button>
         </form>
+
+        <div class="space-y-2 pt-1">
+          <div class="relative flex py-1 items-center">
+            <div class="flex-grow border-t border-cream-300"></div>
+            <span class="flex-shrink mx-3 text-[11px] text-warmgray-400">หรือเข้าสู่ระบบด้วย Social Media</span>
+            <div class="flex-grow border-t border-cream-300"></div>
+          </div>
+          <div class="grid grid-cols-2 gap-2 text-xs font-bold">
+            <button
+              type="button"
+              onclick="appActions.loginWithSocial('gmail')"
+              class="py-2.5 px-3 bg-white border border-cream-300 hover:bg-cream-100 text-espresso-900 rounded-xl transition flex items-center justify-center gap-1.5"
+            >
+              <span>G</span>
+              <span>Gmail</span>
+            </button>
+            <button
+              type="button"
+              onclick="appActions.loginWithSocial('facebook')"
+              class="py-2.5 px-3 bg-[#1877F2] hover:bg-[#166FE5] text-white rounded-xl transition flex items-center justify-center gap-1.5"
+            >
+              <span>f</span>
+              <span>Facebook</span>
+            </button>
+          </div>
+        </div>
 
         <p class="text-center text-[11px] text-warmgray-400">
           ระบบความปลอดภัย: Timeout Logout อัตโนมัติเมื่อไม่ใช้งานเกิน 15 นาที (NFR-04)
