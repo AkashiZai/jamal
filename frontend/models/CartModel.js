@@ -81,6 +81,30 @@ class CartModel {
       isEnoughCash: paid >= totalAmount,
     };
   }
+
+  // Search Method (ตาม Google Doc & Issue #12): ค้นหา Drink, Bakery และ Topping ด้วย keyword
+  searchCatalog(products = [], toppings = [], keyword = '', category = 'all') {
+    const q = String(keyword || '').trim().toLowerCase();
+    const matchedProducts = products.filter((prod) => {
+      const matchCat = category === 'all' || prod.category === category;
+      const matchKey =
+        !q ||
+        String(prod.name || '').toLowerCase().includes(q) ||
+        String(prod.desc || '').toLowerCase().includes(q) ||
+        String(prod.category || '').toLowerCase().includes(q);
+      return matchCat && matchKey;
+    });
+
+    const matchedToppings = toppings.filter((top) => {
+      return !q || String(top.name || '').toLowerCase().includes(q);
+    });
+
+    return {
+      products: matchedProducts,
+      toppings: matchedToppings,
+      totalMatches: matchedProducts.length + matchedToppings.length,
+    };
+  }
 }
 
 module.exports = CartModel;
