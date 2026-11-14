@@ -484,34 +484,12 @@ app.post('/api/sales/:receiptNo/void', (req, res) => {
 });
 
 app.post('/api/staff', (req, res) => {
-  const { name, role = 'Cashier', username, pin, shift = 'กะเช้า (07:00 - 15:30)' } = req.body || {};
-  if (!name || !username || !pin) {
-    return res.status(400).json({ error: 'กรุณากรอกข้อมูลให้ครบถ้วน' });
+  const result = staffModel.addStaff(req.body || {});
+  if (!result.ok) {
+    return res.status(result.status).json({ error: result.error });
   }
-  const roleNameMap = {
-    Admin: 'ผู้ดูแลระบบ (เข้าถึงได้ทุกส่วนงาน)',
-    Cashier: 'แคชเชียร์ (ขายหน้าร้าน, คิดเงิน, ปิดกะ)',
-    Barista: 'บาริสต้า (จอคิวครัว KDS, ทำเครื่องดื่ม)',
-  };
-  const normalizedRole =
-    role.toLowerCase() === 'admin'
-      ? 'admin'
-      : role.toLowerCase() === 'barista' || role.toLowerCase() === 'operator'
-      ? 'operator'
-      : 'cashier';
-
-  const newAcc = {
-    id: `staff-${Date.now()}`,
-    name,
-    role: normalizedRole,
-    roleLabel: role,
-    roleName: roleNameMap[role] || role,
-    username,
-    pin: String(pin),
-    shift,
-  };
-  staffAccounts.push(newAcc);
-  res.status(201).json({ staff: newAcc, staffAccounts });
+  staffAccounts = result.staffAccounts;
+  res.status(201).json({ staff: result.staff, staffAccounts: result.staffAccounts });
 });
 
 // Fallback to index.html for SPA navigation

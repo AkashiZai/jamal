@@ -7,6 +7,44 @@ class StaffModel {
     return this.staffList;
   }
 
+  // Data Structure Method 1: เพิ่มบัญชีพนักงานพร้อมตรวจสอบข้อมูลซ้ำ
+  addStaff({ name, role = 'Cashier', username, pin, shift = 'กะเช้า (07:00 - 15:30)' }) {
+    if (!name || !username || !pin) {
+      return { ok: false, status: 400, error: 'กรุณากรอกข้อมูลให้ครบถ้วน' };
+    }
+    const cleanUsername = String(username).trim().toLowerCase();
+    if (this.staffList.find((acc) => acc.username.trim().toLowerCase() === cleanUsername)) {
+      return { ok: false, status: 409, error: 'ชื่อผู้ใช้งานนี้มีอยู่ในระบบแล้ว' };
+    }
+
+    const roleNameMap = {
+      Admin: 'ผู้ดูแลระบบ (เข้าถึงได้ทุกส่วนงาน)',
+      Cashier: 'แคชเชียร์ (ขายหน้าร้าน, คิดเงิน, ปิดกะ)',
+      Barista: 'บาริสต้า (จอคิวครัว KDS, ทำเครื่องดื่ม)',
+    };
+    const lowerRole = String(role).toLowerCase();
+    const normalizedRole =
+      lowerRole === 'admin'
+        ? 'admin'
+        : lowerRole === 'barista' || lowerRole === 'operator'
+        ? 'operator'
+        : 'cashier';
+
+    const newAcc = {
+      id: `staff-${Date.now()}-${Math.floor(Math.random() * 1000)}`,
+      name: String(name).trim(),
+      role: normalizedRole,
+      roleLabel: role,
+      roleName: roleNameMap[role] || role,
+      username: String(username).trim(),
+      pin: String(pin),
+      shift,
+      authProvider: 'local',
+    };
+    this.staffList.push(newAcc);
+    return { ok: true, status: 201, staff: newAcc, staffAccounts: this.staffList };
+  }
+
   // Data Structure Method 3: เข้าสู่ระบบด้วย Social Media (Gmail / Facebook) ตาม Issue #12
   authenticateSocial({ provider, email, displayName, role = 'cashier' }) {
     const cleanProvider = String(provider || '').trim().toLowerCase();
