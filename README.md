@@ -467,3 +467,31 @@ flowchart TD
 2. **ออกแบบและเชื่อมต่อฐานข้อมูล PostgreSQL / Supabase**: สร้างตาราง `users`, `products`, `orders`, `order_items`, `inventory_logs` ตาม ER-Diagram เพื่อบันทึกข้อมูลถาวร
 3. **พัฒนาระบบ Real-time Synchronisation (WebSocket / Supabase Realtime)**: เพื่อให้ออเดอร์ที่ชำระเงินจากหน้า POS เด้งขึ้นบนจอ Kitchen KDS และจอมือถือลูกค้าได้แบบ Real-time โดยไม่ต้อง Refresh
 4. **ทำ Integration Testing**: ทดสอบการทำงานร่วมกันระหว่าง Frontend, Backend และ Database เพื่อเตรียมพร้อมสำหรับส่งมอบใน Phase ถัดไป
+
+---
+
+### การทำงานของโปรแกรมและสรุปจำนวน HTTP Methods / API (Phase 3 & Phase 4)
+ระบบพัฒนาด้วย **Node.js + Express** (`frontend/server.js`) โดยให้บริการ Static Template (`public/index.html`, `public/app.js`, `public/style.css`) และเชื่อมต่อผ่าน REST API แบบ JSON รวม **13 Endpoints**:
+- **GET (3 methods):**
+  1. `GET /api/state` — ดึงข้อมูลเริ่มต้นทั้งหมด (Categories, Products, Toppings, Staff, Orders, Sales, Sorted Inventory)
+  2. `GET /api/inventory/sorted` — ดึงรายงานสต็อกสินค้า (Base Drink, Cake, Toppings) เรียงจากน้อยไปมาก
+  3. `GET *` — เสิร์ฟหน้า Single-Page Application Template (`public/index.html`)
+- **POST (6 methods):**
+  1. `POST /api/auth/login` — ตรวจสอบสิทธิ์ด้วย Username และรหัส PIN 4 หลัก
+  2. `POST /api/auth/social` — เข้าสู่ระบบผ่าน Gmail / Facebook (Social Login)
+  3. `POST /api/orders` — สร้างออเดอร์ใหม่ ตัดสต็อกอัตโนมัติ และบันทึกยอดขาย
+  4. `POST /api/products` — เพิ่มรายการเมนูใหม่เข้าคลังสินค้า
+  5. `POST /api/products/:id/restock` — เติมสต็อกสินค้าหรือท็อปปิ้ง
+  6. `POST /api/sales/:receiptNo/void` — ยกเลิกบิลด้วยสิทธิ์ผู้จัดการ (Admin Override)
+  *(รวม `POST /api/staff` สำหรับเพิ่มบัญชีพนักงาน)*
+- **PUT / PATCH / DELETE (4 methods):**
+  1. `PUT /api/products/:id` — แก้ไขรายละเอียดสินค้า หมวดหมู่ ราคา และตัวเลือก
+  2. `PATCH /api/products/:id/price` — แก้ไขราคาขายด่วน
+  3. `PATCH /api/orders/:id/status` — เปลี่ยนสถานะคิวครัว KDS (`pending` -> `in_progress` -> `ready` -> `completed`)
+  4. `DELETE /api/products/:id` — ลบรายการสินค้าออกจากระบบ
+
+### การทำ CI/CD Pipeline (Free-tier Parallel Jobs) และการ Deploy (Phase 4)
+- **Continuous Integration (CI):** ใช้ GitHub Actions (`.github/workflows/ci.yml`) โดยแยกเป็น **2 Parallel Jobs บน Free Tier** ที่รันพร้อมกันเมื่อมีการ Push หรือเปิด Pull Request:
+  1. `unit-test-and-coverage`: รัน Jest Unit Tests ทั้ง 4 Models และตรวจสอบ Statement Coverage (`>= 80%`)
+  2. `ui-test-and-static-check`: รัน Playwright UI Tests ครบทั้ง 5 เคสเพื่อตรวจค่า Expected Results บนหน้าเว็บจริง
+- **Continuous Deployment (CD):** เมื่อทั้ง 2 Parallel Jobs ผ่านครบ (`needs: [unit-test-and-coverage, ui-test-and-static-check]`) ระบบจะทริกเกอร์ Deploy ขึ้นเซิร์ฟเวอร์ Production อัตโนมัติ
