@@ -367,20 +367,24 @@ window.appActions = {
     }
   },
 
-  addToCart(product, optionsText, unitPrice) {
+  addToCart(product, optionsText, unitPrice, toppings = []) {
     const existingIdx = state.cart.findIndex(
       (item) => item.id === product.id && item.optionsText === optionsText
     );
     if (existingIdx > -1) {
       state.cart[existingIdx].quantity += 1;
     } else {
+      const toppingsPrice = toppings.reduce((sum, t) => sum + (Number(t.price) || 0), 0);
       state.cart.push({
         cartItemId: `${product.id}-${Date.now()}-${Math.random().toString(36).slice(2, 6)}`,
         id: product.id,
         name: product.name,
         category: product.category,
+        basePrice: Number(product.price) || 0,
+        toppingsPrice,
         unitPrice,
         optionsText,
+        toppings: toppings.map((t) => ({ id: t.id, name: t.name, price: Number(t.price) || 0 })),
         quantity: 1,
         isBakery: Boolean(product.isBakery),
       });
@@ -418,22 +422,33 @@ window.appActions = {
     if (!p) return;
     let extra = 0;
     const opts = [`หวาน ${state.customSweetness}`];
+    const selectedToppings = [];
+    const pickTopping = (id, fallbackName, fallbackPrice) => {
+      const matched = (state.toppings || []).find((t) => t.id === id);
+      return matched
+        ? { id: matched.id, name: matched.name, price: Number(matched.price) || fallbackPrice }
+        : { id, name: fallbackName, price: fallbackPrice };
+    };
     if (state.customMilk.includes('Oat')) {
       extra += 15;
       opts.push('นมโอ๊ต (+฿15)');
+      selectedToppings.push(pickTopping('t1', 'นมโอ๊ต (Oat Milk)', 15));
     } else if (state.customMilk.includes('Almond')) {
       extra += 15;
       opts.push('นมอัลมอนด์ (+฿15)');
+      selectedToppings.push(pickTopping('t2', 'นมอัลมอนด์ (Almond Milk)', 15));
     }
     if (state.customExtraShot) {
       extra += 20;
       opts.push('เพิ่มช็อต (+฿20)');
+      selectedToppings.push(pickTopping('t3', 'เพิ่มช็อตเอสเพรสโซ่ (Extra Shot)', 20));
     }
     if (state.customJelly) {
       extra += 15;
       opts.push('บุกบราวน์ชูการ์ (+฿15)');
+      selectedToppings.push(pickTopping('t4', 'บุกบราวน์ชูการ์ (Brown Sugar Jelly)', 15));
     }
-    this.addToCart(p, opts.join(' • '), p.price + extra);
+    this.addToCart(p, opts.join(' • '), p.price + extra, selectedToppings);
     state.customizingProduct = null;
     render();
   },
@@ -545,6 +560,7 @@ window.appActions = {
         name: ci.name,
         quantity: ci.quantity,
         optionsText: ci.optionsText,
+        toppings: ci.toppings || [],
         category: ci.category,
         isBakery: ci.isBakery,
       })),
