@@ -1107,6 +1107,14 @@ function renderPosPage() {
           </div>
 
           <div class="flex-1 p-4 grid grid-cols-2 sm:grid-cols-3 xl:grid-cols-4 gap-3.5 overflow-y-auto max-h-[620px] content-start auto-rows-max items-start">
+            ${
+              matchedToppings.length > 0
+                ? `<div class="col-span-full bg-amber-50 border border-amber-200 rounded-xl p-3 text-xs text-espresso-900">
+                     <span class="font-bold">ท็อปปิ้งที่ตรงกับคำค้นหา:</span>
+                     ${matchedToppings.map((t) => `${escapeHtml(t.name)} (+฿${t.price}, คงเหลือ ${t.stock})`).join(' • ')}
+                   </div>`
+                : ''
+            }
             ${filteredProducts
               .map((product) => {
                 const isOutOfStock = product.stock !== null && product.stock <= 0;
