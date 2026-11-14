@@ -305,6 +305,40 @@ window.appActions = {
     render();
   },
 
+  async loginWithSocial(provider) {
+    state.loginError = '';
+    const defaultEmail =
+      state.loginRole === 'admin' ? 'owner.jamal@gmail.com' : `cashier.${provider}@gmail.com`;
+    const email = window.prompt(
+      `กรอกอีเมลบัญชี ${provider === 'gmail' ? 'Google (Gmail)' : 'Facebook'} ของคุณ:`,
+      defaultEmail
+    );
+    if (!email) return;
+
+    const res = await fetch('/api/auth/social', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        provider,
+        email,
+        displayName: `${email.split('@')[0]} (${provider})`,
+        role: state.loginRole,
+      }),
+    });
+    const data = await res.json();
+    if (!res.ok) {
+      state.loginError = data.error || 'เข้าสู่ระบบ Social Login ไม่สำเร็จ';
+      render();
+      return;
+    }
+    state.currentUser = data.user;
+    state.remainingSeconds = SESSION_TIMEOUT_SECONDS;
+    if (data.user.role === 'operator') state.currentPage = 'kds';
+    else if (data.user.role === 'admin') state.currentPage = 'admin';
+    else state.currentPage = 'pos';
+    await fetchState();
+  },
+
   // --- POS ---
   setPosCategory(catId) {
     state.posCategory = catId;
