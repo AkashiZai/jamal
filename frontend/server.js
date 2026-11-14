@@ -115,6 +115,34 @@ let products = [
     stock: 8,
     isBakery: true,
   },
+  {
+    id: 'c6',
+    name: 'ลาเต้เย็น (Iced Latte)',
+    category: 'coffee',
+    price: 70.0,
+    desc: 'ช็อตเอสเพรสโซ่ผสมนมสดเย็น หอมละมุนกลมกล่อม',
+    img: 'https://images.unsplash.com/photo-1572442388796-11668a67e53d?w=500&q=80',
+    customizable: true,
+    stock: 25,
+  },
+  {
+    id: 'b5',
+    name: 'บราวนี่ดาร์กช็อกโกแลต (Dark Choc Brownie)',
+    category: 'dessert',
+    price: 75.0,
+    desc: 'ดาร์กช็อกโกแลตเข้มข้น 70% เนื้อหนึบฉ่ำ',
+    img: 'https://images.unsplash.com/photo-1606313564200-e75d5e30476c?w=500&q=80',
+    customizable: false,
+    stock: 12,
+    isBakery: true,
+  },
+];
+
+let toppings = [
+  { id: 't1', name: 'นมโอ๊ต (Oat Milk)', price: 15, stock: 20, category: 'topping' },
+  { id: 't2', name: 'นมอัลมอนด์ (Almond Milk)', price: 15, stock: 15, category: 'topping' },
+  { id: 't3', name: 'เพิ่มช็อตเอสเพรสโซ่ (Extra Shot)', price: 20, stock: 30, category: 'topping' },
+  { id: 't4', name: 'บุกบราวน์ชูการ์ (Brown Sugar Jelly)', price: 15, stock: 18, category: 'topping' },
 ];
 
 let staffAccounts = [
@@ -288,11 +316,34 @@ app.get('/api/state', (_req, res) => {
   res.json({
     categories: CATEGORIES,
     products,
+    toppings,
     staffAccounts,
     orders,
     salesStats,
     salesHistory,
     customerQueueNo,
+  });
+});
+
+app.get('/api/catalog/search', (req, res) => {
+  const { q = '', category = 'all' } = req.query || {};
+  const keyword = String(q).trim().toLowerCase();
+  const matchedProducts = products.filter((prod) => {
+    const matchCat = category === 'all' || prod.category === category;
+    const matchKey =
+      !keyword ||
+      String(prod.name || '').toLowerCase().includes(keyword) ||
+      String(prod.desc || '').toLowerCase().includes(keyword) ||
+      String(prod.category || '').toLowerCase().includes(keyword);
+    return matchCat && matchKey;
+  });
+  const matchedToppings = toppings.filter(
+    (top) => !keyword || String(top.name || '').toLowerCase().includes(keyword)
+  );
+  res.json({
+    products: matchedProducts,
+    toppings: matchedToppings,
+    totalMatches: matchedProducts.length + matchedToppings.length,
   });
 });
 

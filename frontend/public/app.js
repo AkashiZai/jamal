@@ -8,6 +8,7 @@ const state = {
   // Server-synced state
   categories: [],
   products: [],
+  toppings: [],
   staffAccounts: [],
   orders: [],
   salesStats: { totalSales: 14250, totalBills: 84, promptPayShare: 64, cashShare: 36 },
@@ -148,6 +149,7 @@ async function fetchState() {
     const data = await res.json();
     state.categories = data.categories || [];
     state.products = data.products || [];
+    state.toppings = data.toppings || [];
     state.staffAccounts = data.staffAccounts || [];
     state.orders = data.orders || [];
     state.salesStats = data.salesStats || state.salesStats;
@@ -365,20 +367,24 @@ window.appActions = {
     }
   },
 
-  addToCart(product, optionsText, unitPrice) {
+  addToCart(product, optionsText, unitPrice, toppings = []) {
     const existingIdx = state.cart.findIndex(
       (item) => item.id === product.id && item.optionsText === optionsText
     );
     if (existingIdx > -1) {
       state.cart[existingIdx].quantity += 1;
     } else {
+      const toppingsPrice = toppings.reduce((sum, t) => sum + (Number(t.price) || 0), 0);
       state.cart.push({
         cartItemId: `${product.id}-${Date.now()}-${Math.random().toString(36).slice(2, 6)}`,
         id: product.id,
         name: product.name,
         category: product.category,
+        basePrice: Number(product.price) || 0,
+        toppingsPrice,
         unitPrice,
         optionsText,
+        toppings: toppings.map((t) => ({ id: t.id, name: t.name, price: Number(t.price) || 0 })),
         quantity: 1,
         isBakery: Boolean(product.isBakery),
       });
@@ -416,22 +422,33 @@ window.appActions = {
     if (!p) return;
     let extra = 0;
     const opts = [`หวาน ${state.customSweetness}`];
+    const selectedToppings = [];
+    const pickTopping = (id, fallbackName, fallbackPrice) => {
+      const matched = (state.toppings || []).find((t) => t.id === id);
+      return matched
+        ? { id: matched.id, name: matched.name, price: Number(matched.price) || fallbackPrice }
+        : { id, name: fallbackName, price: fallbackPrice };
+    };
     if (state.customMilk.includes('Oat')) {
       extra += 15;
       opts.push('นมโอ๊ต (+฿15)');
+      selectedToppings.push(pickTopping('t1', 'นมโอ๊ต (Oat Milk)', 15));
     } else if (state.customMilk.includes('Almond')) {
       extra += 15;
       opts.push('นมอัลมอนด์ (+฿15)');
+      selectedToppings.push(pickTopping('t2', 'นมอัลมอนด์ (Almond Milk)', 15));
     }
     if (state.customExtraShot) {
       extra += 20;
       opts.push('เพิ่มช็อต (+฿20)');
+      selectedToppings.push(pickTopping('t3', 'เพิ่มช็อตเอสเพรสโซ่ (Extra Shot)', 20));
     }
     if (state.customJelly) {
       extra += 15;
       opts.push('บุกบราวน์ชูการ์ (+฿15)');
+      selectedToppings.push(pickTopping('t4', 'บุกบราวน์ชูการ์ (Brown Sugar Jelly)', 15));
     }
-    this.addToCart(p, opts.join(' • '), p.price + extra);
+    this.addToCart(p, opts.join(' • '), p.price + extra, selectedToppings);
     state.customizingProduct = null;
     render();
   },
@@ -543,6 +560,7 @@ window.appActions = {
         name: ci.name,
         quantity: ci.quantity,
         optionsText: ci.optionsText,
+        toppings: ci.toppings || [],
         category: ci.category,
         isBakery: ci.isBakery,
       })),
@@ -1035,9 +1053,17 @@ function renderPosPage() {
     const matchCategory = state.posCategory === 'all' || prod.category === state.posCategory;
     const q = state.posSearch.trim().toLowerCase();
     const matchQuery =
-      !q || prod.name.toLowerCase().includes(q) || prod.desc.toLowerCase().includes(q);
+      !q ||
+      prod.name.toLowerCase().includes(q) ||
+      prod.desc.toLowerCase().includes(q) ||
+      String(prod.category || '').toLowerCase().includes(q);
     return matchCategory && matchQuery;
   });
+
+  const searchKey = state.posSearch.trim().toLowerCase();
+  const matchedToppings = searchKey
+    ? (state.toppings || []).filter((t) => t.name.toLowerCase().includes(searchKey))
+    : [];
 
   const totalAmount = state.cart.reduce((sum, item) => sum + item.unitPrice * item.quantity, 0);
   const subtotal = totalAmount / 1.07;
@@ -1097,6 +1123,14 @@ function renderPosPage() {
           </div>
 
           <div class="flex-1 p-4 grid grid-cols-2 sm:grid-cols-3 xl:grid-cols-4 gap-3.5 overflow-y-auto max-h-[620px] content-start auto-rows-max items-start">
+            ${
+              matchedToppings.length > 0
+                ? `<div class="col-span-full bg-amber-50 border border-amber-200 rounded-xl p-3 text-xs text-espresso-900">
+                     <span class="font-bold">ท็อปปิ้งที่ตรงกับคำค้นหา:</span>
+                     ${matchedToppings.map((t) => `${escapeHtml(t.name)} (+฿${t.price}, คงเหลือ ${t.stock})`).join(' • ')}
+                   </div>`
+                : ''
+            }
             ${filteredProducts
               .map((product) => {
                 const isOutOfStock = product.stock !== null && product.stock <= 0;
@@ -1383,6 +1417,7 @@ function renderPaymentModal() {
   const subtotal = total / 1.07;
   const vat = total - subtotal;
   const change = Math.max(0, state.cashEntered - total);
+  const shortfall = Math.max(0, total - state.cashEntered);
   const isCashSufficient = state.cashEntered >= total;
 
   return `
@@ -1457,8 +1492,13 @@ function renderPaymentModal() {
 
               <div class="mt-4 p-3.5 rounded-2xl bg-matcha-light border border-matcha-border flex justify-between items-center">
                 <span class="text-xs font-bold text-matcha">เงินทอน (Change Due)</span>
-                <span class="font-mono font-black text-2xl text-matcha tabular-nums">฿${change.toFixed(2)}</span>
+                <span data-testid="pos-change-due" class="font-mono font-black text-2xl text-matcha tabular-nums">฿${change.toFixed(2)}</span>
               </div>
+              ${
+                state.cashEntered > 0 && !isCashSufficient
+                  ? `<div class="mt-2 text-right text-xs font-semibold text-red-600">ยังขาดอีก ฿${shortfall.toFixed(2)}</div>`
+                  : ''
+              }
             </div>
           `
               : `
