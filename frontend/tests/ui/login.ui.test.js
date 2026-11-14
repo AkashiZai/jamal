@@ -17,3 +17,12 @@ test.beforeAll(async () => {
 test.afterAll(async () => {
   if (server) await new Promise((resolve) => server.close(resolve));
 });
+
+test('UI Case 1: Login with valid Cashier PIN navigates to POS page', async ({ page }) => {
+  await page.goto(baseUrl);
+  await page.getByTitle('ออกจากระบบ (Sign Out)').click();
+  await expect(page.getByText('เข้าสู่ระบบ JAMAL POS')).toBeVisible();
+
+  await page.getByRole('button', { name: /เข้าสู่ระบบ \(Sign In\)/ }).click();
+  await expect(page.getByText('เมนูสินค้าหน้าร้าน (Menu Catalog)')).toBeVisible();
+});
