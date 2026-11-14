@@ -1037,9 +1037,17 @@ function renderPosPage() {
     const matchCategory = state.posCategory === 'all' || prod.category === state.posCategory;
     const q = state.posSearch.trim().toLowerCase();
     const matchQuery =
-      !q || prod.name.toLowerCase().includes(q) || prod.desc.toLowerCase().includes(q);
+      !q ||
+      prod.name.toLowerCase().includes(q) ||
+      prod.desc.toLowerCase().includes(q) ||
+      String(prod.category || '').toLowerCase().includes(q);
     return matchCategory && matchQuery;
   });
+
+  const searchKey = state.posSearch.trim().toLowerCase();
+  const matchedToppings = searchKey
+    ? (state.toppings || []).filter((t) => t.name.toLowerCase().includes(searchKey))
+    : [];
 
   const totalAmount = state.cart.reduce((sum, item) => sum + item.unitPrice * item.quantity, 0);
   const subtotal = totalAmount / 1.07;
