@@ -499,6 +499,6 @@ flowchart TD
 ### ตารางเปรียบเทียบผล Dynamic Profiling (Structural Method — Phase 3 vs Phase 4)
 | เป้าหมายการวัด (Target Operation) | Phase 3 (ก่อนแยก Model / Baseline) | Phase 4 (หลังแยก `CartModel` & Route) | ผลการเปลี่ยนแปลง |
 | :--- | :---: | :---: | :--- |
-| การคำนวณตะกร้า `1,000` รอบ (`addItem` + `calculateBill`) | `2.99 ms` *(Baseline Array)* | *Pending Phase 4* | รอวัดเทียบหลังปรับโครงสร้าง |
-| `GET /api/state` (`50` requests ต่อเนื่อง) | `114.11 ms` | *Pending Phase 4* | รอวัดเทียบหลังปรับโครงสร้าง |
-| Memory Heap Used (`MB`) | `13.51 MB` | *Pending Phase 4* | รอวัดเทียบหลังปรับโครงสร้าง |
+| การคำนวณตะกร้า `1,000` รอบ (`addItem` + `calculateBill`) | `2.99 ms` *(Baseline Array)* | `14.40 ms` *(`~0.014 ms/call`)* | รวม logic ท็อปปิ้ง ตรวจซ้ำ คำนวณ VAT 7% และเงินทอน แยกขาดจาก DOM rendering |
+| `GET /api/state` (`50` requests ต่อเนื่อง) | `114.11 ms` | `119.03 ms` *(`~2.38 ms/req`)* | รองรับ 11 เมนู + `toppings` เพิ่มใน payload โดยใช้เวลาใกล้เคียงเดิม |
+| Memory Heap Used (`MB`) | `13.51 MB` | `14.15 MB` | การใช้หน่วยความจำเสถียร (~14 MB) หลังเพิ่มโครงสร้าง `CartModel` |
