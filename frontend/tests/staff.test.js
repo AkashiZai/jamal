@@ -68,5 +68,62 @@ describe('StaffModel Unit Tests', () => {
       .post('/api/auth/social')
       .send({ provider: 'unknown', email: '' });
     expect(badRes.statusCode).toBe(400);
+
+    const badPinRes = await request(app)
+      .post('/api/auth/login')
+      .send({ username: 'cashier_zai', pin: '0000' });
+    expect(badPinRes.statusCode).toBe(401);
+  });
+
+  test('addStaff, countStaffByRole, and isSessionExpired work accurately', async () => {
+    const model = new StaffModel(seed);
+    expect(model.addStaff({ name: '', username: '', pin: '' }).ok).toBe(false);
+    expect(model.addStaff({ name: 'B', username: 'cashier_zai', pin: '1111' }).status).toBe(409);
+
+    const added = model.addStaff({
+      name: 'Barista A',
+      role: 'Barista',
+      username: 'barista_a',
+      pin: '5678',
+    });
+    expect(added.ok).toBe(true);
+
+    const addedAdmin = model.addStaff({
+      name: 'Manager B',
+      role: 'Admin',
+      username: 'admin_b',
+      pin: '8888',
+    });
+    expect(addedAdmin.ok).toBe(true);
+
+    const addedDefault = model.addStaff({
+      name: 'Cashier C',
+      username: 'cashier_c',
+      pin: '2222',
+    });
+    expect(addedDefault.ok).toBe(true);
+    expect(model.countStaffByRole()).toEqual({ admin: 2, cashier: 2, operator: 1, total: 5 });
+
+    const now = 1_000_000;
+    expect(model.isSessionExpired(0, now)).toBe(false);
+    expect(model.isSessionExpired(now + 1000, now)).toBe(false);
+    expect(model.isSessionExpired(now - 10 * 60 * 1000, now)).toBe(false);
+    expect(model.isSessionExpired(now - 16 * 60 * 1000, now)).toBe(true);
+
+    const staffRes = await request(app).post('/api/staff').send({
+      name: 'API Staff',
+      role: 'Cashier',
+      username: 'api_staff',
+      pin: '3333',
+    });
+    expect(staffRes.statusCode).toBe(201);
+
+    const dupStaffRes = await request(app).post('/api/staff').send({
+      name: 'API Staff Dup',
+      role: 'Cashier',
+      username: 'api_staff',
+      pin: '3333',
+    });
+    expect(dupStaffRes.statusCode).toBe(409);
   });
 });
