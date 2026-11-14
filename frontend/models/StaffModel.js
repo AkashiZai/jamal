@@ -13,7 +13,7 @@ class StaffModel {
       return { ok: false, status: 400, error: 'กรุณากรอกข้อมูลให้ครบถ้วน' };
     }
     const cleanUsername = String(username).trim().toLowerCase();
-    if (this.staffList.find((acc) => acc.username.trim().toLowerCase() === cleanUsername)) {
+    if (this.findByUsername(cleanUsername)) {
       return { ok: false, status: 409, error: 'ชื่อผู้ใช้งานนี้มีอยู่ในระบบแล้ว' };
     }
 
@@ -47,10 +47,7 @@ class StaffModel {
 
   // Data Structure Method 2: ตรวจสอบสิทธิ์ด้วย Username + PIN
   authenticatePin(username, pin) {
-    const key = String(username || '').trim().toLowerCase();
-    const matched = key
-      ? this.staffList.find((acc) => acc.username.trim().toLowerCase() === key) || null
-      : null;
+    const matched = this.findByUsername(username);
     if (!matched) {
       return { ok: false, status: 404, error: 'ไม่พบชื่อผู้ใช้งานนี้ในระบบ' };
     }
@@ -72,8 +69,7 @@ class StaffModel {
       return { ok: false, status: 400, error: 'ข้อมูลบัญชี Social Login ไม่ถูกต้อง' };
     }
 
-    let user =
-      this.staffList.find((acc) => acc.username.trim().toLowerCase() === cleanEmail) || null;
+    let user = this.findByUsername(cleanEmail);
     if (!user) {
       const normalizedRole = String(role).toLowerCase() === 'admin' ? 'admin' : 'cashier';
       user = {
@@ -88,6 +84,13 @@ class StaffModel {
       this.staffList.push(user);
     }
     return { ok: true, status: 200, user };
+  }
+
+  // Search Method (ตาม Google Doc): ค้นหาพนักงานด้วย Username หรือ Email
+  findByUsername(username) {
+    const key = String(username || '').trim().toLowerCase();
+    if (!key) return null;
+    return this.staffList.find((acc) => acc.username.trim().toLowerCase() === key) || null;
   }
 }
 
