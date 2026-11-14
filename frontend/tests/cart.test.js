@@ -38,4 +38,44 @@ describe('CartModel Unit Tests', () => {
     cart.updateItemQuantity(itemId, 0);
     expect(cart.getItems()).toHaveLength(1);
   });
+
+  test('calculateBill computes drink+toppings, VAT 7%, and change due correctly', () => {
+    const cart = new CartModel();
+    cart.addItem(sampleProducts[0], 'หวาน 25% • เพิ่มช็อต', null, [sampleToppings[1]]);
+    cart.addItem(sampleProducts[1], '', 85, []);
+
+    const bill = cart.calculateBill(200);
+    expect(bill.totalAmount).toBe(170); // (65+20) + 85
+    expect(bill.toppingsTotal).toBe(20);
+    expect(bill.changeDue).toBe(30);
+    expect(bill.isEnoughCash).toBe(true);
+    expect(bill.vatAmount).toBeGreaterThan(0);
+
+    const shortBill = cart.calculateBill(100);
+    expect(shortBill.isEnoughCash).toBe(false);
+    expect(shortBill.changeDue).toBe(0);
+  });
+
+  test('searchCatalog and GET /api/catalog/search match drinks, bakery, and toppings by keyword', async () => {
+    const cart = new CartModel();
+    const res1 = cart.searchCatalog(sampleProducts, sampleToppings, 'โอ๊ต');
+    expect(res1.toppings).toHaveLength(1);
+    expect(res1.toppings[0].id).toBe('t1');
+
+    const res2 = cart.searchCatalog(sampleProducts, sampleToppings, 'ครัวซองต์', 'bakery');
+    expect(res2.products).toHaveLength(1);
+    expect(res2.products[0].id).toBe('b1');
+
+    const allRes = cart.searchCatalog(sampleProducts, sampleToppings);
+    expect(allRes.totalMatches).toBe(4);
+
+    const stateRes = await request(app).get('/api/state');
+    expect(stateRes.statusCode).toBe(200);
+    expect(stateRes.body.products.length).toBeGreaterThanOrEqual(11);
+    expect(stateRes.body.toppings.length).toBeGreaterThanOrEqual(4);
+
+    const apiSearch = await request(app).get('/api/catalog/search').query({ q: 'โอ๊ต' });
+    expect(apiSearch.statusCode).toBe(200);
+    expect(apiSearch.body.toppings.length).toBe(1);
+  });
 });
