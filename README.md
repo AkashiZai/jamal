@@ -495,3 +495,10 @@ flowchart TD
   1. `unit-test-and-coverage`: รัน Jest Unit Tests ทั้ง 4 Models และตรวจสอบ Statement Coverage (`>= 80%`)
   2. `ui-test-and-static-check`: รัน Playwright UI Tests ครบทั้ง 5 เคสเพื่อตรวจค่า Expected Results บนหน้าเว็บจริง
 - **Continuous Deployment (CD):** เมื่อทั้ง 2 Parallel Jobs ผ่านครบ (`needs: [unit-test-and-coverage, ui-test-and-static-check]`) ระบบจะทริกเกอร์ Deploy ขึ้นเซิร์ฟเวอร์ Production อัตโนมัติ
+
+### ตารางเปรียบเทียบผล Dynamic Profiling (Structural Method — Phase 3 vs Phase 4)
+| เป้าหมายการวัด (Target Operation) | Phase 3 (ก่อนแยก Model / Baseline) | Phase 4 (หลังแยก `CartModel` & Route) | ผลการเปลี่ยนแปลง |
+| :--- | :---: | :---: | :--- |
+| การคำนวณตะกร้า `1,000` รอบ (`addItem` + `calculateBill`) | `2.99 ms` *(Baseline Array)* | *Pending Phase 4* | รอวัดเทียบหลังปรับโครงสร้าง |
+| `GET /api/state` (`50` requests ต่อเนื่อง) | `114.11 ms` | *Pending Phase 4* | รอวัดเทียบหลังปรับโครงสร้าง |
+| Memory Heap Used (`MB`) | `13.51 MB` | *Pending Phase 4* | รอวัดเทียบหลังปรับโครงสร้าง |
