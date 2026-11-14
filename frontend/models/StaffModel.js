@@ -92,6 +92,17 @@ class StaffModel {
     if (!key) return null;
     return this.staffList.find((acc) => acc.username.trim().toLowerCase() === key) || null;
   }
+
+  // Calculation Method (ตาม Google Doc): นับจำนวนพนักงานแยกตาม Role
+  countStaffByRole() {
+    const summary = { admin: 0, cashier: 0, operator: 0, total: this.staffList.length };
+    for (const acc of this.staffList) {
+      if (acc.role === 'admin') summary.admin += 1;
+      else if (acc.role === 'operator') summary.operator += 1;
+      else summary.cashier += 1;
+    }
+    return summary;
+  }
 }
 
 module.exports = StaffModel;
