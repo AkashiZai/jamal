@@ -502,3 +502,30 @@ flowchart TD
 | การคำนวณตะกร้า `1,000` รอบ (`addItem` + `calculateBill`) | `2.99 ms` *(Baseline Array)* | `14.40 ms` *(`~0.014 ms/call`)* | รวม logic ท็อปปิ้ง ตรวจซ้ำ คำนวณ VAT 7% และเงินทอน แยกขาดจาก DOM rendering |
 | `GET /api/state` (`50` requests ต่อเนื่อง) | `114.11 ms` | `119.03 ms` *(`~2.38 ms/req`)* | รองรับ 11 เมนู + `toppings` เพิ่มใน payload โดยใช้เวลาใกล้เคียงเดิม |
 | Memory Heap Used (`MB`) | `13.51 MB` | `14.15 MB` | การใช้หน่วยความจำเสถียร (~14 MB) หลังเพิ่มโครงสร้าง `CartModel` |
+
+### ตาราง Unit Test Cases สำหรับ Data Structure (`models/` — รวม 15 Test Cases)
+| ลำดับ | รหัส Test | Class / Model | Method ที่ทดสอบ | Input / เงื่อนไข | Expected Result | สถานะ |
+| :---: | :---: | :--- | :--- | :--- | :--- | :---: |
+| 1 | UT-01 | `StaffModel` | `authenticatePin()` | `cashier_zai`, PIN `1234` / PIN ผิด | คืนข้อมูล user (`ok: true`) / คืน `401` เมื่อ PIN ผิด | Pass |
+| 2 | UT-02 | `StaffModel` | `authenticateSocial()` | Gmail `newstaff@gmail.com` | สร้าง/คืนบัญชี Social (`authProvider: 'gmail'`) | Pass |
+| 3 | UT-03 | `StaffModel` | `addStaff()`, `countStaffByRole()` | เพิ่มพนักงานใหม่ / username ซ้ำ | บันทึกสำเร็จและนับจำนวนแยกตาม role ถูกต้อง | Pass |
+| 4 | UT-04 | `StaffModel` | `isSessionExpired()` | เวลาผ่านไป 10 นาที vs 16 นาที | คืน `false` ที่ 10 นาที และ `true` เมื่อเกิน 15 นาที | Pass |
+| 5 | UT-05 | `CartModel` | `addItem()` | เพิ่มกาแฟ + ท็อปปิ้งนมโอ๊ต (+฿15) ซ้ำ 2 แก้ว | รวมเป็น 1 แถว `quantity: 2`, `unitPrice: 80` | Pass |
+| 6 | UT-06 | `CartModel` | `updateItemQuantity()` | ปรับจำนวนเป็น `3` และปรับเป็น `0` | อัปเดตจำนวนเป็น 3 และลบแถวออกเมื่อเป็น 0 | Pass |
+| 7 | UT-07 | `CartModel` | `calculateBill()` | ยอดรวม ฿170, รับเงินสด ฿200 / ฿100 | คำนวณ VAT 7%, เงินทอน `฿30` (`isEnoughCash: true`) | Pass |
+| 8 | UT-08 | `CartModel` | `searchCatalog()` | ค้นหาคำว่า `"โอ๊ต"` และ `"ครัวซองต์"` | คืนรายการท็อปปิ้งและเบเกอรี่ที่ตรงกับคีย์เวิร์ด | Pass |
+| 9 | UT-09 | `OrderQueueModel` | `enqueueOrder()` | สร้างออเดอร์ใหม่จากลำดับคิวที่ 5 | ได้เลขคิว `A05` และสถานะเริ่มต้น `pending` | Planned (ลำดับ 3) |
+| 10 | UT-10 | `OrderQueueModel` | `advanceOrderStatus()` | เปลี่ยนสถานะ `ord-1` เป็น `in_progress` | สถานะเปลี่ยนเป็น `in_progress` และคืน `400` เมื่อสถานะผิด | Planned (ลำดับ 3) |
+| 11 | UT-11 | `OrderQueueModel` | `findOrdersByStatus()`, `getQueueStats()` | คิวที่มีออเดอร์ ฿100 และ ฿200 | กรองตามสถานะถูกต้อง, `averageAmount: 150`, `min: 100`, `max: 200` | Planned (ลำดับ 3) |
+| 12 | UT-12 | `InventoryModel` | `deductStock()` | สั่งกาแฟ 2 แก้ว (+ท็อปปิ้ง) และครัวซองต์ 1 ชิ้น | ตัดสต็อกทั้ง Base Drink, Cake, Topping และบล็อกกรณีของหมด | Planned (ลำดับ 4) |
+| 13 | UT-13 | `InventoryModel` | `sortInventorySmallToLarge()` | สินค้าสต็อก `2`, `5`, `20` | เรียงลำดับจากน้อยไปมาก `[2, 5, 20]` ถูกต้อง | Planned (ลำดับ 4) |
+| 14 | UT-14 | `InventoryModel` | `createProduct()`, `updateProduct()`, `deleteProduct()`, `restockItem()` | เพิ่ม/แก้ไขราคา/เติมสต็อก/ลบสินค้า | CRUD ทำงานครบและอัปเดตจำนวนสต็อกถูกต้อง | Planned (ลำดับ 4) |
+| 15 | UT-15 | `InventoryModel` | `voidSale()`, `getSalesAnalytics()` | บิล ฿150 และ ฿65, จากนั้นกด Void บิลแรก | คำนวณ `avg: 107.5`, `min: 65`, `max: 150` และตัดบิลที่ Void ออก | Planned (ลำดับ 4) |
+
+#### ตัวอย่างคำสั่งทดสอบและ Dynamic Profiling (`frontend/`)
+```bash
+npm test                # รัน Jest Unit Tests (staff.test.js + cart.test.js)
+npm run test:coverage   # ตรวจ Statement Coverage บน models/ (>= 80%)
+npm run test:ui         # รัน Playwright UI Tests (tests/ui/*.ui.test.js)
+npm run profile:dynamic # รัน Dynamic Profiling (scripts/profile_dynamic.js)
+```
