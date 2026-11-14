@@ -103,6 +103,12 @@ class StaffModel {
     }
     return summary;
   }
+
+  // NFR-04: ตรวจสอบ Session Timeout 15 นาที
+  isSessionExpired(lastActiveMs, nowMs = Date.now(), timeoutMs = 15 * 60 * 1000) {
+    if (!lastActiveMs || nowMs < lastActiveMs) return false;
+    return nowMs - lastActiveMs >= timeoutMs;
+  }
 }
 
 module.exports = StaffModel;
