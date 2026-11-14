@@ -298,16 +298,11 @@ app.get('/api/state', (_req, res) => {
 
 app.post('/api/auth/login', (req, res) => {
   const { username, pin } = req.body || {};
-  const matched = staffAccounts.find(
-    (acc) => acc.username.trim().toLowerCase() === String(username || '').trim().toLowerCase()
-  );
-  if (!matched) {
-    return res.status(404).json({ error: 'ไม่พบชื่อผู้ใช้งานนี้ในระบบ' });
+  const result = staffModel.authenticatePin(username, pin);
+  if (!result.ok) {
+    return res.status(result.status).json({ error: result.error });
   }
-  if (matched.pin !== String(pin || '')) {
-    return res.status(401).json({ error: 'รหัสผ่าน PIN ไม่ถูกต้อง (ลองใช้: ' + matched.pin + ')' });
-  }
-  res.json({ user: matched });
+  res.json({ user: result.user });
 });
 
 app.post('/api/auth/social', (req, res) => {

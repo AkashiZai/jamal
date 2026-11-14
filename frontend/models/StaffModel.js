@@ -45,6 +45,25 @@ class StaffModel {
     return { ok: true, status: 201, staff: newAcc, staffAccounts: this.staffList };
   }
 
+  // Data Structure Method 2: ตรวจสอบสิทธิ์ด้วย Username + PIN
+  authenticatePin(username, pin) {
+    const key = String(username || '').trim().toLowerCase();
+    const matched = key
+      ? this.staffList.find((acc) => acc.username.trim().toLowerCase() === key) || null
+      : null;
+    if (!matched) {
+      return { ok: false, status: 404, error: 'ไม่พบชื่อผู้ใช้งานนี้ในระบบ' };
+    }
+    if (matched.pin !== String(pin || '')) {
+      return {
+        ok: false,
+        status: 401,
+        error: 'รหัสผ่าน PIN ไม่ถูกต้อง (ลองใช้: ' + matched.pin + ')',
+      };
+    }
+    return { ok: true, status: 200, user: matched };
+  }
+
   // Data Structure Method 3: เข้าสู่ระบบด้วย Social Media (Gmail / Facebook) ตาม Issue #12
   authenticateSocial({ provider, email, displayName, role = 'cashier' }) {
     const cleanProvider = String(provider || '').trim().toLowerCase();
