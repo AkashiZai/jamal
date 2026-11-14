@@ -41,6 +41,18 @@ class CartModel {
     }
     return this.cart;
   }
+
+  // Data Structure Method 2: อัปเดตจำนวนสินค้าในตะกร้า (ถ้า <= 0 ลบออก)
+  updateItemQuantity(cartItemId, newQty) {
+    if (Number(newQty) <= 0) {
+      this.cart = this.cart.filter((item) => item.cartItemId !== cartItemId);
+    } else {
+      this.cart = this.cart.map((item) =>
+        item.cartItemId === cartItemId ? { ...item, quantity: Number(newQty) } : item
+      );
+    }
+    return this.cart;
+  }
 }
 
 module.exports = CartModel;
