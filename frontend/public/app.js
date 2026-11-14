@@ -8,6 +8,7 @@ const state = {
   // Server-synced state
   categories: [],
   products: [],
+  toppings: [],
   staffAccounts: [],
   orders: [],
   salesStats: { totalSales: 14250, totalBills: 84, promptPayShare: 64, cashShare: 36 },
@@ -148,6 +149,7 @@ async function fetchState() {
     const data = await res.json();
     state.categories = data.categories || [];
     state.products = data.products || [];
+    state.toppings = data.toppings || [];
     state.staffAccounts = data.staffAccounts || [];
     state.orders = data.orders || [];
     state.salesStats = data.salesStats || state.salesStats;
