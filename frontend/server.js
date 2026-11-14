@@ -115,6 +115,27 @@ let products = [
     stock: 8,
     isBakery: true,
   },
+  {
+    id: 'c6',
+    name: 'ลาเต้เย็น (Iced Latte)',
+    category: 'coffee',
+    price: 70.0,
+    desc: 'ช็อตเอสเพรสโซ่ผสมนมสดเย็น หอมละมุนกลมกล่อม',
+    img: 'https://images.unsplash.com/photo-1572442388796-11668a67e53d?w=500&q=80',
+    customizable: true,
+    stock: 25,
+  },
+  {
+    id: 'b5',
+    name: 'บราวนี่ดาร์กช็อกโกแลต (Dark Choc Brownie)',
+    category: 'dessert',
+    price: 75.0,
+    desc: 'ดาร์กช็อกโกแลตเข้มข้น 70% เนื้อหนึบฉ่ำ',
+    img: 'https://images.unsplash.com/photo-1606313564200-e75d5e30476c?w=500&q=80',
+    customizable: false,
+    stock: 12,
+    isBakery: true,
+  },
 ];
 
 let staffAccounts = [
