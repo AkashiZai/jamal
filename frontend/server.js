@@ -138,6 +138,13 @@ let products = [
   },
 ];
 
+let toppings = [
+  { id: 't1', name: 'นมโอ๊ต (Oat Milk)', price: 15, stock: 20, category: 'topping' },
+  { id: 't2', name: 'นมอัลมอนด์ (Almond Milk)', price: 15, stock: 15, category: 'topping' },
+  { id: 't3', name: 'เพิ่มช็อตเอสเพรสโซ่ (Extra Shot)', price: 20, stock: 30, category: 'topping' },
+  { id: 't4', name: 'บุกบราวน์ชูการ์ (Brown Sugar Jelly)', price: 15, stock: 18, category: 'topping' },
+];
+
 let staffAccounts = [
   {
     id: 'staff-01',
@@ -309,11 +316,34 @@ app.get('/api/state', (_req, res) => {
   res.json({
     categories: CATEGORIES,
     products,
+    toppings,
     staffAccounts,
     orders,
     salesStats,
     salesHistory,
     customerQueueNo,
+  });
+});
+
+app.get('/api/catalog/search', (req, res) => {
+  const { q = '', category = 'all' } = req.query || {};
+  const keyword = String(q).trim().toLowerCase();
+  const matchedProducts = products.filter((prod) => {
+    const matchCat = category === 'all' || prod.category === category;
+    const matchKey =
+      !keyword ||
+      String(prod.name || '').toLowerCase().includes(keyword) ||
+      String(prod.desc || '').toLowerCase().includes(keyword) ||
+      String(prod.category || '').toLowerCase().includes(keyword);
+    return matchCat && matchKey;
+  });
+  const matchedToppings = toppings.filter(
+    (top) => !keyword || String(top.name || '').toLowerCase().includes(keyword)
+  );
+  res.json({
+    products: matchedProducts,
+    toppings: matchedToppings,
+    totalMatches: matchedProducts.length + matchedToppings.length,
   });
 });
 
