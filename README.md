@@ -489,3 +489,9 @@ flowchart TD
   2. `PATCH /api/products/:id/price` — แก้ไขราคาขายด่วน
   3. `PATCH /api/orders/:id/status` — เปลี่ยนสถานะคิวครัว KDS (`pending` -> `in_progress` -> `ready` -> `completed`)
   4. `DELETE /api/products/:id` — ลบรายการสินค้าออกจากระบบ
+
+### การทำ CI/CD Pipeline (Free-tier Parallel Jobs) และการ Deploy (Phase 4)
+- **Continuous Integration (CI):** ใช้ GitHub Actions (`.github/workflows/ci.yml`) โดยแยกเป็น **2 Parallel Jobs บน Free Tier** ที่รันพร้อมกันเมื่อมีการ Push หรือเปิด Pull Request:
+  1. `unit-test-and-coverage`: รัน Jest Unit Tests ทั้ง 4 Models และตรวจสอบ Statement Coverage (`>= 80%`)
+  2. `ui-test-and-static-check`: รัน Playwright UI Tests ครบทั้ง 5 เคสเพื่อตรวจค่า Expected Results บนหน้าเว็บจริง
+- **Continuous Deployment (CD):** เมื่อทั้ง 2 Parallel Jobs ผ่านครบ (`needs: [unit-test-and-coverage, ui-test-and-static-check]`) ระบบจะทริกเกอร์ Deploy ขึ้นเซิร์ฟเวอร์ Production อัตโนมัติ
