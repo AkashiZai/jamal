@@ -1417,6 +1417,7 @@ function renderPaymentModal() {
   const subtotal = total / 1.07;
   const vat = total - subtotal;
   const change = Math.max(0, state.cashEntered - total);
+  const shortfall = Math.max(0, total - state.cashEntered);
   const isCashSufficient = state.cashEntered >= total;
 
   return `
@@ -1491,8 +1492,13 @@ function renderPaymentModal() {
 
               <div class="mt-4 p-3.5 rounded-2xl bg-matcha-light border border-matcha-border flex justify-between items-center">
                 <span class="text-xs font-bold text-matcha">เงินทอน (Change Due)</span>
-                <span class="font-mono font-black text-2xl text-matcha tabular-nums">฿${change.toFixed(2)}</span>
+                <span data-testid="pos-change-due" class="font-mono font-black text-2xl text-matcha tabular-nums">฿${change.toFixed(2)}</span>
               </div>
+              ${
+                state.cashEntered > 0 && !isCashSufficient
+                  ? `<div class="mt-2 text-right text-xs font-semibold text-red-600">ยังขาดอีก ฿${shortfall.toFixed(2)}</div>`
+                  : ''
+              }
             </div>
           `
               : `
