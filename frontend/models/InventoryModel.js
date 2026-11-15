@@ -93,6 +93,26 @@ class InventoryModel {
     if (!qty || !isTracked(item)) return item;
     return { ...item, stock: Math.max(0, item.stock - qty) };
   }
+
+  // Data Structure Method 2: เติมสต็อกได้ทั้ง Product และ Topping
+  restockItem(id, amount = DEFAULT_RESTOCK_AMOUNT) {
+    const qty = Number(amount);
+    if (!Number.isFinite(qty) || qty <= 0) {
+      return { ok: false, status: 400, error: 'จำนวนที่เติมต้องมากกว่า 0' };
+    }
+    let updatedItem = null;
+    const addStock = (list) =>
+      list.map((item) => {
+        if (item.id !== id) return item;
+        updatedItem = { ...item, stock: (item.stock ?? 0) + qty };
+        return updatedItem;
+      });
+
+    this.products = addStock(this.products);
+    if (!updatedItem) this.toppings = addStock(this.toppings);
+    if (!updatedItem) return { ok: false, status: 404, error: 'ไม่พบรายการสินค้า/ท็อปปิ้ง' };
+    return { ok: true, item: updatedItem, products: this.products, toppings: this.toppings };
+  }
 }
 
 module.exports = InventoryModel;
