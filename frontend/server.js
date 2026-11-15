@@ -146,6 +146,7 @@ let toppings = [
 ];
 const CartModel = require('./models/CartModel');
 const OrderQueueModel = require('./models/OrderQueueModel');
+const InventoryModel = require('./models/InventoryModel');
 const cartCatalogHelper = new CartModel();
 
 let staffAccounts = [
@@ -312,6 +313,15 @@ let salesHistory = [
 
 let customerQueueNo = 'A03';
 
+// InventoryModel (ส่วนที่ 4): ดูแลสต็อก Base Drink / Cake / Toppings, ยอดขาย/ใบเสร็จ และการ Void บิล
+const inventoryModel = new InventoryModel(products, toppings, salesHistory, salesStats);
+
+// ดึงข้อมูลล่าสุดจาก InventoryModel กลับมาเก็บในตัวแปรของ server
+// เพื่อให้ /api/state และ /api/catalog/search อ่านค่าเดียวกับที่โมเดลจัดการอยู่
+function syncInventoryState() {
+  ({ products, toppings, salesHistory, salesStats } = inventoryModel.getState());
+}
+
 // ============================================================================
 // REST API ENDPOINTS
 // ============================================================================
@@ -325,8 +335,13 @@ app.get('/api/state', (_req, res) => {
     orders,
     salesStats,
     salesHistory,
+    sortedInventory: inventoryModel.sortInventorySmallToLarge(),
     customerQueueNo,
   });
+});
+
+app.get('/api/inventory/sorted', (_req, res) => {
+  res.json({ items: inventoryModel.sortInventorySmallToLarge() });
 });
 
 app.get('/api/catalog/search', (req, res) => {
@@ -357,59 +372,26 @@ app.post('/api/orders', (req, res) => {
   const payload = req.body || {};
   const items = payload.items || [];
 
-  // เช็ก Out-of-Stock ก่อนสร้างออเดอร์ (Issue #8 & #12)
-  for (const item of items) {
-    const prod = products.find((p) => p.id === item.id);
-    const qty = Number(item.quantity) || 1;
-    if (prod && prod.stock !== null && prod.stock < qty) {
-      return res.status(400).json({ error: `สินค้า "${prod.name}" หมดสต็อก (Out of Stock)` });
-    }
+  // ตัดสต็อก Base Drink / Cake / Toppings อัตโนมัติ (FR-03) พร้อมเช็ก Out-of-Stock (Issue #8 & #12)
+  // ถ้าสต็อกไม่พอจะตอบ HTTP 400 และไม่สร้างออเดอร์
+  const stockResult = inventoryModel.deductStock(items);
+  if (!stockResult.ok) {
+    return res.status(stockResult.status).json({ error: stockResult.error });
   }
 
   const newOrder = orderQueueModel.enqueueOrder(payload);
   orders = orderQueueModel.getAll();
 
-  // ตัดสต็อกอัตโนมัติ (FR-03)
-  products = products.map((p) => {
-    const itemInCart = items.find((it) => it.id === p.id);
-    if (itemInCart && p.stock !== null) {
-      return {
-        ...p,
-        stock: Math.max(0, p.stock - (Number(itemInCart.quantity) || 1)),
-      };
-    }
-    return p;
+  // บันทึกยอดขายและใบเสร็จเข้าประวัติการขาย (FR-08)
+  inventoryModel.recordSale({
+    totalAmount: payload.totalAmount,
+    items,
+    paymentMethod: payload.paymentMethod || 'PromptPay',
+    queueNo: newOrder.queueNo,
+    cashierName: payload.cashierName || 'Cashier',
+    time: newOrder.createdAt,
   });
-
-  // Update sales stats & history (FR-08)
-  const totalAmount = Number(payload.totalAmount) || 0;
-  const paymentMethod = payload.paymentMethod || 'PromptPay';
-  const cashierName = payload.cashierName || 'Cashier';
-
-  salesStats = {
-    ...salesStats,
-    totalSales: salesStats.totalSales + totalAmount,
-    totalBills: salesStats.totalBills + 1,
-  };
-
-  const now = new Date();
-  const receiptNo = `INV-${now.getFullYear()}${String(now.getMonth() + 1).padStart(2, '0')}${String(
-    now.getDate()
-  ).padStart(2, '0')}-${String(salesStats.totalBills).padStart(4, '0')}`;
-
-  salesHistory = [
-    {
-      receiptNo,
-      time: newOrder.createdAt,
-      queueNo: newOrder.queueNo,
-      itemsSummary: items.map((i) => `${i.name} (x${i.quantity || 1})`).join(', '),
-      paymentMethod,
-      total: totalAmount,
-      status: 'paid',
-      cashier: cashierName,
-    },
-    ...salesHistory,
-  ];
+  syncInventoryState();
 
   if (String(payload.channel || '').includes('Mobile')) {
     customerQueueNo = newOrder.queueNo;
@@ -459,31 +441,17 @@ app.patch('/api/products/:id/price', (req, res) => {
 });
 
 app.post('/api/products/:id/restock', (req, res) => {
-  const { id } = req.params;
-  const { amount = 5 } = req.body || {};
-  products = products.map((p) => {
-    if (p.id === id) {
-      return { ...p, stock: (p.stock ?? 0) + Number(amount) };
-    }
-    return p;
-  });
-  res.json({ ok: true, products });
+  const result = inventoryModel.restockItem(req.params.id, req.body?.amount ?? 5);
+  if (!result.ok) return res.status(result.status).json({ error: result.error });
+  syncInventoryState();
+  res.json({ ok: true, products, toppings });
 });
 
 app.post('/api/sales/:receiptNo/void', (req, res) => {
-  const { receiptNo } = req.params;
-  const { adminName = 'Admin Zai', reason = 'ยกเลิกโดยผู้จัดการ' } = req.body || {};
-  salesHistory = salesHistory.map((item) => {
-    if (item.receiptNo === receiptNo) {
-      return {
-        ...item,
-        status: 'voided',
-        voidBy: adminName,
-        voidReason: reason,
-      };
-    }
-    return item;
-  });
+  const { adminName, reason } = req.body || {};
+  const result = inventoryModel.voidSale(req.params.receiptNo, adminName, reason);
+  if (!result.ok) return res.status(result.status).json({ error: result.error });
+  syncInventoryState();
   res.json({ ok: true, salesHistory });
 });
 
