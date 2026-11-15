@@ -114,6 +114,78 @@ class InventoryModel {
     return { ok: true, item: updatedItem, products: this.products, toppings: this.toppings };
   }
 
+  // Data Structure Method 3: Admin CRUD (เพิ่ม / แก้ไข / ลบ สินค้า หมวดหมู่ ราคา ตัวเลือก)
+  createProduct(input = {}) {
+    const invalid = this.validateNewProduct(input);
+    if (invalid) return { ok: false, status: 400, error: invalid };
+
+    const category = input.category || 'coffee';
+    const isBakery = BAKERY_CATEGORIES.includes(category);
+    this.productSequence += 1;
+    const newProduct = {
+      id: `p-${Date.now()}-${this.productSequence}`,
+      name: String(input.name).trim(),
+      category,
+      price: Number(input.price),
+      cost: Number(input.cost) || 0,
+      desc: input.desc || 'เมนูใหม่ประจำร้าน',
+      img: 'https://images.unsplash.com/photo-1517256064527-09c73fc73e38?w=500&q=80',
+      customizable: input.customizable !== undefined ? Boolean(input.customizable) : !isBakery,
+      isBakery,
+      stock: input.stock !== undefined ? Number(input.stock) : DEFAULT_NEW_PRODUCT_STOCK,
+    };
+    this.products = [...this.products, newProduct];
+    return { ok: true, status: 201, product: newProduct, products: this.products };
+  }
+
+  validateNewProduct({ name, price, stock }) {
+    if (!String(name ?? '').trim() || !(Number(price) > 0)) return 'กรุณากรอกชื่อเมนูและราคา';
+    if (stock !== undefined && !(Number(stock) >= 0)) return 'จำนวนสต็อกต้องไม่ติดลบ';
+    return null;
+  }
+
+  updateProduct(id, updates = {}) {
+    const prev = this.products.find((p) => p.id === id);
+    if (!prev) return { ok: false, status: 404, error: 'ไม่พบสินค้าที่ต้องการแก้ไข' };
+
+    // รับเฉพาะฟิลด์ที่แก้ไขได้ (กัน id หรือฟิลด์ภายในถูกเขียนทับจาก request)
+    const patch = {};
+    for (const key of ['name', 'category', 'price', 'cost', 'desc', 'img', 'customizable', 'stock']) {
+      if (updates[key] !== undefined) patch[key] = updates[key];
+    }
+    const invalid = this.validateProductPatch(patch);
+    if (invalid) return { ok: false, status: 400, error: invalid };
+
+    const category = patch.category ?? prev.category;
+    const updated = {
+      ...prev,
+      ...patch,
+      category,
+      isBakery: BAKERY_CATEGORIES.includes(category),
+      price: patch.price !== undefined ? Number(patch.price) : prev.price,
+      stock: patch.stock !== undefined ? Number(patch.stock) : prev.stock,
+      customizable: patch.customizable !== undefined ? Boolean(patch.customizable) : prev.customizable,
+    };
+    this.products = this.products.map((p) => (p.id === id ? updated : p));
+    return { ok: true, status: 200, product: updated, products: this.products };
+  }
+
+  validateProductPatch(patch) {
+    if (patch.name !== undefined && !String(patch.name).trim()) return 'ชื่อเมนูต้องไม่ว่าง';
+    if (patch.price !== undefined && !(Number(patch.price) > 0)) return 'ราคาต้องมากกว่า 0';
+    if (patch.stock !== undefined && !(Number(patch.stock) >= 0)) return 'จำนวนสต็อกต้องไม่ติดลบ';
+    return null;
+  }
+
+  deleteProduct(id) {
+    const before = this.products.length;
+    this.products = this.products.filter((p) => p.id !== id);
+    if (this.products.length === before) {
+      return { ok: false, status: 404, error: 'ไม่พบสินค้าที่ต้องการลบ' };
+    }
+    return { ok: true, status: 200, products: this.products };
+  }
+
   // Search/Sort Method (ตาม Google Doc & Issue #12): เรียง Inventory จากน้อยไปมาก
   // รวม Base Drink + Cake + Toppings ที่มีการนับสต็อก แล้วเรียงตามจำนวนคงเหลือ (Stable Sort)
   sortInventorySmallToLarge() {
