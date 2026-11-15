@@ -45,6 +45,54 @@ class InventoryModel {
       salesStats: this.salesStats,
     };
   }
+
+  // Data Structure Method 1: ตัดสต็อก Base Drink, Cake และ Toppings พร้อมเช็ก Out of Stock
+  // รวมจำนวนที่ต้องใช้ของทุกบรรทัดในออเดอร์ก่อน แล้วค่อยตรวจ เพื่อกันกรณีสินค้าเดียวกันอยู่หลายบรรทัด
+  deductStock(orderItems = []) {
+    const demand = this.collectDemand(orderItems);
+    const shortage = this.findShortage(demand);
+    if (shortage) return { ok: false, status: 400, error: shortage };
+
+    this.products = this.products.map((p) => this.withDeductedStock(p, demand.products));
+    this.toppings = this.toppings.map((t) => this.withDeductedStock(t, demand.toppings));
+    return { ok: true, products: this.products, toppings: this.toppings };
+  }
+
+  // รวมจำนวนที่ใช้ต่อสินค้า (products) และต่อท็อปปิ้ง (toppings) จากทุกบรรทัดของออเดอร์
+  collectDemand(orderItems) {
+    const demand = { products: new Map(), toppings: new Map() };
+    const add = (map, id, qty) => map.set(id, (map.get(id) || 0) + qty);
+    for (const item of orderItems) {
+      const qty = toQuantity(item.quantity);
+      add(demand.products, item.id, qty);
+      const toppingIds = new Set((item.toppings || []).map((t) => t.id));
+      toppingIds.forEach((id) => add(demand.toppings, id, qty));
+    }
+    return demand;
+  }
+
+  // คืนข้อความ error ของรายการแรกที่สต็อกไม่พอ (หรือ null ถ้าสต็อกพอทุกรายการ)
+  findShortage(demand) {
+    for (const [id, qty] of demand.products) {
+      const prod = this.products.find((p) => p.id === id);
+      if (prod && isTracked(prod) && prod.stock < qty) {
+        return `สินค้า "${prod.name}" หมดหรือสต็อกไม่พอ (คงเหลือ ${prod.stock})`;
+      }
+    }
+    for (const [id, qty] of demand.toppings) {
+      const top = this.toppings.find((t) => t.id === id);
+      if (top && isTracked(top) && top.stock < qty) {
+        return `ท็อปปิ้ง "${top.name}" หมดหรือสต็อกไม่พอ (คงเหลือ ${top.stock})`;
+      }
+    }
+    return null;
+  }
+
+  withDeductedStock(item, demandMap) {
+    const qty = demandMap.get(item.id);
+    if (!qty || !isTracked(item)) return item;
+    return { ...item, stock: Math.max(0, item.stock - qty) };
+  }
 }
 
 module.exports = InventoryModel;
