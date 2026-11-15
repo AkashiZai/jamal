@@ -619,7 +619,7 @@ npm run profile:dynamic # รัน Dynamic Profiling (scripts/profile_dynamic.j
 
 ## 14. สรุปผลการประชุมทบทวนการทำงาน (Sprint 3 Retrospective)
 
-* **วัน-เวลาที่ประชุม:** 15 พฤศจิกายน 2569 (สิ้นสุด Sprint 3)
+* **วัน-เวลาที่ประชุม:** 10 พฤศจิกายน 2569 (สิ้นสุด Sprint 3)
 * **คลิปวิดีโอสรุปการประชุม Retrospective Sprint 3:** https://youtu.be/bCgfyVGiR1w
 
 ### 1. สิ่งที่ทำได้ดี (What went well)
