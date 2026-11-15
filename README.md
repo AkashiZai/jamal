@@ -577,3 +577,37 @@ npm run profile:dynamic # รัน Dynamic Profiling (scripts/profile_dynamic.j
 2. **การควบคุมคุณภาพโค้ดและ Monitor Build:** ใช้ Jest + Supertest ตรวจ Statement Coverage บนโฟลเดอร์ `models/` และตั้งค่า GitHub Actions CI Pipeline แบบ Parallel Jobs เพื่อรัน Unit Test และ Playwright UI Test อัตโนมัติทุกครั้งที่ Push/Pull Request
 3. **การจัดการ Bugs และ Profiling:** ใช้ ESLint (Static Profiling) และ `perf_hooks` (Dynamic Structural Profiling) วัดผลก่อนและหลังปรับโครงสร้างโค้ด โดยสรุปผลไว้ในตารางเปรียบเทียบด้านบน
 4. **การแยก Business Logic ออกจาก Route (ส่วนที่ 4):** ย้ายการตัดสต็อก การบันทึกบิลขาย การ Void บิล และ Admin CRUD ของเมนูจาก `server.js` ไปไว้ใน `InventoryModel` ทำให้ Route เหลือหน้าที่รับ-ตอบ HTTP และเขียน Unit Test ครอบคลุมได้โดยไม่ต้องเปิดเซิร์ฟเวอร์
+
+---
+
+### การ Deploy ขึ้น Production บน AWS Elastic Beanstalk (Region: `us-east-1`)
+- **Live URL:** http://jamal-pos-env.eba-ycvffjku.us-east-1.elasticbeanstalk.com/
+- **GitHub Issues ที่เกี่ยวข้อง:** `#52` และ `#53`
+
+#### รายละเอียด Environment บน AWS Elastic Beanstalk
+| หัวข้อ (Configuration) | ค่าที่ตั้งใช้งานจริง |
+| :--- | :--- |
+| **Application Name / Environment Name** | `jamal-pos-app` / `jamal-pos-env` (ID: `e-tedpbmfw8w`) |
+| **Region / Platform** | `us-east-1` — `Node.js 22 running on 64bit Amazon Linux 2023/6.12.3` |
+| **Environment Tier / Preset** | Web server environment — Single instance (Public IP: `3.232.105.183`) |
+| **Service Access (AWS Academy)** | Service role: `LabRole`, EC2 instance profile: `LabInstanceProfile` |
+| **Environment Properties** | `PORT=8080`, `NODE_ENV=production` |
+| **Running Version / Health** | `jamal-pos-v1` / Health: `Ok` |
+
+#### โครงสร้างแพ็กเกจ Deployment Bundle (`jamal-pos-eb.zip`)
+แพ็กไฟล์จากโฟลเดอร์ `frontend/` (ไม่รวม `node_modules/` เพื่อให้ Elastic Beanstalk ติดตั้ง production dependencies อัตโนมัติด้วย `npm`) โดยให้ `package.json` อยู่ที่ root ของไฟล์ `.zip`:
+- `package.json`, `package-lock.json`, `server.js`
+- `models/` (`StaffModel.js`, `CartModel.js`, `OrderQueueModel.js`, `InventoryModel.js`)
+- `public/` (`index.html`, `app.js`, `style.css`)
+- `Procfile` (`web: npm start`)
+- `.ebextensions/01_env.config` (ตั้งค่า `PORT="8080"` และ `NODE_ENV="production"` ให้ตรงกับ Nginx reverse proxy บน Amazon Linux 2023)
+
+#### ขั้นตอนการ Deploy และผลการตรวจสอบระบบจริง
+1. ตรวจสอบความพร้อมของโค้ดฝั่ง `frontend/` (`npm test` ผ่าน 4 Test Suites / 24 Tests) แล้วสร้างไฟล์ `.zip` ด้วยพาธแบบ POSIX (`/`)
+2. เปิด AWS Elastic Beanstalk Console (`us-east-1`) เลือก **Web server environment**, แพลตฟอร์ม **Node.js 22 (Amazon Linux 2023)**, อัปโหลดไฟล์ Local `.zip` (`jamal-pos-v1`), ตั้งค่า **Single instance**, เลือก `LabRole` + `LabInstanceProfile` และเปิด Public IP ใน default VPC
+3. เมื่อสร้าง Environment เสร็จสิ้น สถานะเปลี่ยนเป็น `Ok` และทดสอบ Endpoint จริงได้ผลดังนี้:
+   - `GET /` → HTTP `200` (โหลดหน้าเว็บ JAMAL POS สำเร็จ)
+   - `GET /api/state` → คืนข้อมูล `11` products, `4` toppings, `3` orders และ `15` sortedInventory
+   - `GET /api/catalog/search?q=Oat` → คืนรายการท็อปปิ้งที่ตรงคำค้นหาถูกต้อง
+
+> **หมายเหตุ (AWS Academy Learner Lab):** สภาพแวดล้อมที่ Deploy บนบัญชี Learner Lab จะทำงานตามรอบเวลาของ Lab Session (หาก Session หมดเวลา EC2 จะหยุดชั่วคราว และกด `Start Lab` เพื่อเปิดใช้งานใหม่ได้)
