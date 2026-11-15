@@ -145,6 +145,7 @@ let toppings = [
   { id: 't4', name: 'บุกบราวน์ชูการ์ (Brown Sugar Jelly)', price: 15, stock: 18, category: 'topping' },
 ];
 const CartModel = require('./models/CartModel');
+const OrderQueueModel = require('./models/OrderQueueModel');
 const cartCatalogHelper = new CartModel();
 
 let staffAccounts = [
@@ -245,6 +246,7 @@ let orders = [
 ];
 
 let queueSequence = 5;
+const orderQueueModel = new OrderQueueModel(orders, queueSequence);
 
 let salesStats = {
   totalSales: 14250.0,
@@ -352,44 +354,22 @@ app.post('/api/auth/social', (req, res) => {
 });
 
 app.post('/api/orders', (req, res) => {
-  const {
-    items = [],
-    totalAmount = 0,
-    paymentMethod = 'PromptPay',
-    tableNo = 'หน้าร้าน',
-    channel = 'หน้าร้าน (POS)',
-    cashierName = 'Cashier',
-  } = req.body || {};
+  const payload = req.body || {};
+  const items = payload.items || [];
 
-  const qNum = `A${String(queueSequence).padStart(2, '0')}`;
-  queueSequence += 1;
+  // เช็ก Out-of-Stock ก่อนสร้างออเดอร์ (Issue #8 & #12)
+  for (const item of items) {
+    const prod = products.find((p) => p.id === item.id);
+    const qty = Number(item.quantity) || 1;
+    if (prod && prod.stock !== null && prod.stock < qty) {
+      return res.status(400).json({ error: `สินค้า "${prod.name}" หมดสต็อก (Out of Stock)` });
+    }
+  }
 
-  const now = new Date();
-  const timeStr = `${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}`;
+  const newOrder = orderQueueModel.enqueueOrder(payload);
+  orders = orderQueueModel.getAll();
 
-  const newOrder = {
-    id: `ord-${Date.now()}`,
-    queueNo: qNum,
-    createdAt: timeStr,
-    timeElapsed: 'เพิ่งสั่ง (0 นาที)',
-    status: 'pending',
-    tableNo,
-    channel,
-    cashierName,
-    items: items.map((it) => ({
-      name: it.name,
-      quantity: Number(it.quantity) || 1,
-      optionsText: it.optionsText || (it.category === 'bakery' ? 'อบอุ่นร้อน' : 'ปกติ'),
-      isBeverage: it.category === 'coffee' || it.category === 'non-coffee',
-      isBakery: Boolean(it.isBakery || it.category === 'bakery' || it.category === 'dessert'),
-    })),
-    totalAmount: Number(totalAmount) || 0,
-    paymentMethod,
-  };
-
-  orders = [newOrder, ...orders];
-
-  // Deduct bakery stock (FR-03)
+  // ตัดสต็อกอัตโนมัติ (FR-03)
   products = products.map((p) => {
     const itemInCart = items.find((it) => it.id === p.id);
     if (itemInCart && p.stock !== null) {
@@ -402,12 +382,17 @@ app.post('/api/orders', (req, res) => {
   });
 
   // Update sales stats & history (FR-08)
+  const totalAmount = Number(payload.totalAmount) || 0;
+  const paymentMethod = payload.paymentMethod || 'PromptPay';
+  const cashierName = payload.cashierName || 'Cashier';
+
   salesStats = {
     ...salesStats,
-    totalSales: salesStats.totalSales + (Number(totalAmount) || 0),
+    totalSales: salesStats.totalSales + totalAmount,
     totalBills: salesStats.totalBills + 1,
   };
 
+  const now = new Date();
   const receiptNo = `INV-${now.getFullYear()}${String(now.getMonth() + 1).padStart(2, '0')}${String(
     now.getDate()
   ).padStart(2, '0')}-${String(salesStats.totalBills).padStart(4, '0')}`;
@@ -415,19 +400,19 @@ app.post('/api/orders', (req, res) => {
   salesHistory = [
     {
       receiptNo,
-      time: timeStr,
-      queueNo: qNum,
-      itemsSummary: items.map((i) => `${i.name} (x${i.quantity})`).join(', '),
+      time: newOrder.createdAt,
+      queueNo: newOrder.queueNo,
+      itemsSummary: items.map((i) => `${i.name} (x${i.quantity || 1})`).join(', '),
       paymentMethod,
-      total: Number(totalAmount) || 0,
+      total: totalAmount,
       status: 'paid',
       cashier: cashierName,
     },
     ...salesHistory,
   ];
 
-  if (String(channel).includes('Mobile')) {
-    customerQueueNo = qNum;
+  if (String(payload.channel || '').includes('Mobile')) {
+    customerQueueNo = newOrder.queueNo;
   }
 
   res.status(201).json({ order: newOrder, customerQueueNo });
@@ -521,6 +506,14 @@ app.post('/api/staff', (req, res) => {
   }
   staffAccounts = result.staffAccounts;
   res.status(201).json({ staff: result.staff, staffAccounts: result.staffAccounts });
+});
+
+app.get('/api/queue/stats', (req, res) => {
+  const { status = 'all' } = req.query || {};
+  res.json({
+    orders: orderQueueModel.findOrdersByStatus(status),
+    stats: orderQueueModel.getQueueStats(),
+  });
 });
 
 // Fallback to index.html for SPA navigation
