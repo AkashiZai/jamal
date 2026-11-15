@@ -78,6 +78,12 @@ class OrderQueueModel {
     const updated = this.orders.find((ord) => ord.id === orderId);
     return { ok: true, status: 200, order: updated, orders: this.orders };
   }
+
+  // Search Method: กรอง/ค้นหาออเดอร์ตามสถานะ
+  findOrdersByStatus(status = 'all') {
+    if (!status || status === 'all') return this.orders;
+    return this.orders.filter((ord) => ord.status === status);
+  }
 }
 
 module.exports = OrderQueueModel;
