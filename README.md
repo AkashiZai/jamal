@@ -613,3 +613,43 @@ npm run profile:dynamic # รัน Dynamic Profiling (scripts/profile_dynamic.j
    - `GET /api/catalog/search?q=Oat` → คืนรายการท็อปปิ้งที่ตรงคำค้นหาถูกต้อง
 
 > **หมายเหตุ (AWS Academy Learner Lab):** สภาพแวดล้อมที่ Deploy บนบัญชี Learner Lab จะทำงานตามรอบเวลาของ Lab Session (หาก Session หมดเวลา EC2 จะหยุดชั่วคราว และกด `Start Lab` เพื่อเปิดใช้งานใหม่ได้)
+
+---
+
+## 14. สรุปผลการประชุมทบทวนการทำงาน (Sprint 3 Retrospective)
+
+* **วัน-เวลาที่ประชุม:** 15 พฤศจิกายน 2569 (สิ้นสุด Sprint 3)
+* **คลิปวิดีโอสรุปการประชุม Retrospective Sprint 3:** *(รอทีมงานอัปโหลดและแนบลิงก์ YouTube)*
+
+### 1. สิ่งที่ทำได้ดี (What went well)
+1. **การแยกโครงสร้าง Data Structure ครบทั้ง 4 โมดูล:** แยก Business Logic ออกจาก `server.js` เป็น 4 คลาส ได้แก่ `StaffModel`, `CartModel`, `OrderQueueModel` และ `InventoryModel` ได้อย่างชัดเจน
+2. **รองรับ Change Request (#12) ได้ครบถ้วน:** เพิ่ม Social Login (Gmail/Facebook), เมนูเครื่องดื่มและเบเกอรี่รวม 11 รายการ, ระบบค้นหาคีย์เวิร์ดครอบคลุมท็อปปิ้ง, ตัดสต็อกอัตโนมัติ (Drink/Bakery/Topping), Admin CRUD และรายงานเรียงสต็อกจากน้อยไปมาก
+3. **การออกแบบ Unit Test ครอบคลุม:** ชุดทดสอบ Jest + Supertest ทั้ง 4 Test Suites (24 Tests) ผ่านครบทั้งหมด และได้ **Statement Coverage 100%** ในโฟลเดอร์ `frontend/models/`
+
+### 2. สิ่งที่ควรปรับปรุง (What could be improved)
+1. **Static Complexity ใน `StaffModel.js`:** รอบแรกของการทำ Static Profiling ด้วย ESLint พบ complexity warning เกินเกณฑ์ (`11 > 10`) จึงต้องวางแผน Refactor แยกเมธอดย่อยในรอบถัดไป
+2. **การจัดหมวดหมู่ Issue และเอกสารย้อนหลัง:** มี Issue ช่วงต้นบางใบที่ยังขาด Label/Milestone และจำนวน API Endpoints ใน `README.md` ต้องปรับให้ตรงกับ 16 routes จริงใน `server.js`
+
+### 3. สิ่งที่ต้องทำต่อไปใน Sprint 4 (Next Steps / Action Items)
+1. **ทำ Playwright Automated UI Tests ครบ 5 เคสหลัก:** Login (Valid/Invalid PIN), Cashier POS + Toppings, Kitchen KDS Transitions และ Admin Inventory Sort/Restock
+2. **ตั้งค่า CI/CD Pipeline และ Deploy Production:** ทดสอบรัน Parallel Jobs บน GitHub Actions และนำระบบขึ้น AWS Elastic Beanstalk (`us-east-1`)
+
+---
+
+## 15. สรุปผลการประชุมทบทวนการทำงาน (Sprint 4 / Final Retrospective)
+
+* **วัน-เวลาที่ประชุม:** 15 พฤศจิกายน 2569 (สิ้นสุด Sprint 4 — Final Submission)
+* **คลิปวิดีโอสรุปการประชุม Final Retrospective (Sprint 4):** *(รอทีมงานอัปโหลดและแนบลิงก์ YouTube)*
+
+### 1. สิ่งที่ทำได้ดี (What went well)
+1. **คุณภาพโค้ดและการทดสอบผ่านตามเกณฑ์ทั้งหมด:** หลังจาก Refactor `StaffModel.js` แล้ว คำสั่ง `npm run lint` ได้ **0 errors, 0 warnings**, `npm run test:coverage` ผ่านครบ **24/24 Tests** (Statement Coverage **100%**, Branch **86.94%**, Functions **100%**, Lines **100%**), และ `npm run test:ui` (Playwright) ผ่านครบ **5/5 เคส**
+2. **ระบบ CI/CD และการ Deploy บน AWS สำเร็จ:** GitHub Actions CI (`unit-test-and-coverage` และ `ui-test-and-static-check`) ผ่านทุก Job และ Deploy ระบบจริงขึ้น **AWS Elastic Beanstalk (`us-east-1`)** ได้สำเร็จที่ http://jamal-pos-env.eba-ycvffjku.us-east-1.elasticbeanstalk.com/
+3. **การทำงานร่วมกันครบทั้ง 4 คน:** ทุกคนมี Commit ตรง Format `<ticketid>: <msg>` (`>= 20` commits), Branches (`>= 2`), Issues และ Peer Review Comments (`>= 20` comments) ครบถ้วน
+
+### 2. สิ่งที่ควรปรับปรุง (What could be improved)
+1. **ความสม่ำเสมอรายสัปดาห์ (Weekly Cadence):** คอมมิตและคอมเม้นส่วนใหญ่ของ Sprint 3–4 ถูกเร่งส่งในช่วงปลายสัปดาห์ `W45` ในโปรเจกต์ถัดไปควรกระจายการ Commit และปิด Issue ให้สม่ำเสมอทุกสัปดาห์
+2. **การเก็บข้อมูลถาวร (Persistent Database):** ปัจจุบันเซิร์ฟเวอร์ Express ยังใช้ In-Memory Store ใน `server.js` (รีเซ็ตเมื่อรีสตาร์ต Instance) หากต่อยอดขึ้นใช้งานจริงควรเชื่อมต่อฐานข้อมูลเช่น PostgreSQL หรือ DynamoDB
+
+### 3. สรุปบทเรียนและแนวทางต่อยอด (Lessons Learned & Future Work)
+1. การทำ **Static Profiling (ESLint)** และ **Dynamic Profiling (`perf_hooks`)** ช่วยให้เห็นคอขวดและจุดที่โค้ดซับซ้อนเกินไปอย่างเป็นรูปธรรมก่อนส่งมอบ
+2. แนวทางต่อยอดในอนาคต ได้แก่ การเชื่อมต่อฐานข้อมูลถาวร, รองรับใบเสร็จและระบบแจ้งเตือนสต็อก Real-time ผ่าน WebSocket, และการเชื่อมต่อ CI/CD Deploy เข้า AWS Elastic Beanstalk โดยตรงเมื่อ Merge เข้า `main`
