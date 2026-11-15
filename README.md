@@ -517,14 +517,14 @@ flowchart TD
 | 9 | UT-09 | `OrderQueueModel` | `enqueueOrder()` | สร้างออเดอร์ใหม่จากลำดับคิวที่ 5 | ได้เลขคิว `A05` และสถานะเริ่มต้น `pending` | Pass |
 | 10 | UT-10 | `OrderQueueModel` | `advanceOrderStatus()` | เปลี่ยนสถานะ `ord-1` เป็น `in_progress` | สถานะเปลี่ยนเป็น `in_progress` และคืน `400` เมื่อสถานะผิด | Pass |
 | 11 | UT-11 | `OrderQueueModel` | `findOrdersByStatus()`, `getQueueStats()` | คิวที่มีออเดอร์ ฿100 และ ฿200 | กรองตามสถานะถูกต้อง, `averageAmount: 150`, `min: 100`, `max: 200` | Pass |
-| 12 | UT-12 | `InventoryModel` | `deductStock()` | สั่งกาแฟ 2 แก้ว (+ท็อปปิ้ง) และครัวซองต์ 1 ชิ้น | ตัดสต็อกทั้ง Base Drink, Cake, Topping และบล็อกกรณีของหมด | Planned (ลำดับ 4) |
-| 13 | UT-13 | `InventoryModel` | `sortInventorySmallToLarge()` | สินค้าสต็อก `2`, `5`, `20` | เรียงลำดับจากน้อยไปมาก `[2, 5, 20]` ถูกต้อง | Planned (ลำดับ 4) |
-| 14 | UT-14 | `InventoryModel` | `createProduct()`, `updateProduct()`, `deleteProduct()`, `restockItem()` | เพิ่ม/แก้ไขราคา/เติมสต็อก/ลบสินค้า | CRUD ทำงานครบและอัปเดตจำนวนสต็อกถูกต้อง | Planned (ลำดับ 4) |
-| 15 | UT-15 | `InventoryModel` | `voidSale()`, `getSalesAnalytics()` | บิล ฿150 และ ฿65, จากนั้นกด Void บิลแรก | คำนวณ `avg: 107.5`, `min: 65`, `max: 150` และตัดบิลที่ Void ออก | Planned (ลำดับ 4) |
+| 12 | UT-12 | `InventoryModel` | `deductStock()` | สั่งกาแฟ 2 แก้ว (+ท็อปปิ้ง) และครัวซองต์ 1 ชิ้น | ตัดสต็อกทั้ง Base Drink, Cake, Topping และบล็อกกรณีของหมด | Pass |
+| 13 | UT-13 | `InventoryModel` | `sortInventorySmallToLarge()` | สินค้าสต็อก `2`, `5`, `20` | เรียงลำดับจากน้อยไปมาก `[2, 5, 20]` ถูกต้อง | Pass |
+| 14 | UT-14 | `InventoryModel` | `createProduct()`, `updateProduct()`, `deleteProduct()`, `restockItem()` | เพิ่ม/แก้ไขราคา/เติมสต็อก/ลบสินค้า | CRUD ทำงานครบและอัปเดตจำนวนสต็อกถูกต้อง | Pass |
+| 15 | UT-15 | `InventoryModel` | `voidSale()`, `getSalesAnalytics()` | บิล ฿150 และ ฿65, จากนั้นกด Void บิลแรก | คำนวณ `avg: 107.5`, `min: 65`, `max: 150` และตัดบิลที่ Void ออก | Pass |
 
 #### ตัวอย่างคำสั่งทดสอบและ Dynamic Profiling (`frontend/`)
 ```bash
-npm test                # รัน Jest Unit Tests (staff.test.js + cart.test.js + orderQueue.test.js)
+npm test                # รัน Jest Unit Tests (staff.test.js + cart.test.js + orderQueue.test.js + inventory.test.js)
 npm run test:coverage   # ตรวจ Statement Coverage บน models/ (>= 80%)
 npm run test:ui         # รัน Playwright UI Tests (tests/ui/*.ui.test.js)
 npm run lint            # รัน Static Profiling ด้วย ESLint (eslint.config.mjs)
@@ -549,3 +549,31 @@ npm run profile:dynamic # รัน Dynamic Profiling (scripts/profile_dynamic.j
 ### สิ่งที่เปลี่ยนแปลงจากรายงาน Phase 1–2 (และ Phase 3) พร้อมเหตุผล
 1. **แยกชั้น Data Structure (`frontend/models/`):** เปลี่ยนจากการเก็บตัวแปร Array ใน `server.js` มาเป็น 4 คลาส (`StaffModel`, `CartModel`, `OrderQueueModel`, `InventoryModel`) เพื่อให้เขียน Unit Test ครอบคลุม Statement Coverage `>= 80%` และรองรับการคำนวณ/ค้นหาครบทุกโมดูล
 2. **รองรับ Change Request (#12) เพิ่มเติม:** เพิ่ม Social Login (Gmail/Facebook), ขยายเมนูเป็น 11 รายการ (`>= 10`), ค้นหาครอบคลุมทั้งเครื่องดื่ม เบเกอรี่ และท็อปปิ้ง, เพิ่มสต็อกของ Base Drink/Cake/Toppings, เพิ่ม Admin CRUD ครบ (เพิ่ม/ลบ/แก้ไข) และรายงานเรียงสต็อกน้อยไปมาก
+
+---
+
+### รายงานผล Test Coverage (`models/` Folder — เกณฑ์ >= 80% Statement Coverage)
+รันคำสั่ง `npm run test:coverage` (Jest `--coverage`) บนโฟลเดอร์ `frontend/models/` ซึ่งประกอบด้วย `StaffModel.js`, `CartModel.js`, `OrderQueueModel.js` และ `InventoryModel.js` ได้ผลลัพธ์ **Statement Coverage 100% ทุกไฟล์** ผ่านเกณฑ์ที่กำหนด (ชุดทดสอบ 4 Test Suites รวม 24 Tests ผ่านทั้งหมด):
+
+| ไฟล์ Data Structure (`models/`) | % Stmts | % Branch | % Funcs | % Lines | ไฟล์ทดสอบ (`tests/`) | ผู้รับผิดชอบ |
+| :--- | :---: | :---: | :---: | :---: | :--- | :--- |
+| `StaffModel.js` | 100 | 89.83 | 100 | 100 | `staff.test.js` (5 tests) | `@AkashiZai` |
+| `CartModel.js` | 100 | 78.94 | 100 | 100 | `cart.test.js` (4 tests) | `@203Tharathep` |
+| `OrderQueueModel.js` | 100 | 72.54 | 100 | 100 | `orderQueue.test.js` (3 tests) | `@Ctrl-Pichayut` |
+| `InventoryModel.js` | 100 | 95.16 | 100 | 100 | `inventory.test.js` (12 tests) | `@Kizizi123123` |
+| **All files** | **100** | **86.94** | **100** | **100** | 4 Test Suites / 24 Tests | ทั้งทีม |
+
+### ตารางสรุป 5 UI Test Cases (Phase 4 — Playwright, `npm run test:ui`)
+| ลำดับ | ชื่อไฟล์ UI Test | รายละเอียดการทดสอบ (Steps) | การเช็กค่า Expected Result (`expect(...)`) | ผู้รับผิดชอบ |
+| :---: | :--- | :--- | :--- | :--- |
+| 1 | `login.ui.test.js` | กดออกจากระบบ -> กด Sign In ด้วย PIN แคชเชียร์ `1234` ที่ระบบกรอกไว้ให้ | `expect(page.getByText('เมนูสินค้าหน้าร้าน (Menu Catalog)')).toBeVisible()` | `@AkashiZai` |
+| 2 | `login.ui.test.js` | กดออกจากระบบ -> กรอกรหัส PIN ผิด `0000` -> กด Sign In | `expect(page.getByText(/รหัสผ่าน PIN ไม่ถูกต้อง/)).toBeVisible()` | `@AkashiZai` |
+| 3 | `pos.ui.test.js` | ค้นหา `"โอ๊ต"` และ `"เอสเพรสโซ่เย็น"` -> เลือกเพิ่มช็อตกาแฟ (+฿20) -> คิดเงินสดรับ ฿100 | `expect(page.getByText('฿85.00').first()).toBeVisible()` และเงินทอน `expect(page.getByTestId('pos-change-due')).toHaveText('฿15.00')` | `@203Tharathep` |
+| 4 | `kds.ui.test.js` | เปิดหน้า Kitchen KDS -> กด `+ จำลองคิวใหม่` -> กด `รับทำออเดอร์นี้ →` | `expect(page.getByText('#คิว A05')).toBeVisible()` และปุ่มเปลี่ยนเป็น `✓ ทำเสร็จแล้ว (พร้อมเสิร์ฟ)` | `@Ctrl-Pichayut` |
+| 5 | `admin.ui.test.js` | เปิด Admin Portal -> จัดการสต็อกทั้งหมด -> ตรวจว่ารายการเรียงสต็อกน้อยไปมาก -> กด `+ เติม 5 ชิ้น` ที่ครัวซองต์ | สต็อกครัวซองต์เพิ่มขึ้น 5 ชิ้น (ค่าตั้งต้น 4 -> `9 ชิ้น`) ด้วย `expect(croissantStock).toHaveText(...)` และรายการยังเรียงน้อยไปมากหลังเติม | `@Kizizi123123` |
+
+### กระบวนการทำงาน (Process, Methods & Tools) ที่เพิ่มเติมใน Phase 3 และ Phase 4
+1. **การบริหารโปรเจกต์และ Change Management:** แตก Change Request (`#12`) และงานทดสอบออกเป็น Tickets ย่อยใน Milestone `Sprint3` และ `Sprint4` ตั้งชื่อ Branch ตามมาตรฐาน `<nameid>_<ticketid>` (เช่น `kizizi123123_10`) และ Commit ตามรูปแบบ `<ticketid>: <msg>` เพื่อให้ตรวจย้อนกลับจาก Commit ไปยัง Issue ได้
+2. **การควบคุมคุณภาพโค้ดและ Monitor Build:** ใช้ Jest + Supertest ตรวจ Statement Coverage บนโฟลเดอร์ `models/` และตั้งค่า GitHub Actions CI Pipeline แบบ Parallel Jobs เพื่อรัน Unit Test และ Playwright UI Test อัตโนมัติทุกครั้งที่ Push/Pull Request
+3. **การจัดการ Bugs และ Profiling:** ใช้ ESLint (Static Profiling) และ `perf_hooks` (Dynamic Structural Profiling) วัดผลก่อนและหลังปรับโครงสร้างโค้ด โดยสรุปผลไว้ในตารางเปรียบเทียบด้านบน
+4. **การแยก Business Logic ออกจาก Route (ส่วนที่ 4):** ย้ายการตัดสต็อก การบันทึกบิลขาย การ Void บิล และ Admin CRUD ของเมนูจาก `server.js` ไปไว้ใน `InventoryModel` ทำให้ Route เหลือหน้าที่รับ-ตอบ HTTP และเขียน Unit Test ครอบคลุมได้โดยไม่ต้องเปิดเซิร์ฟเวอร์
