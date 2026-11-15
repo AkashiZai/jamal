@@ -62,4 +62,23 @@ describe('OrderQueueModel Unit Tests', () => {
       .send({ status: 'invalid_state' });
     expect(patchBad.statusCode).toBe(400);
   });
+
+  test('findOrdersByStatus and getQueueStats return accurate filter and min/max/avg', async () => {
+    const queue = new OrderQueueModel(seed, 5);
+    expect(queue.findOrdersByStatus('pending')).toHaveLength(1);
+    expect(queue.findOrdersByStatus('all')).toHaveLength(2);
+
+    const stats = queue.getQueueStats();
+    expect(stats.totalOrders).toBe(2);
+    expect(stats.averageAmount).toBe(150);
+    expect(stats.minAmount).toBe(100);
+    expect(stats.maxAmount).toBe(200);
+
+    const emptyQueue = new OrderQueueModel([], 1);
+    expect(emptyQueue.getQueueStats().averageAmount).toBe(0);
+
+    const apiStats = await request(app).get('/api/queue/stats').query({ status: 'all' });
+    expect(apiStats.statusCode).toBe(200);
+    expect(apiStats.body.stats.totalOrders).toBeGreaterThanOrEqual(3);
+  });
 });
