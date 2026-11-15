@@ -471,19 +471,21 @@ flowchart TD
 ---
 
 ### การทำงานของโปรแกรมและสรุปจำนวน HTTP Methods / API (Phase 3 & Phase 4)
-ระบบพัฒนาด้วย **Node.js + Express** (`frontend/server.js`) โดยให้บริการ Static Template (`public/index.html`, `public/app.js`, `public/style.css`) และเชื่อมต่อผ่าน REST API แบบ JSON รวม **13 Endpoints**:
-- **GET (3 methods):**
+ระบบพัฒนาด้วย **Node.js + Express** (`frontend/server.js`) โดยให้บริการ Static Template (`public/index.html`, `public/app.js`, `public/style.css`) และเชื่อมต่อผ่าน REST API แบบ JSON รวม **16 Endpoints**:
+- **GET (5 methods):**
   1. `GET /api/state` — ดึงข้อมูลเริ่มต้นทั้งหมด (Categories, Products, Toppings, Staff, Orders, Sales, Sorted Inventory)
   2. `GET /api/inventory/sorted` — ดึงรายงานสต็อกสินค้า (Base Drink, Cake, Toppings) เรียงจากน้อยไปมาก
-  3. `GET *` — เสิร์ฟหน้า Single-Page Application Template (`public/index.html`)
-- **POST (6 methods):**
+  3. `GET /api/catalog/search` — ค้นหาเครื่องดื่ม เบเกอรี่ และท็อปปิ้งด้วยคีย์เวิร์ด (`q`, `category`)
+  4. `GET /api/queue/stats` — ดึงรายการออเดอร์ตามสถานะและสถิติยอดคำสั่งซื้อในคิว (`average`, `min`, `max`)
+  5. `GET *` — เสิร์ฟหน้า Single-Page Application Template (`public/index.html`)
+- **POST (7 methods):**
   1. `POST /api/auth/login` — ตรวจสอบสิทธิ์ด้วย Username และรหัส PIN 4 หลัก
   2. `POST /api/auth/social` — เข้าสู่ระบบผ่าน Gmail / Facebook (Social Login)
   3. `POST /api/orders` — สร้างออเดอร์ใหม่ ตัดสต็อกอัตโนมัติ และบันทึกยอดขาย
   4. `POST /api/products` — เพิ่มรายการเมนูใหม่เข้าคลังสินค้า
   5. `POST /api/products/:id/restock` — เติมสต็อกสินค้าหรือท็อปปิ้ง
   6. `POST /api/sales/:receiptNo/void` — ยกเลิกบิลด้วยสิทธิ์ผู้จัดการ (Admin Override)
-  *(รวม `POST /api/staff` สำหรับเพิ่มบัญชีพนักงาน)*
+  7. `POST /api/staff` — เพิ่มบัญชีพนักงานใหม่เข้าสู่ระบบ
 - **PUT / PATCH / DELETE (4 methods):**
   1. `PUT /api/products/:id` — แก้ไขรายละเอียดสินค้า หมวดหมู่ ราคา และตัวเลือก
   2. `PATCH /api/products/:id/price` — แก้ไขราคาขายด่วน
