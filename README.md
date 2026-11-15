@@ -514,9 +514,9 @@ flowchart TD
 | 6 | UT-06 | `CartModel` | `updateItemQuantity()` | ปรับจำนวนเป็น `3` และปรับเป็น `0` | อัปเดตจำนวนเป็น 3 และลบแถวออกเมื่อเป็น 0 | Pass |
 | 7 | UT-07 | `CartModel` | `calculateBill()` | ยอดรวม ฿170, รับเงินสด ฿200 / ฿100 | คำนวณ VAT 7%, เงินทอน `฿30` (`isEnoughCash: true`) | Pass |
 | 8 | UT-08 | `CartModel` | `searchCatalog()` | ค้นหาคำว่า `"โอ๊ต"` และ `"ครัวซองต์"` | คืนรายการท็อปปิ้งและเบเกอรี่ที่ตรงกับคีย์เวิร์ด | Pass |
-| 9 | UT-09 | `OrderQueueModel` | `enqueueOrder()` | สร้างออเดอร์ใหม่จากลำดับคิวที่ 5 | ได้เลขคิว `A05` และสถานะเริ่มต้น `pending` | Planned (ลำดับ 3) |
-| 10 | UT-10 | `OrderQueueModel` | `advanceOrderStatus()` | เปลี่ยนสถานะ `ord-1` เป็น `in_progress` | สถานะเปลี่ยนเป็น `in_progress` และคืน `400` เมื่อสถานะผิด | Planned (ลำดับ 3) |
-| 11 | UT-11 | `OrderQueueModel` | `findOrdersByStatus()`, `getQueueStats()` | คิวที่มีออเดอร์ ฿100 และ ฿200 | กรองตามสถานะถูกต้อง, `averageAmount: 150`, `min: 100`, `max: 200` | Planned (ลำดับ 3) |
+| 9 | UT-09 | `OrderQueueModel` | `enqueueOrder()` | สร้างออเดอร์ใหม่จากลำดับคิวที่ 5 | ได้เลขคิว `A05` และสถานะเริ่มต้น `pending` | Pass |
+| 10 | UT-10 | `OrderQueueModel` | `advanceOrderStatus()` | เปลี่ยนสถานะ `ord-1` เป็น `in_progress` | สถานะเปลี่ยนเป็น `in_progress` และคืน `400` เมื่อสถานะผิด | Pass |
+| 11 | UT-11 | `OrderQueueModel` | `findOrdersByStatus()`, `getQueueStats()` | คิวที่มีออเดอร์ ฿100 และ ฿200 | กรองตามสถานะถูกต้อง, `averageAmount: 150`, `min: 100`, `max: 200` | Pass |
 | 12 | UT-12 | `InventoryModel` | `deductStock()` | สั่งกาแฟ 2 แก้ว (+ท็อปปิ้ง) และครัวซองต์ 1 ชิ้น | ตัดสต็อกทั้ง Base Drink, Cake, Topping และบล็อกกรณีของหมด | Planned (ลำดับ 4) |
 | 13 | UT-13 | `InventoryModel` | `sortInventorySmallToLarge()` | สินค้าสต็อก `2`, `5`, `20` | เรียงลำดับจากน้อยไปมาก `[2, 5, 20]` ถูกต้อง | Planned (ลำดับ 4) |
 | 14 | UT-14 | `InventoryModel` | `createProduct()`, `updateProduct()`, `deleteProduct()`, `restockItem()` | เพิ่ม/แก้ไขราคา/เติมสต็อก/ลบสินค้า | CRUD ทำงานครบและอัปเดตจำนวนสต็อกถูกต้อง | Planned (ลำดับ 4) |
@@ -524,7 +524,7 @@ flowchart TD
 
 #### ตัวอย่างคำสั่งทดสอบและ Dynamic Profiling (`frontend/`)
 ```bash
-npm test                # รัน Jest Unit Tests (staff.test.js + cart.test.js)
+npm test                # รัน Jest Unit Tests (staff.test.js + cart.test.js + orderQueue.test.js)
 npm run test:coverage   # ตรวจ Statement Coverage บน models/ (>= 80%)
 npm run test:ui         # รัน Playwright UI Tests (tests/ui/*.ui.test.js)
 npm run lint            # รัน Static Profiling ด้วย ESLint (eslint.config.mjs)
@@ -541,3 +541,11 @@ npm run profile:dynamic # รัน Dynamic Profiling (scripts/profile_dynamic.j
 | จำนวนไฟล์ที่มีฟังก์ชันยาวเกินเกณฑ์ (`max-lines-per-function`) | พบใน `server.js` (รวมทุก route และข้อมูลไว้ไฟล์เดียว) | ลดลงจากการแยก logic ออกเป็น 4 คลาสใน `models/` | โค้ดอ่านง่ายและดูแลแยกส่วนได้ดีขึ้น |
 | ค่าความซับซ้อน (`complexity > 10`) | พบใน route `POST /api/orders` เดิม | แยกเป็น `deductStock()`, `enqueueOrder()`, `recordSale()` (ค่า complexity <= 6 ต่อเมธอด) | ลดความซับซ้อนของแต่ละเมธอดลงต่ำกว่าเกณฑ์ |
 | จำนวน `no-undef` / `no-unused-vars` Errors | `0` errors (`2` warnings) | `0` errors (`0` warnings) | ไม่มีตัวแปรค้างหรือไม่ถูกใช้งาน |
+
+### สิ่งที่ยังไม่เสร็จสมบูรณ์ / Bug ที่พบใน Phase 3 (และแก้ไขครบใน Phase 4)
+1. **การตัดสต็อกท็อปปิ้งแยกจากเครื่องดื่มหลัก:** ในระยะต้นของ Phase 3 ระบบตัดเฉพาะสต็อกเบเกอรี่ ใน Phase 4 ได้ขยาย `InventoryModel.deductStock()` ให้ตัดสต็อกครบทั้ง Base Drink, Cake และ Toppings
+2. **การป้องกันการกดสั่งสินค้าที่สต็อกเป็น 0 จากฝั่ง API โดยตรง:** เพิ่มการตรวจสอบใน `InventoryModel.deductStock()` ให้คืน HTTP `400` ทันทีหากสินค้าหรือท็อปปิ้งไม่พอ
+
+### สิ่งที่เปลี่ยนแปลงจากรายงาน Phase 1–2 (และ Phase 3) พร้อมเหตุผล
+1. **แยกชั้น Data Structure (`frontend/models/`):** เปลี่ยนจากการเก็บตัวแปร Array ใน `server.js` มาเป็น 4 คลาส (`StaffModel`, `CartModel`, `OrderQueueModel`, `InventoryModel`) เพื่อให้เขียน Unit Test ครอบคลุม Statement Coverage `>= 80%` และรองรับการคำนวณ/ค้นหาครบทุกโมดูล
+2. **รองรับ Change Request (#12) เพิ่มเติม:** เพิ่ม Social Login (Gmail/Facebook), ขยายเมนูเป็น 11 รายการ (`>= 10`), ค้นหาครอบคลุมทั้งเครื่องดื่ม เบเกอรี่ และท็อปปิ้ง, เพิ่มสต็อกของ Base Drink/Cake/Toppings, เพิ่ม Admin CRUD ครบ (เพิ่ม/ลบ/แก้ไข) และรายงานเรียงสต็อกน้อยไปมาก
