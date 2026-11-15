@@ -135,6 +135,71 @@ class InventoryModel {
     ];
     return combined.sort((a, b) => a.stock - b.stock);
   }
+
+  // บันทึกบิลขายใหม่เข้าประวัติ (FR-08) พร้อมอัปเดตยอดขายรวมและจำนวนบิล
+  recordSale({
+    totalAmount = 0,
+    items = [],
+    paymentMethod = 'PromptPay',
+    queueNo = 'A01',
+    cashierName = 'Cashier',
+    time,
+  } = {}) {
+    const amt = Number(totalAmount) || 0;
+    this.salesStats = {
+      ...this.salesStats,
+      totalSales: this.salesStats.totalSales + amt,
+      totalBills: this.salesStats.totalBills + 1,
+    };
+    const now = new Date();
+    const pad = (n) => String(n).padStart(2, '0');
+    const receiptNo = `INV-${now.getFullYear()}${pad(now.getMonth() + 1)}${pad(now.getDate())}-${String(
+      this.salesStats.totalBills
+    ).padStart(4, '0')}`;
+
+    const record = {
+      receiptNo,
+      time: time || `${pad(now.getHours())}:${pad(now.getMinutes())}`,
+      queueNo,
+      itemsSummary: items.map((i) => `${i.name} (x${i.quantity || 1})`).join(', '),
+      paymentMethod,
+      total: amt,
+      status: 'paid',
+      cashier: cashierName,
+    };
+    this.salesHistory = [record, ...this.salesHistory];
+    return record;
+  }
+
+  // Manager Override: Void บิลพร้อมบันทึกผู้อนุมัติและเหตุผล (Audit Trail)
+  voidSale(receiptNo, adminName = 'Admin Zai', reason = 'ยกเลิกโดยผู้จัดการ') {
+    const target = this.salesHistory.find((s) => s.receiptNo === receiptNo);
+    if (!target) return { ok: false, status: 404, error: 'ไม่พบเลขที่ใบเสร็จ' };
+    if (target.status === 'voided') {
+      return { ok: false, status: 409, error: 'บิลนี้ถูก Void ไปแล้ว' };
+    }
+    this.salesHistory = this.salesHistory.map((item) =>
+      item.receiptNo === receiptNo ? { ...item, status: 'voided', voidBy: adminName, voidReason: reason } : item
+    );
+    return { ok: true, status: 200, salesHistory: this.salesHistory };
+  }
+
+  // Calculation Method (ตาม Google Doc): วิเคราะห์ยอดขาย Avg / Min / Max จากบิลที่ยังไม่ถูก Void
+  getSalesAnalytics() {
+    const paidBills = this.salesHistory.filter((s) => s.status === 'paid');
+    if (paidBills.length === 0) {
+      return { totalPaidRevenue: 0, paidCount: 0, averageBill: 0, minBill: 0, maxBill: 0 };
+    }
+    const totals = paidBills.map((bill) => Number(bill.total) || 0);
+    const sum = totals.reduce((acc, val) => acc + val, 0);
+    return {
+      totalPaidRevenue: Number(sum.toFixed(2)),
+      paidCount: paidBills.length,
+      averageBill: Number((sum / paidBills.length).toFixed(2)),
+      minBill: Math.min(...totals),
+      maxBill: Math.max(...totals),
+    };
+  }
 }
 
 module.exports = InventoryModel;
