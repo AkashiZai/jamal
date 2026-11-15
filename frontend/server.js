@@ -29,7 +29,7 @@ let products = [
     desc: 'เมล็ดคั่วกลาง บราซิล-เชียงราย เข้มข้นกลมกล่อม',
     img: 'https://images.unsplash.com/photo-1517256064527-09c73fc73e38?w=500&q=80',
     customizable: true,
-    stock: null,
+    stock: 20,
   },
   {
     id: 'c2',
@@ -39,7 +39,7 @@ let products = [
     desc: 'ช็อตเอสเพรสโซ่เข้มผสมน้ำส้มคั้นสด สดชื่นตื่นตัว',
     img: 'https://images.unsplash.com/photo-1514432324607-a09d9b4aefdd?w=500&q=80',
     customizable: true,
-    stock: null,
+    stock: 20,
   },
   {
     id: 'c3',
@@ -49,7 +49,7 @@ let products = [
     desc: 'ฟองนมเนียนนุ่ม โรยผงโกโก้พรีเมียม',
     img: 'https://images.unsplash.com/photo-1534778101976-62847782c213?w=500&q=80',
     customizable: true,
-    stock: null,
+    stock: 20,
   },
   {
     id: 'c4',
@@ -59,7 +59,7 @@ let products = [
     desc: 'ผงมัทฉะเกรดพิธีการแท้จากเกียวโต หอมละมุนเข้มข้น',
     img: 'https://images.unsplash.com/photo-1536256263959-770b48d82b0a?w=500&q=80',
     customizable: true,
-    stock: null,
+    stock: 20,
   },
   {
     id: 'c5',
@@ -69,7 +69,7 @@ let products = [
     desc: 'ใบชาคั่วสูตรลับของร้าน หอมกรุ่นหวานมันกำลังดี',
     img: 'https://images.unsplash.com/photo-1576092768241-dec231879fc3?w=500&q=80',
     customizable: true,
-    stock: null,
+    stock: 20,
   },
   {
     id: 'b1',
@@ -146,6 +146,7 @@ let toppings = [
 ];
 const CartModel = require('./models/CartModel');
 const OrderQueueModel = require('./models/OrderQueueModel');
+const InventoryModel = require('./models/InventoryModel');
 const cartCatalogHelper = new CartModel();
 
 let staffAccounts = [
@@ -312,6 +313,23 @@ let salesHistory = [
 
 let customerQueueNo = 'A03';
 
+// InventoryModel (ส่วนที่ 4): ดูแลสต็อก Base Drink / Cake / Toppings, ยอดขาย/ใบเสร็จ และการ Void บิล
+const inventoryModel = new InventoryModel(products, toppings, salesHistory, salesStats);
+
+// ดึงข้อมูลล่าสุดจาก InventoryModel กลับมาเก็บในตัวแปรของ server
+// เพื่อให้ /api/state และ /api/catalog/search อ่านค่าเดียวกับที่โมเดลจัดการอยู่
+function syncInventoryState() {
+  ({ products, toppings, salesHistory, salesStats } = inventoryModel.getState());
+}
+
+// Manager Override (#10): หาบัญชี Admin ที่ PIN ตรงกัน (นับเฉพาะบัญชี Admin ที่สร้างในระบบ ไม่รวมบัญชี Social Login)
+function findManagerByPin(pin) {
+  const key = String(pin ?? '');
+  if (!key) return null;
+  const isLocal = (acc) => !acc.authProvider || acc.authProvider === 'local';
+  return staffModel.getAll().find((acc) => acc.role === 'admin' && isLocal(acc) && acc.pin === key) || null;
+}
+
 // ============================================================================
 // REST API ENDPOINTS
 // ============================================================================
@@ -325,8 +343,13 @@ app.get('/api/state', (_req, res) => {
     orders,
     salesStats,
     salesHistory,
+    sortedInventory: inventoryModel.sortInventorySmallToLarge(),
     customerQueueNo,
   });
+});
+
+app.get('/api/inventory/sorted', (_req, res) => {
+  res.json({ items: inventoryModel.sortInventorySmallToLarge() });
 });
 
 app.get('/api/catalog/search', (req, res) => {
@@ -357,59 +380,26 @@ app.post('/api/orders', (req, res) => {
   const payload = req.body || {};
   const items = payload.items || [];
 
-  // เช็ก Out-of-Stock ก่อนสร้างออเดอร์ (Issue #8 & #12)
-  for (const item of items) {
-    const prod = products.find((p) => p.id === item.id);
-    const qty = Number(item.quantity) || 1;
-    if (prod && prod.stock !== null && prod.stock < qty) {
-      return res.status(400).json({ error: `สินค้า "${prod.name}" หมดสต็อก (Out of Stock)` });
-    }
+  // ตัดสต็อก Base Drink / Cake / Toppings อัตโนมัติ (FR-03) พร้อมเช็ก Out-of-Stock (Issue #8 & #12)
+  // ถ้าสต็อกไม่พอจะตอบ HTTP 400 และไม่สร้างออเดอร์
+  const stockResult = inventoryModel.deductStock(items);
+  if (!stockResult.ok) {
+    return res.status(stockResult.status).json({ error: stockResult.error });
   }
 
   const newOrder = orderQueueModel.enqueueOrder(payload);
   orders = orderQueueModel.getAll();
 
-  // ตัดสต็อกอัตโนมัติ (FR-03)
-  products = products.map((p) => {
-    const itemInCart = items.find((it) => it.id === p.id);
-    if (itemInCart && p.stock !== null) {
-      return {
-        ...p,
-        stock: Math.max(0, p.stock - (Number(itemInCart.quantity) || 1)),
-      };
-    }
-    return p;
+  // บันทึกยอดขายและใบเสร็จเข้าประวัติการขาย (FR-08)
+  inventoryModel.recordSale({
+    totalAmount: payload.totalAmount,
+    items,
+    paymentMethod: payload.paymentMethod || 'PromptPay',
+    queueNo: newOrder.queueNo,
+    cashierName: payload.cashierName || 'Cashier',
+    time: newOrder.createdAt,
   });
-
-  // Update sales stats & history (FR-08)
-  const totalAmount = Number(payload.totalAmount) || 0;
-  const paymentMethod = payload.paymentMethod || 'PromptPay';
-  const cashierName = payload.cashierName || 'Cashier';
-
-  salesStats = {
-    ...salesStats,
-    totalSales: salesStats.totalSales + totalAmount,
-    totalBills: salesStats.totalBills + 1,
-  };
-
-  const now = new Date();
-  const receiptNo = `INV-${now.getFullYear()}${String(now.getMonth() + 1).padStart(2, '0')}${String(
-    now.getDate()
-  ).padStart(2, '0')}-${String(salesStats.totalBills).padStart(4, '0')}`;
-
-  salesHistory = [
-    {
-      receiptNo,
-      time: newOrder.createdAt,
-      queueNo: newOrder.queueNo,
-      itemsSummary: items.map((i) => `${i.name} (x${i.quantity || 1})`).join(', '),
-      paymentMethod,
-      total: totalAmount,
-      status: 'paid',
-      cashier: cashierName,
-    },
-    ...salesHistory,
-  ];
+  syncInventoryState();
 
   if (String(payload.channel || '').includes('Mobile')) {
     customerQueueNo = newOrder.queueNo;
@@ -459,31 +449,22 @@ app.patch('/api/products/:id/price', (req, res) => {
 });
 
 app.post('/api/products/:id/restock', (req, res) => {
-  const { id } = req.params;
-  const { amount = 5 } = req.body || {};
-  products = products.map((p) => {
-    if (p.id === id) {
-      return { ...p, stock: (p.stock ?? 0) + Number(amount) };
-    }
-    return p;
-  });
-  res.json({ ok: true, products });
+  const result = inventoryModel.restockItem(req.params.id, req.body?.amount ?? 5);
+  if (!result.ok) return res.status(result.status).json({ error: result.error });
+  syncInventoryState();
+  res.json({ ok: true, products, toppings });
 });
 
 app.post('/api/sales/:receiptNo/void', (req, res) => {
-  const { receiptNo } = req.params;
-  const { adminName = 'Admin Zai', reason = 'ยกเลิกโดยผู้จัดการ' } = req.body || {};
-  salesHistory = salesHistory.map((item) => {
-    if (item.receiptNo === receiptNo) {
-      return {
-        ...item,
-        status: 'voided',
-        voidBy: adminName,
-        voidReason: reason,
-      };
-    }
-    return item;
-  });
+  // Manager Override: ต้องกรอก PIN ผู้จัดการ และบันทึกชื่อผู้อนุมัติพร้อมเหตุผลลงบิล (Audit Trail)
+  const { pin, reason } = req.body || {};
+  const manager = findManagerByPin(pin);
+  if (!manager) {
+    return res.status(403).json({ error: 'รหัส PIN ผู้จัดการไม่ถูกต้อง ไม่สามารถ Void บิลได้' });
+  }
+  const result = inventoryModel.voidSale(req.params.receiptNo, manager.name, reason || undefined);
+  if (!result.ok) return res.status(result.status).json({ error: result.error });
+  syncInventoryState();
   res.json({ ok: true, salesHistory });
 });
 
