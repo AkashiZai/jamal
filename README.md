@@ -611,6 +611,7 @@ npm run profile:dynamic # รัน Dynamic Profiling (scripts/profile_dynamic.j
    - `GET /` → HTTP `200` (โหลดหน้าเว็บ JAMAL POS สำเร็จ)
    - `GET /api/state` → คืนข้อมูล `11` products, `4` toppings, `3` orders และ `15` sortedInventory
    - `GET /api/catalog/search?q=Oat` → คืนรายการท็อปปิ้งที่ตรงคำค้นหาถูกต้อง
+4. ตรวจรับการใช้งานจริง End-to-End บน Production (Issue `#53` โดย `@Ctrl-Pichayut`): ทดสอบเข้าสู่ระบบ Cashier, สั่งซื้อ `ครัวซองต์เนยสด AOP` (`POST /api/orders` HTTP `201` คิว `#A05` พร้อมตัดสต็อกอัตโนมัติ `4 -> 3`) และเปลี่ยนสถานะคิวบนหน้าจอ Kitchen KDS (`PATCH /api/orders/:id/status` HTTP `200`) ผ่านสมบูรณ์
 
 > **หมายเหตุ (AWS Academy Learner Lab):** สภาพแวดล้อมที่ Deploy บนบัญชี Learner Lab จะทำงานตามรอบเวลาของ Lab Session (หาก Session หมดเวลา EC2 จะหยุดชั่วคราว และกด `Start Lab` เพื่อเปิดใช้งานใหม่ได้)
 
@@ -619,7 +620,7 @@ npm run profile:dynamic # รัน Dynamic Profiling (scripts/profile_dynamic.j
 ## 14. สรุปผลการประชุมทบทวนการทำงาน (Sprint 3 Retrospective)
 
 * **วัน-เวลาที่ประชุม:** 15 พฤศจิกายน 2569 (สิ้นสุด Sprint 3)
-* **คลิปวิดีโอสรุปการประชุม Retrospective Sprint 3:** *(รอทีมงานอัปโหลดและแนบลิงก์ YouTube)*
+* **คลิปวิดีโอสรุปการประชุม Retrospective Sprint 3:** https://youtu.be/bCgfyVGiR1w
 
 ### 1. สิ่งที่ทำได้ดี (What went well)
 1. **การแยกโครงสร้าง Data Structure ครบทั้ง 4 โมดูล:** แยก Business Logic ออกจาก `server.js` เป็น 4 คลาส ได้แก่ `StaffModel`, `CartModel`, `OrderQueueModel` และ `InventoryModel` ได้อย่างชัดเจน
