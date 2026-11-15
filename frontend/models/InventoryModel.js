@@ -113,6 +113,28 @@ class InventoryModel {
     if (!updatedItem) return { ok: false, status: 404, error: 'ไม่พบรายการสินค้า/ท็อปปิ้ง' };
     return { ok: true, item: updatedItem, products: this.products, toppings: this.toppings };
   }
+
+  // Search/Sort Method (ตาม Google Doc & Issue #12): เรียง Inventory จากน้อยไปมาก
+  // รวม Base Drink + Cake + Toppings ที่มีการนับสต็อก แล้วเรียงตามจำนวนคงเหลือ (Stable Sort)
+  sortInventorySmallToLarge() {
+    const combined = [
+      ...this.products.filter(isTracked).map((p) => ({
+        id: p.id,
+        name: p.name,
+        group: isBakeryItem(p) ? 'cake/bakery' : 'base-drink',
+        stock: p.stock,
+        price: p.price,
+      })),
+      ...this.toppings.filter(isTracked).map((t) => ({
+        id: t.id,
+        name: t.name,
+        group: 'topping',
+        stock: t.stock,
+        price: t.price,
+      })),
+    ];
+    return combined.sort((a, b) => a.stock - b.stock);
+  }
 }
 
 module.exports = InventoryModel;
