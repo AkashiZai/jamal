@@ -420,31 +420,30 @@ app.patch('/api/orders/:id/status', (req, res) => {
 });
 
 app.post('/api/products', (req, res) => {
-  const { name, category = 'coffee', price, cost = 0, desc } = req.body || {};
-  if (!name || !price) {
-    return res.status(400).json({ error: 'กรุณาระบุชื่อเมนูและราคา' });
-  }
-  const isBakery = category === 'bakery' || category === 'dessert';
-  const newProduct = {
-    id: `p-${Date.now()}`,
-    name,
-    category,
-    price: Number(price),
-    cost: Number(cost || 0),
-    desc: desc || 'เมนูใหม่ประจำร้าน',
-    img: 'https://images.unsplash.com/photo-1517256064527-09c73fc73e38?w=500&q=80',
-    customizable: category === 'coffee' || category === 'non-coffee',
-    isBakery,
-    stock: isBakery ? 10 : null,
-  };
-  products.push(newProduct);
-  res.status(201).json({ product: newProduct, products });
+  const result = inventoryModel.createProduct(req.body || {});
+  if (!result.ok) return res.status(result.status).json({ error: result.error });
+  syncInventoryState();
+  res.status(201).json({ product: result.product, products });
+});
+
+app.put('/api/products/:id', (req, res) => {
+  const result = inventoryModel.updateProduct(req.params.id, req.body || {});
+  if (!result.ok) return res.status(result.status).json({ error: result.error });
+  syncInventoryState();
+  res.json({ ok: true, product: result.product, products });
+});
+
+app.delete('/api/products/:id', (req, res) => {
+  const result = inventoryModel.deleteProduct(req.params.id);
+  if (!result.ok) return res.status(result.status).json({ error: result.error });
+  syncInventoryState();
+  res.json({ ok: true, products });
 });
 
 app.patch('/api/products/:id/price', (req, res) => {
-  const { id } = req.params;
-  const { price } = req.body || {};
-  products = products.map((p) => (p.id === id ? { ...p, price: Number(price) } : p));
+  const result = inventoryModel.updateProduct(req.params.id, { price: req.body?.price });
+  if (!result.ok) return res.status(result.status).json({ error: result.error });
+  syncInventoryState();
   res.json({ ok: true, products });
 });
 
