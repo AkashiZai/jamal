@@ -48,6 +48,36 @@ class OrderQueueModel {
     this.orders = [newOrder, ...this.orders];
     return newOrder;
   }
+
+  // Data Structure Method 2: เปลี่ยนสถานะออเดอร์ใน KDS
+  advanceOrderStatus(orderId, nextStatus) {
+    if (!VALID_STATUSES.includes(nextStatus)) {
+      return { ok: false, status: 400, error: 'สถานะออเดอร์ไม่ถูกต้อง' };
+    }
+    const target = this.orders.find((ord) => ord.id === orderId);
+    if (!target) {
+      return { ok: false, status: 404, error: 'ไม่พบหมายเลขออเดอร์นี้ในคิว' };
+    }
+
+    this.orders = this.orders.map((ord) => {
+      if (ord.id !== orderId) return ord;
+      return {
+        ...ord,
+        status: nextStatus,
+        timeElapsed:
+          nextStatus === 'in_progress'
+            ? 'กำลังทำ (0 นาที)'
+            : nextStatus === 'ready'
+              ? 'พร้อมเสิร์ฟแล้ว'
+              : nextStatus === 'pending'
+                ? 'เพิ่งสั่ง (0 นาที)'
+                : 'เสร็จสิ้น',
+      };
+    });
+
+    const updated = this.orders.find((ord) => ord.id === orderId);
+    return { ok: true, status: 200, order: updated, orders: this.orders };
+  }
 }
 
 module.exports = OrderQueueModel;
