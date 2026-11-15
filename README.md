@@ -562,3 +562,9 @@ npm run profile:dynamic # รัน Dynamic Profiling (scripts/profile_dynamic.j
 | `OrderQueueModel.js` | 100 | 72.54 | 100 | 100 | `orderQueue.test.js` (3 tests) | `@Ctrl-Pichayut` |
 | `InventoryModel.js` | 100 | 95.16 | 100 | 100 | `inventory.test.js` (12 tests) | `@Kizizi123123` |
 | **All files** | **100** | **86.94** | **100** | **100** | 4 Test Suites / 24 Tests | ทั้งทีม |
+
+### กระบวนการทำงาน (Process, Methods & Tools) ที่เพิ่มเติมใน Phase 3 และ Phase 4
+1. **การบริหารโปรเจกต์และ Change Management:** แตก Change Request (`#12`) และงานทดสอบออกเป็น Tickets ย่อยใน Milestone `Sprint3` และ `Sprint4` ตั้งชื่อ Branch ตามมาตรฐาน `<nameid>_<ticketid>` (เช่น `kizizi123123_10`) และ Commit ตามรูปแบบ `<ticketid>: <msg>` เพื่อให้ตรวจย้อนกลับจาก Commit ไปยัง Issue ได้
+2. **การควบคุมคุณภาพโค้ดและ Monitor Build:** ใช้ Jest + Supertest ตรวจ Statement Coverage บนโฟลเดอร์ `models/` และตั้งค่า GitHub Actions CI Pipeline แบบ Parallel Jobs เพื่อรัน Unit Test และ Playwright UI Test อัตโนมัติทุกครั้งที่ Push/Pull Request
+3. **การจัดการ Bugs และ Profiling:** ใช้ ESLint (Static Profiling) และ `perf_hooks` (Dynamic Structural Profiling) วัดผลก่อนและหลังปรับโครงสร้างโค้ด โดยสรุปผลไว้ในตารางเปรียบเทียบด้านบน
+4. **การแยก Business Logic ออกจาก Route (ส่วนที่ 4):** ย้ายการตัดสต็อก การบันทึกบิลขาย การ Void บิล และ Admin CRUD ของเมนูจาก `server.js` ไปไว้ใน `InventoryModel` ทำให้ Route เหลือหน้าที่รับ-ตอบ HTTP และเขียน Unit Test ครอบคลุมได้โดยไม่ต้องเปิดเซิร์ฟเวอร์
