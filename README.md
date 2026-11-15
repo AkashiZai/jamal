@@ -563,6 +563,15 @@ npm run profile:dynamic # รัน Dynamic Profiling (scripts/profile_dynamic.j
 | `InventoryModel.js` | 100 | 95.16 | 100 | 100 | `inventory.test.js` (12 tests) | `@Kizizi123123` |
 | **All files** | **100** | **86.94** | **100** | **100** | 4 Test Suites / 24 Tests | ทั้งทีม |
 
+### ตารางสรุป 5 UI Test Cases (Phase 4 — Playwright, `npm run test:ui`)
+| ลำดับ | ชื่อไฟล์ UI Test | รายละเอียดการทดสอบ (Steps) | การเช็กค่า Expected Result (`expect(...)`) | ผู้รับผิดชอบ |
+| :---: | :--- | :--- | :--- | :--- |
+| 1 | `login.ui.test.js` | กดออกจากระบบ -> กด Sign In ด้วย PIN แคชเชียร์ `1234` ที่ระบบกรอกไว้ให้ | `expect(page.getByText('เมนูสินค้าหน้าร้าน (Menu Catalog)')).toBeVisible()` | `@AkashiZai` |
+| 2 | `login.ui.test.js` | กดออกจากระบบ -> กรอกรหัส PIN ผิด `0000` -> กด Sign In | `expect(page.getByText(/รหัสผ่าน PIN ไม่ถูกต้อง/)).toBeVisible()` | `@AkashiZai` |
+| 3 | `pos.ui.test.js` | ค้นหา `"โอ๊ต"` และ `"เอสเพรสโซ่เย็น"` -> เลือกเพิ่มช็อตกาแฟ (+฿20) -> คิดเงินสดรับ ฿100 | `expect(page.getByText('฿85.00').first()).toBeVisible()` และเงินทอน `expect(page.getByTestId('pos-change-due')).toHaveText('฿15.00')` | `@203Tharathep` |
+| 4 | `kds.ui.test.js` | เปิดหน้า Kitchen KDS -> กด `+ จำลองคิวใหม่` -> กด `รับทำออเดอร์นี้ →` | `expect(page.getByText('#คิว A05')).toBeVisible()` และปุ่มเปลี่ยนเป็น `✓ ทำเสร็จแล้ว (พร้อมเสิร์ฟ)` | `@Ctrl-Pichayut` |
+| 5 | `admin.ui.test.js` | เปิด Admin Portal -> จัดการสต็อกทั้งหมด -> ตรวจว่ารายการเรียงสต็อกน้อยไปมาก -> กด `+ เติม 5 ชิ้น` ที่ครัวซองต์ | สต็อกครัวซองต์เพิ่มขึ้น 5 ชิ้น (ค่าตั้งต้น 4 -> `9 ชิ้น`) ด้วย `expect(croissantStock).toHaveText(...)` และรายการยังเรียงน้อยไปมากหลังเติม | `@Kizizi123123` |
+
 ### กระบวนการทำงาน (Process, Methods & Tools) ที่เพิ่มเติมใน Phase 3 และ Phase 4
 1. **การบริหารโปรเจกต์และ Change Management:** แตก Change Request (`#12`) และงานทดสอบออกเป็น Tickets ย่อยใน Milestone `Sprint3` และ `Sprint4` ตั้งชื่อ Branch ตามมาตรฐาน `<nameid>_<ticketid>` (เช่น `kizizi123123_10`) และ Commit ตามรูปแบบ `<ticketid>: <msg>` เพื่อให้ตรวจย้อนกลับจาก Commit ไปยัง Issue ได้
 2. **การควบคุมคุณภาพโค้ดและ Monitor Build:** ใช้ Jest + Supertest ตรวจ Statement Coverage บนโฟลเดอร์ `models/` และตั้งค่า GitHub Actions CI Pipeline แบบ Parallel Jobs เพื่อรัน Unit Test และ Playwright UI Test อัตโนมัติทุกครั้งที่ Push/Pull Request
