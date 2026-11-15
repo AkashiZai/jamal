@@ -84,6 +84,34 @@ class OrderQueueModel {
     if (!status || status === 'all') return this.orders;
     return this.orders.filter((ord) => ord.status === status);
   }
+
+  // Calculation Method: สรุปจำนวนแต่ละสถานะ + avg/min/max ยอดออเดอร์
+  getQueueStats() {
+    const counts = { pending: 0, in_progress: 0, ready: 0, completed: 0 };
+    if (this.orders.length === 0) {
+      return { totalOrders: 0, counts, averageAmount: 0, minAmount: 0, maxAmount: 0 };
+    }
+
+    let sum = 0;
+    let min = Infinity;
+    let max = -Infinity;
+
+    for (const ord of this.orders) {
+      if (counts[ord.status] !== undefined) counts[ord.status] += 1;
+      const amt = Number(ord.totalAmount) || 0;
+      sum += amt;
+      if (amt < min) min = amt;
+      if (amt > max) max = amt;
+    }
+
+    return {
+      totalOrders: this.orders.length,
+      counts,
+      averageAmount: Number((sum / this.orders.length).toFixed(2)),
+      minAmount: min,
+      maxAmount: max,
+    };
+  }
 }
 
 module.exports = OrderQueueModel;
