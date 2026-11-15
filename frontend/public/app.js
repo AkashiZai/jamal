@@ -1505,6 +1505,7 @@ function renderPaymentModal() {
             <div class="flex flex-col items-center justify-center p-6 bg-cream-50 rounded-2xl border border-cream-300 text-center space-y-3">
               <div class="bg-white p-3 rounded-2xl shadow-sm border border-cream-200">
                 <img
+                  data-testid="promptpay-qr-img"
                   src="https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=https://promptpay.io/0812345678/${total.toFixed(2)}"
                   alt="PromptPay QR Code"
                   class="w-40 h-40 object-contain rounded-lg"
@@ -1512,7 +1513,7 @@ function renderPaymentModal() {
               </div>
               <div class="space-y-1">
                 <div class="font-bold text-sm text-espresso-900">สแกนจ่ายผ่านแอปธนาคาร (PromptPay)</div>
-                <div class="text-xs text-warmgray-600 font-mono">ยอดชำระ: <strong class="text-terracotta text-sm">฿${total.toFixed(2)}</strong></div>
+                <div class="text-xs text-warmgray-600 font-mono">ยอดชำระ: <strong data-testid="promptpay-qr-amount" class="text-terracotta text-sm">฿${total.toFixed(2)}</strong></div>
               </div>
             </div>
           `
