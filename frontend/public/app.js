@@ -1505,6 +1505,7 @@ function renderPaymentModal() {
             <div class="flex flex-col items-center justify-center p-6 bg-cream-50 rounded-2xl border border-cream-300 text-center space-y-3">
               <div class="bg-white p-3 rounded-2xl shadow-sm border border-cream-200">
                 <img
+                  data-testid="promptpay-qr-img"
                   src="https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=https://promptpay.io/0812345678/${total.toFixed(2)}"
                   alt="PromptPay QR Code"
                   class="w-40 h-40 object-contain rounded-lg"
@@ -1512,7 +1513,7 @@ function renderPaymentModal() {
               </div>
               <div class="space-y-1">
                 <div class="font-bold text-sm text-espresso-900">สแกนจ่ายผ่านแอปธนาคาร (PromptPay)</div>
-                <div class="text-xs text-warmgray-600 font-mono">ยอดชำระ: <strong class="text-terracotta text-sm">฿${total.toFixed(2)}</strong></div>
+                <div class="text-xs text-warmgray-600 font-mono">ยอดชำระ: <strong data-testid="promptpay-qr-amount" class="text-terracotta text-sm">฿${total.toFixed(2)}</strong></div>
               </div>
             </div>
           `
@@ -1570,6 +1571,16 @@ function renderPaymentModal() {
                   ${
                     item.optionsText
                       ? `<div class="text-[9px] text-warmgray-600 pl-2">↳ ${escapeHtml(item.optionsText)}</div>`
+                      : ''
+                  }
+                  ${
+                    Array.isArray(item.toppings) && item.toppings.length > 0
+                      ? item.toppings
+                          .map(
+                            (t) =>
+                              `<div class="flex justify-between text-[9px] text-warmgray-600 pl-3"><span>+ ${escapeHtml(t.name)}</span><span>+${Number(t.price || 0).toFixed(2)}</span></div>`
+                          )
+                          .join('')
                       : ''
                   }
                 </div>
@@ -1744,6 +1755,7 @@ function renderKdsPage() {
                                 <div class="text-xs">
                                   <div class="font-bold text-espresso-900">${it.quantity}x ${escapeHtml(it.name)}</div>
                                   ${it.optionsText ? `<div class="text-[11px] font-semibold text-terracotta ml-3 mt-0.5">↳ ${escapeHtml(it.optionsText)}</div>` : ''}
+                                  ${Array.isArray(it.toppings) && it.toppings.length > 0 ? `<div class="text-[10px] text-espresso-700 ml-3 mt-0.5">+ ท็อปปิ้ง: ${it.toppings.map((t) => escapeHtml(t.name)).join(', ')}</div>` : ''}
                                 </div>
                               `
                                 )
@@ -1794,6 +1806,7 @@ function renderKdsPage() {
                                 <div class="text-xs">
                                   <div class="font-bold text-espresso-900">${it.quantity}x ${escapeHtml(it.name)}</div>
                                   ${it.optionsText ? `<div class="text-[11px] font-semibold text-matcha ml-3 mt-0.5">↳ ${escapeHtml(it.optionsText)}</div>` : ''}
+                                  ${Array.isArray(it.toppings) && it.toppings.length > 0 ? `<div class="text-[10px] text-espresso-700 ml-3 mt-0.5">+ ท็อปปิ้ง: ${it.toppings.map((t) => escapeHtml(t.name)).join(', ')}</div>` : ''}
                                 </div>
                               `
                                 )
@@ -1844,6 +1857,7 @@ function renderKdsPage() {
                                 <div class="text-xs">
                                   <div class="font-bold text-espresso-900">${it.quantity}x ${escapeHtml(it.name)}</div>
                                   ${it.optionsText ? `<div class="text-[11px] text-warmgray-600 ml-3 mt-0.5">↳ ${escapeHtml(it.optionsText)}</div>` : ''}
+                                  ${Array.isArray(it.toppings) && it.toppings.length > 0 ? `<div class="text-[10px] text-espresso-700 ml-3 mt-0.5">+ ท็อปปิ้ง: ${it.toppings.map((t) => escapeHtml(t.name)).join(', ')}</div>` : ''}
                                 </div>
                               `
                                 )

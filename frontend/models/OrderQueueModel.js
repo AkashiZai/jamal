@@ -38,6 +38,7 @@ class OrderQueueModel {
         name: it.name,
         quantity: Number(it.quantity) || 1,
         optionsText: it.optionsText || (it.category === 'bakery' ? 'อบอุ่นร้อน' : 'ปกติ'),
+        toppings: Array.isArray(it.toppings) ? it.toppings : [],
         isBeverage: it.category === 'coffee' || it.category === 'non-coffee',
         isBakery: Boolean(it.isBakery || it.category === 'bakery' || it.category === 'dessert'),
       })),
