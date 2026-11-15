@@ -7,8 +7,34 @@ class StaffModel {
     return this.staffList;
   }
 
+  _normalizeStaffRole(role) {
+    const roleMap = { admin: 'admin', barista: 'operator', operator: 'operator' };
+    const key = String(role || '').trim().toLowerCase();
+    return roleMap[key] || 'cashier';
+  }
+
+  _buildLocalStaffRecord({ name, role = 'Cashier', username, pin, shift = 'กะเช้า (07:00 - 15:30)' }) {
+    const roleNameMap = {
+      Admin: 'ผู้ดูแลระบบ (เข้าถึงได้ทุกส่วนงาน)',
+      Cashier: 'แคชเชียร์ (ขายหน้าร้าน, คิดเงิน, ปิดกะ)',
+      Barista: 'บาริสต้า (จอคิวครัว KDS, ทำเครื่องดื่ม)',
+    };
+    return {
+      id: `staff-${Date.now()}-${Math.floor(Math.random() * 1000)}`,
+      name: String(name).trim(),
+      role: this._normalizeStaffRole(role),
+      roleLabel: role,
+      roleName: roleNameMap[role] || role,
+      username: String(username).trim(),
+      pin: String(pin),
+      shift,
+      authProvider: 'local',
+    };
+  }
+
   // Data Structure Method 1: เพิ่มบัญชีพนักงานพร้อมตรวจสอบข้อมูลซ้ำ
-  addStaff({ name, role = 'Cashier', username, pin, shift = 'กะเช้า (07:00 - 15:30)' }) {
+  addStaff(staffInput = {}) {
+    const { name, username, pin } = staffInput;
     if (!name || !username || !pin) {
       return { ok: false, status: 400, error: 'กรุณากรอกข้อมูลให้ครบถ้วน' };
     }
@@ -17,30 +43,7 @@ class StaffModel {
       return { ok: false, status: 409, error: 'ชื่อผู้ใช้งานนี้มีอยู่ในระบบแล้ว' };
     }
 
-    const roleNameMap = {
-      Admin: 'ผู้ดูแลระบบ (เข้าถึงได้ทุกส่วนงาน)',
-      Cashier: 'แคชเชียร์ (ขายหน้าร้าน, คิดเงิน, ปิดกะ)',
-      Barista: 'บาริสต้า (จอคิวครัว KDS, ทำเครื่องดื่ม)',
-    };
-    const lowerRole = String(role).toLowerCase();
-    const normalizedRole =
-      lowerRole === 'admin'
-        ? 'admin'
-        : lowerRole === 'barista' || lowerRole === 'operator'
-        ? 'operator'
-        : 'cashier';
-
-    const newAcc = {
-      id: `staff-${Date.now()}-${Math.floor(Math.random() * 1000)}`,
-      name: String(name).trim(),
-      role: normalizedRole,
-      roleLabel: role,
-      roleName: roleNameMap[role] || role,
-      username: String(username).trim(),
-      pin: String(pin),
-      shift,
-      authProvider: 'local',
-    };
+    const newAcc = this._buildLocalStaffRecord(staffInput);
     this.staffList.push(newAcc);
     return { ok: true, status: 201, staff: newAcc, staffAccounts: this.staffList };
   }
@@ -61,8 +64,21 @@ class StaffModel {
     return { ok: true, status: 200, user: matched };
   }
 
+  _buildSocialStaffRecord({ cleanProvider, cleanEmail, displayName, role = 'cashier' }) {
+    const normalizedRole = String(role).toLowerCase() === 'admin' ? 'admin' : 'cashier';
+    return {
+      id: `social-${Date.now()}`,
+      username: cleanEmail,
+      pin: '0000',
+      name: displayName || cleanEmail.split('@')[0],
+      role: normalizedRole,
+      roleName: normalizedRole === 'admin' ? 'เจ้าของร้าน (Social)' : 'แคชเชียร์ (Social)',
+      authProvider: cleanProvider === 'google' ? 'gmail' : cleanProvider,
+    };
+  }
+
   // Data Structure Method 3: เข้าสู่ระบบด้วย Social Media (Gmail / Facebook) ตาม Issue #12
-  authenticateSocial({ provider, email, displayName, role = 'cashier' }) {
+  authenticateSocial({ provider, email, displayName, role }) {
     const cleanProvider = String(provider || '').trim().toLowerCase();
     const cleanEmail = String(email || '').trim().toLowerCase();
     if (!['gmail', 'google', 'facebook'].includes(cleanProvider) || !cleanEmail) {
@@ -71,16 +87,7 @@ class StaffModel {
 
     let user = this.findByUsername(cleanEmail);
     if (!user) {
-      const normalizedRole = String(role).toLowerCase() === 'admin' ? 'admin' : 'cashier';
-      user = {
-        id: `social-${Date.now()}`,
-        username: cleanEmail,
-        pin: '0000',
-        name: displayName || cleanEmail.split('@')[0],
-        role: normalizedRole,
-        roleName: normalizedRole === 'admin' ? 'เจ้าของร้าน (Social)' : 'แคชเชียร์ (Social)',
-        authProvider: cleanProvider === 'google' ? 'gmail' : cleanProvider,
-      };
+      user = this._buildSocialStaffRecord({ cleanProvider, cleanEmail, displayName, role });
       this.staffList.push(user);
     }
     return { ok: true, status: 200, user };
