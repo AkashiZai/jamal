@@ -1572,6 +1572,16 @@ function renderPaymentModal() {
                       ? `<div class="text-[9px] text-warmgray-600 pl-2">↳ ${escapeHtml(item.optionsText)}</div>`
                       : ''
                   }
+                  ${
+                    Array.isArray(item.toppings) && item.toppings.length > 0
+                      ? item.toppings
+                          .map(
+                            (t) =>
+                              `<div class="flex justify-between text-[9px] text-warmgray-600 pl-3"><span>+ ${escapeHtml(t.name)}</span><span>+${Number(t.price || 0).toFixed(2)}</span></div>`
+                          )
+                          .join('')
+                      : ''
+                  }
                 </div>
               `
                 )
