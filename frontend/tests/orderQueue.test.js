@@ -38,4 +38,28 @@ describe('OrderQueueModel Unit Tests', () => {
       });
     expect(oosRes.statusCode).toBe(400);
   });
+
+  test('advanceOrderStatus transitions valid statuses and rejects invalid input', async () => {
+    const queue = new OrderQueueModel(seed, 5);
+    const ok = queue.advanceOrderStatus('ord-1', 'in_progress');
+    expect(ok.ok).toBe(true);
+    expect(ok.order.status).toBe('in_progress');
+
+    expect(queue.advanceOrderStatus('ord-1', 'ready').order.timeElapsed).toBe('พร้อมเสิร์ฟแล้ว');
+    expect(queue.advanceOrderStatus('ord-1', 'pending').order.timeElapsed).toBe('เพิ่งสั่ง (0 นาที)');
+    expect(queue.advanceOrderStatus('ord-1', 'completed').order.timeElapsed).toBe('เสร็จสิ้น');
+    expect(queue.advanceOrderStatus('ord-1', 'bad_status').status).toBe(400);
+    expect(queue.advanceOrderStatus('not-found', 'ready').status).toBe(404);
+
+    const patchOk = await request(app)
+      .patch('/api/orders/ord-a04/status')
+      .send({ status: 'in_progress' });
+    expect(patchOk.statusCode).toBe(200);
+    expect(patchOk.body.ok).toBe(true);
+
+    const patchBad = await request(app)
+      .patch('/api/orders/ord-a04/status')
+      .send({ status: 'invalid_state' });
+    expect(patchBad.statusCode).toBe(400);
+  });
 });
