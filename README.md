@@ -640,7 +640,7 @@ npm run profile:dynamic # รัน Dynamic Profiling (scripts/profile_dynamic.j
 ## 15. สรุปผลการประชุมทบทวนการทำงาน (Sprint 4 / Final Retrospective)
 
 * **วัน-เวลาที่ประชุม:** 15 พฤศจิกายน 2569 (สิ้นสุด Sprint 4 — Final Submission)
-* **คลิปวิดีโอสรุปการประชุม Final Retrospective (Sprint 4):** *(รอทีมงานอัปโหลดและแนบลิงก์ YouTube)*
+* **คลิปวิดีโอสรุปการประชุม Final Retrospective (Sprint 4):** https://youtu.be/hfDTt5S0-oo
 
 ### 1. สิ่งที่ทำได้ดี (What went well)
 1. **คุณภาพโค้ดและการทดสอบผ่านตามเกณฑ์ทั้งหมด:** หลังจาก Refactor `StaffModel.js` แล้ว คำสั่ง `npm run lint` ได้ **0 errors, 0 warnings**, `npm run test:coverage` ผ่านครบ **24/24 Tests** (Statement Coverage **100%**, Branch **85.86%**, Functions **100%**, Lines **100%**), และ `npm run test:ui` (Playwright) ผ่านครบ **5/5 เคส**
