@@ -535,3 +535,9 @@ npm run profile:dynamic # รัน Dynamic Profiling (scripts/profile_dynamic.j
 
 ### ตารางเปรียบเทียบผล Static Profiling (Phase 3 vs Phase 4)
 > ผลตรวจวัด Phase 3 Baseline ด้วย `npm run lint` (`eslint.config.mjs`): พบ `0` errors และ complexity warnings ใน `server.js` (`POST /api/orders`, `POST /api/products`) รวมถึง `StaffModel.js` ก่อนการ Refactor แยกเมธอดย่อยใน Phase 4
+
+| ตัวชี้วัด (Static Metric via ESLint) | Phase 3 (ก่อน Refactor แยก Model) | Phase 4 (หลังแยก 4 Models & Clean Code) | ผลการปรับปรุง |
+| :--- | :---: | :---: | :--- |
+| จำนวนไฟล์ที่มีฟังก์ชันยาวเกินเกณฑ์ (`max-lines-per-function`) | พบใน `server.js` (รวมทุก route และข้อมูลไว้ไฟล์เดียว) | ลดลงจากการแยก logic ออกเป็น 4 คลาสใน `models/` | โค้ดอ่านง่ายและดูแลแยกส่วนได้ดีขึ้น |
+| ค่าความซับซ้อน (`complexity > 10`) | พบใน route `POST /api/orders` เดิม | แยกเป็น `deductStock()`, `enqueueOrder()`, `recordSale()` (ค่า complexity <= 6 ต่อเมธอด) | ลดความซับซ้อนของแต่ละเมธอดลงต่ำกว่าเกณฑ์ |
+| จำนวน `no-undef` / `no-unused-vars` Errors | `0` errors (`2` warnings) | `0` errors (`0` warnings) | ไม่มีตัวแปรค้างหรือไม่ถูกใช้งาน |
