@@ -322,6 +322,14 @@ function syncInventoryState() {
   ({ products, toppings, salesHistory, salesStats } = inventoryModel.getState());
 }
 
+// Manager Override (#10): หาบัญชี Admin ที่ PIN ตรงกัน (นับเฉพาะบัญชี Admin ที่สร้างในระบบ ไม่รวมบัญชี Social Login)
+function findManagerByPin(pin) {
+  const key = String(pin ?? '');
+  if (!key) return null;
+  const isLocal = (acc) => !acc.authProvider || acc.authProvider === 'local';
+  return staffModel.getAll().find((acc) => acc.role === 'admin' && isLocal(acc) && acc.pin === key) || null;
+}
+
 // ============================================================================
 // REST API ENDPOINTS
 // ============================================================================
@@ -448,8 +456,13 @@ app.post('/api/products/:id/restock', (req, res) => {
 });
 
 app.post('/api/sales/:receiptNo/void', (req, res) => {
-  const { adminName, reason } = req.body || {};
-  const result = inventoryModel.voidSale(req.params.receiptNo, adminName, reason);
+  // Manager Override: ต้องกรอก PIN ผู้จัดการ และบันทึกชื่อผู้อนุมัติพร้อมเหตุผลลงบิล (Audit Trail)
+  const { pin, reason } = req.body || {};
+  const manager = findManagerByPin(pin);
+  if (!manager) {
+    return res.status(403).json({ error: 'รหัส PIN ผู้จัดการไม่ถูกต้อง ไม่สามารถ Void บิลได้' });
+  }
+  const result = inventoryModel.voidSale(req.params.receiptNo, manager.name, reason || undefined);
   if (!result.ok) return res.status(result.status).json({ error: result.error });
   syncInventoryState();
   res.json({ ok: true, salesHistory });
