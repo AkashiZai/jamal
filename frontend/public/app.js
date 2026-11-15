@@ -1744,6 +1744,7 @@ function renderKdsPage() {
                                 <div class="text-xs">
                                   <div class="font-bold text-espresso-900">${it.quantity}x ${escapeHtml(it.name)}</div>
                                   ${it.optionsText ? `<div class="text-[11px] font-semibold text-terracotta ml-3 mt-0.5">↳ ${escapeHtml(it.optionsText)}</div>` : ''}
+                                  ${Array.isArray(it.toppings) && it.toppings.length > 0 ? `<div class="text-[10px] text-espresso-700 ml-3 mt-0.5">+ ท็อปปิ้ง: ${it.toppings.map((t) => escapeHtml(t.name)).join(', ')}</div>` : ''}
                                 </div>
                               `
                                 )
@@ -1794,6 +1795,7 @@ function renderKdsPage() {
                                 <div class="text-xs">
                                   <div class="font-bold text-espresso-900">${it.quantity}x ${escapeHtml(it.name)}</div>
                                   ${it.optionsText ? `<div class="text-[11px] font-semibold text-matcha ml-3 mt-0.5">↳ ${escapeHtml(it.optionsText)}</div>` : ''}
+                                  ${Array.isArray(it.toppings) && it.toppings.length > 0 ? `<div class="text-[10px] text-espresso-700 ml-3 mt-0.5">+ ท็อปปิ้ง: ${it.toppings.map((t) => escapeHtml(t.name)).join(', ')}</div>` : ''}
                                 </div>
                               `
                                 )
@@ -1844,6 +1846,7 @@ function renderKdsPage() {
                                 <div class="text-xs">
                                   <div class="font-bold text-espresso-900">${it.quantity}x ${escapeHtml(it.name)}</div>
                                   ${it.optionsText ? `<div class="text-[11px] text-warmgray-600 ml-3 mt-0.5">↳ ${escapeHtml(it.optionsText)}</div>` : ''}
+                                  ${Array.isArray(it.toppings) && it.toppings.length > 0 ? `<div class="text-[10px] text-espresso-700 ml-3 mt-0.5">+ ท็อปปิ้ง: ${it.toppings.map((t) => escapeHtml(t.name)).join(', ')}</div>` : ''}
                                 </div>
                               `
                                 )
