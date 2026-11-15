@@ -517,14 +517,14 @@ flowchart TD
 | 9 | UT-09 | `OrderQueueModel` | `enqueueOrder()` | สร้างออเดอร์ใหม่จากลำดับคิวที่ 5 | ได้เลขคิว `A05` และสถานะเริ่มต้น `pending` | Pass |
 | 10 | UT-10 | `OrderQueueModel` | `advanceOrderStatus()` | เปลี่ยนสถานะ `ord-1` เป็น `in_progress` | สถานะเปลี่ยนเป็น `in_progress` และคืน `400` เมื่อสถานะผิด | Pass |
 | 11 | UT-11 | `OrderQueueModel` | `findOrdersByStatus()`, `getQueueStats()` | คิวที่มีออเดอร์ ฿100 และ ฿200 | กรองตามสถานะถูกต้อง, `averageAmount: 150`, `min: 100`, `max: 200` | Pass |
-| 12 | UT-12 | `InventoryModel` | `deductStock()` | สั่งกาแฟ 2 แก้ว (+ท็อปปิ้ง) และครัวซองต์ 1 ชิ้น | ตัดสต็อกทั้ง Base Drink, Cake, Topping และบล็อกกรณีของหมด | Planned (ลำดับ 4) |
-| 13 | UT-13 | `InventoryModel` | `sortInventorySmallToLarge()` | สินค้าสต็อก `2`, `5`, `20` | เรียงลำดับจากน้อยไปมาก `[2, 5, 20]` ถูกต้อง | Planned (ลำดับ 4) |
-| 14 | UT-14 | `InventoryModel` | `createProduct()`, `updateProduct()`, `deleteProduct()`, `restockItem()` | เพิ่ม/แก้ไขราคา/เติมสต็อก/ลบสินค้า | CRUD ทำงานครบและอัปเดตจำนวนสต็อกถูกต้อง | Planned (ลำดับ 4) |
-| 15 | UT-15 | `InventoryModel` | `voidSale()`, `getSalesAnalytics()` | บิล ฿150 และ ฿65, จากนั้นกด Void บิลแรก | คำนวณ `avg: 107.5`, `min: 65`, `max: 150` และตัดบิลที่ Void ออก | Planned (ลำดับ 4) |
+| 12 | UT-12 | `InventoryModel` | `deductStock()` | สั่งกาแฟ 2 แก้ว (+ท็อปปิ้ง) และครัวซองต์ 1 ชิ้น | ตัดสต็อกทั้ง Base Drink, Cake, Topping และบล็อกกรณีของหมด | Pass |
+| 13 | UT-13 | `InventoryModel` | `sortInventorySmallToLarge()` | สินค้าสต็อก `2`, `5`, `20` | เรียงลำดับจากน้อยไปมาก `[2, 5, 20]` ถูกต้อง | Pass |
+| 14 | UT-14 | `InventoryModel` | `createProduct()`, `updateProduct()`, `deleteProduct()`, `restockItem()` | เพิ่ม/แก้ไขราคา/เติมสต็อก/ลบสินค้า | CRUD ทำงานครบและอัปเดตจำนวนสต็อกถูกต้อง | Pass |
+| 15 | UT-15 | `InventoryModel` | `voidSale()`, `getSalesAnalytics()` | บิล ฿150 และ ฿65, จากนั้นกด Void บิลแรก | คำนวณ `avg: 107.5`, `min: 65`, `max: 150` และตัดบิลที่ Void ออก | Pass |
 
 #### ตัวอย่างคำสั่งทดสอบและ Dynamic Profiling (`frontend/`)
 ```bash
-npm test                # รัน Jest Unit Tests (staff.test.js + cart.test.js + orderQueue.test.js)
+npm test                # รัน Jest Unit Tests (staff.test.js + cart.test.js + orderQueue.test.js + inventory.test.js)
 npm run test:coverage   # ตรวจ Statement Coverage บน models/ (>= 80%)
 npm run test:ui         # รัน Playwright UI Tests (tests/ui/*.ui.test.js)
 npm run lint            # รัน Static Profiling ด้วย ESLint (eslint.config.mjs)
@@ -549,3 +549,16 @@ npm run profile:dynamic # รัน Dynamic Profiling (scripts/profile_dynamic.j
 ### สิ่งที่เปลี่ยนแปลงจากรายงาน Phase 1–2 (และ Phase 3) พร้อมเหตุผล
 1. **แยกชั้น Data Structure (`frontend/models/`):** เปลี่ยนจากการเก็บตัวแปร Array ใน `server.js` มาเป็น 4 คลาส (`StaffModel`, `CartModel`, `OrderQueueModel`, `InventoryModel`) เพื่อให้เขียน Unit Test ครอบคลุม Statement Coverage `>= 80%` และรองรับการคำนวณ/ค้นหาครบทุกโมดูล
 2. **รองรับ Change Request (#12) เพิ่มเติม:** เพิ่ม Social Login (Gmail/Facebook), ขยายเมนูเป็น 11 รายการ (`>= 10`), ค้นหาครอบคลุมทั้งเครื่องดื่ม เบเกอรี่ และท็อปปิ้ง, เพิ่มสต็อกของ Base Drink/Cake/Toppings, เพิ่ม Admin CRUD ครบ (เพิ่ม/ลบ/แก้ไข) และรายงานเรียงสต็อกน้อยไปมาก
+
+---
+
+### รายงานผล Test Coverage (`models/` Folder — เกณฑ์ >= 80% Statement Coverage)
+รันคำสั่ง `npm run test:coverage` (Jest `--coverage`) บนโฟลเดอร์ `frontend/models/` ซึ่งประกอบด้วย `StaffModel.js`, `CartModel.js`, `OrderQueueModel.js` และ `InventoryModel.js` ได้ผลลัพธ์ **Statement Coverage 100% ทุกไฟล์** ผ่านเกณฑ์ที่กำหนด (ชุดทดสอบ 4 Test Suites รวม 24 Tests ผ่านทั้งหมด):
+
+| ไฟล์ Data Structure (`models/`) | % Stmts | % Branch | % Funcs | % Lines | ไฟล์ทดสอบ (`tests/`) | ผู้รับผิดชอบ |
+| :--- | :---: | :---: | :---: | :---: | :--- | :--- |
+| `StaffModel.js` | 100 | 89.83 | 100 | 100 | `staff.test.js` (5 tests) | `@AkashiZai` |
+| `CartModel.js` | 100 | 78.94 | 100 | 100 | `cart.test.js` (4 tests) | `@203Tharathep` |
+| `OrderQueueModel.js` | 100 | 72.54 | 100 | 100 | `orderQueue.test.js` (3 tests) | `@Ctrl-Pichayut` |
+| `InventoryModel.js` | 100 | 95.16 | 100 | 100 | `inventory.test.js` (12 tests) | `@Kizizi123123` |
+| **All files** | **100** | **86.94** | **100** | **100** | 4 Test Suites / 24 Tests | ทั้งทีม |
