@@ -220,12 +220,16 @@ async function apiAddProduct(form) {
   await fetchState();
 }
 
-async function apiVoidReceipt(receiptNo) {
-  await fetch(`/api/sales/${encodeURIComponent(receiptNo)}/void`, {
+async function apiVoidReceipt(receiptNo, pin, reason) {
+  const res = await fetch(`/api/sales/${encodeURIComponent(receiptNo)}/void`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ adminName: 'Admin Zai' }),
+    body: JSON.stringify({ pin, reason }),
   });
+  if (!res.ok) {
+    const data = await res.json().catch(() => ({}));
+    alert(data.error || 'ไม่สามารถ Void บิลได้');
+  }
   await fetchState();
 }
 
@@ -687,10 +691,12 @@ window.appActions = {
     render();
   },
 
+  // Manager Override (#10): ต้องกรอก PIN ผู้จัดการและระบุเหตุผลก่อน Void บิล
   async confirmVoidReceipt(receiptNo) {
-    if (window.confirm(`ยืนยันการ Void บิล ${receiptNo}?`)) {
-      await apiVoidReceipt(receiptNo);
-    }
+    const pin = window.prompt(`Manager Override: กรอกรหัส PIN ผู้จัดการเพื่อ Void บิล ${receiptNo}`);
+    if (!pin) return;
+    const reason = window.prompt('ระบุเหตุผลในการ Void บิล', 'ลูกค้ายกเลิก') || undefined;
+    await apiVoidReceipt(receiptNo, pin, reason);
   },
 
   // --- CUSTOMER MOBILE ---
