@@ -13,6 +13,7 @@ const state = {
   orders: [],
   salesStats: { totalSales: 14250, totalBills: 84, promptPayShare: 64, cashShare: 36 },
   salesHistory: [],
+  sortedInventory: [], // รายการสต็อก Base Drink/Cake/Toppings เรียงน้อยไปมาก (GET /api/state)
   customerQueueNo: 'A03',
 
   // Client UI state
@@ -154,6 +155,7 @@ async function fetchState() {
     state.orders = data.orders || [];
     state.salesStats = data.salesStats || state.salesStats;
     state.salesHistory = data.salesHistory || [];
+    state.sortedInventory = data.sortedInventory || [];
     state.customerQueueNo = data.customerQueueNo || state.customerQueueNo;
     render();
   } catch (err) {
@@ -2009,20 +2011,21 @@ function renderAdminPage() {
       </div>
     `;
   } else if (state.adminTab === 'inventory') {
+    const groupLabels = { 'base-drink': 'เครื่องดื่ม', 'cake/bakery': 'เค้ก/เบเกอรี่', topping: 'ท็อปปิ้ง' };
     mainContent = `
       <div class="space-y-5">
         <div>
-          <h2 class="text-xl sm:text-2xl font-extrabold text-espresso-900">ระบบจัดการคลังสต็อกเบเกอรี่ (Bakery Inventory Control)</h2>
-          <p class="text-xs text-warmgray-600 mt-0.5">ข้อกำหนด FR-03: ตรวจสอบและเติมสต็อกสินค้าเบเกอรี่และของหวาน</p>
+          <h2 class="text-xl sm:text-2xl font-extrabold text-espresso-900">ระบบจัดการคลังสต็อก (Base Drink / Cake / Toppings)</h2>
+          <p class="text-xs text-warmgray-600 mt-0.5">ข้อกำหนด FR-03 และ Change Request #12: เรียงจากสต็อกน้อยไปมาก เพื่อให้เห็นรายการที่ใกล้หมดก่อน</p>
         </div>
         <div class="bg-white rounded-2xl border border-cream-300 p-5 shadow-sm space-y-3">
-          ${bakeryProducts
+          ${state.sortedInventory
             .map(
               (item) => `
             <div class="p-4 rounded-xl border border-cream-200 bg-cream-50/50 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
               <div>
-                <div class="font-bold text-sm text-espresso-900">${escapeHtml(item.name)}</div>
-                <div class="text-xs text-warmgray-500 mt-0.5">ราคาขาย: ฿${item.price.toFixed(2)} • สต็อกปัจจุบัน: <strong class="text-espresso-900 font-mono">${item.stock} ชิ้น</strong></div>
+                <div class="font-bold text-sm text-espresso-900">${escapeHtml(item.name)} <span class="ml-1 text-[10px] font-semibold text-warmgray-600 bg-cream-200 rounded px-1.5 py-0.5 align-middle">${groupLabels[item.group] || escapeHtml(item.group)}</span></div>
+                <div class="text-xs text-warmgray-500 mt-0.5">ราคาขาย: ฿${Number(item.price).toFixed(2)} • สต็อกปัจจุบัน: <strong data-testid="inventory-stock-${escapeHtml(item.id)}" class="${item.stock === 0 ? 'text-red-600' : item.stock < 5 ? 'text-amber-600' : 'text-espresso-900'} font-mono">${item.stock} ชิ้น</strong></div>
               </div>
               <div class="flex items-center gap-2">
                 <button onclick="appActions.restock('${item.id}', 5)" class="px-3 py-1.5 bg-espresso-800 hover:bg-espresso-700 text-white rounded-lg text-xs font-bold transition">+ เติม 5 ชิ้น</button>
