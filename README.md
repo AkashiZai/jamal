@@ -527,5 +527,11 @@ flowchart TD
 npm test                # รัน Jest Unit Tests (staff.test.js + cart.test.js)
 npm run test:coverage   # ตรวจ Statement Coverage บน models/ (>= 80%)
 npm run test:ui         # รัน Playwright UI Tests (tests/ui/*.ui.test.js)
+npm run lint            # รัน Static Profiling ด้วย ESLint (eslint.config.mjs)
 npm run profile:dynamic # รัน Dynamic Profiling (scripts/profile_dynamic.js)
 ```
+
+---
+
+### ตารางเปรียบเทียบผล Static Profiling (Phase 3 vs Phase 4)
+> ผลตรวจวัด Phase 3 Baseline ด้วย `npm run lint` (`eslint.config.mjs`): พบ `0` errors และ complexity warnings ใน `server.js` (`POST /api/orders`, `POST /api/products`) รวมถึง `StaffModel.js` ก่อนการ Refactor แยกเมธอดย่อยใน Phase 4
