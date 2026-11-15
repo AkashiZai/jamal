@@ -421,24 +421,12 @@ app.post('/api/orders', (req, res) => {
 app.patch('/api/orders/:id/status', (req, res) => {
   const { id } = req.params;
   const { status } = req.body || {};
-
-  orders = orders.map((ord) => {
-    if (ord.id === id) {
-      return {
-        ...ord,
-        status,
-        timeElapsed:
-          status === 'in_progress'
-            ? 'กำลังทำ (0 นาที)'
-            : status === 'ready'
-            ? 'พร้อมเสิร์ฟแล้ว'
-            : 'เสร็จสิ้น',
-      };
-    }
-    return ord;
-  });
-
-  res.json({ ok: true, orders });
+  const result = orderQueueModel.advanceOrderStatus(id, status);
+  if (!result.ok) {
+    return res.status(result.status).json({ error: result.error });
+  }
+  orders = result.orders;
+  res.json({ ok: true, orders: result.orders });
 });
 
 app.post('/api/products', (req, res) => {
