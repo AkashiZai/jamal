@@ -29,7 +29,7 @@ let products = [
     desc: 'เมล็ดคั่วกลาง บราซิล-เชียงราย เข้มข้นกลมกล่อม',
     img: 'https://images.unsplash.com/photo-1517256064527-09c73fc73e38?w=500&q=80',
     customizable: true,
-    stock: null,
+    stock: 20,
   },
   {
     id: 'c2',
@@ -39,7 +39,7 @@ let products = [
     desc: 'ช็อตเอสเพรสโซ่เข้มผสมน้ำส้มคั้นสด สดชื่นตื่นตัว',
     img: 'https://images.unsplash.com/photo-1514432324607-a09d9b4aefdd?w=500&q=80',
     customizable: true,
-    stock: null,
+    stock: 20,
   },
   {
     id: 'c3',
@@ -49,7 +49,7 @@ let products = [
     desc: 'ฟองนมเนียนนุ่ม โรยผงโกโก้พรีเมียม',
     img: 'https://images.unsplash.com/photo-1534778101976-62847782c213?w=500&q=80',
     customizable: true,
-    stock: null,
+    stock: 20,
   },
   {
     id: 'c4',
@@ -59,7 +59,7 @@ let products = [
     desc: 'ผงมัทฉะเกรดพิธีการแท้จากเกียวโต หอมละมุนเข้มข้น',
     img: 'https://images.unsplash.com/photo-1536256263959-770b48d82b0a?w=500&q=80',
     customizable: true,
-    stock: null,
+    stock: 20,
   },
   {
     id: 'c5',
@@ -69,7 +69,7 @@ let products = [
     desc: 'ใบชาคั่วสูตรลับของร้าน หอมกรุ่นหวานมันกำลังดี',
     img: 'https://images.unsplash.com/photo-1576092768241-dec231879fc3?w=500&q=80',
     customizable: true,
-    stock: null,
+    stock: 20,
   },
   {
     id: 'b1',
