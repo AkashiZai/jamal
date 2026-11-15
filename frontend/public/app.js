@@ -699,6 +699,13 @@ window.appActions = {
     await apiVoidReceipt(receiptNo, pin, reason);
   },
 
+  // Admin CRUD: ลบเมนูออกจากระบบ (DELETE /api/products/:id)
+  async deleteProduct(productId) {
+    if (!window.confirm('ยืนยันการลบรายการเมนูนี้?')) return;
+    await fetch(`/api/products/${encodeURIComponent(productId)}`, { method: 'DELETE' });
+    await fetchState();
+  },
+
   // --- CUSTOMER MOBILE ---
   toggleMobileFrame() {
     state.mobileFrameMode = !state.mobileFrameMode;
@@ -2072,6 +2079,7 @@ function renderAdminPage() {
                     <div class="flex items-center gap-2">
                       <span class="font-mono font-bold text-sm text-terracotta">฿${prod.price.toFixed(2)}</span>
                       <button onclick="appActions.startEditPrice('${prod.id}', ${prod.price})" class="p-1.5 text-warmgray-500 hover:text-espresso-900 hover:bg-cream-200 rounded-lg transition" title="แก้ไขราคา">✎</button>
+                      <button onclick="appActions.deleteProduct('${prod.id}')" class="p-1.5 text-red-500 hover:text-red-700 hover:bg-red-50 rounded-lg transition text-xs font-bold" title="ลบเมนู">🗑</button>
                     </div>
                   `
                   }
