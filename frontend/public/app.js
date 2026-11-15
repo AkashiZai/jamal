@@ -706,7 +706,7 @@ window.appActions = {
 
   clickMobileProduct(productId) {
     const product = state.products.find((p) => p.id === productId);
-    if (!product || product.stock === 0) return;
+    if (!product || (product.stock !== null && product.stock <= 0)) return;
     if (product.customizable) {
       state.mobileCustomProduct = product;
       state.mobileCustomSweetness = '25%';
@@ -2416,7 +2416,7 @@ function renderCustomerMobilePage() {
           <div class="space-y-3">
             ${filteredProducts
               .map((product) => {
-                const isOutOfStock = product.stock === 0;
+                const isOutOfStock = product.stock !== null && product.stock <= 0;
                 return `
                   <div class="bg-white rounded-2xl border border-cream-300 p-3 flex gap-3 shadow-sm ${isOutOfStock ? 'opacity-60 bg-cream-50' : ''}">
                     <div class="w-20 h-20 rounded-xl overflow-hidden bg-cream-200 shrink-0 border border-cream-200 relative">
@@ -2431,7 +2431,7 @@ function renderCustomerMobilePage() {
                         <span class="font-mono font-extrabold text-sm text-terracotta">฿${product.price.toFixed(2)}</span>
                         ${
                           isOutOfStock
-                            ? `<span class="bg-red-50 text-red-600 text-[10px] font-bold px-2 py-1 rounded-md border border-red-200">สินค้าหมด</span>`
+                            ? `<span class="bg-red-50 text-red-600 text-[10px] font-bold px-2 py-1 rounded-md border border-red-200">Out of Stock (สินค้าหมด)</span>`
                             : `<button onclick="appActions.clickMobileProduct('${product.id}')" class="px-3 py-1 bg-espresso-900 hover:bg-espresso-800 text-white text-xs font-bold rounded-lg">+ สั่ง</button>`
                         }
                       </div>
