@@ -75,4 +75,22 @@ describe('InventoryModel Unit Tests', () => {
     expect(stockOf(result.products, 'c1')).toBe(18);
     expect(model.deductStock().ok).toBe(true);
   });
+
+  test('sortInventorySmallToLarge sorts base drinks, cakes, and toppings ascending', () => {
+    const model = new InventoryModel(seedProducts, seedToppings);
+    const sorted = model.sortInventorySmallToLarge();
+    expect(sorted.map((x) => x.id)).toEqual(['b1', 't1', 'c1']); // stocks: 2, 5, 20
+    expect(sorted.map((x) => x.stock)).toEqual([2, 5, 20]);
+    expect(sorted.map((x) => x.group)).toEqual(['cake/bakery', 'topping', 'base-drink']);
+  });
+
+  test('sortInventorySmallToLarge skips untracked items and follows stock changes', () => {
+    const products = [...seedProducts, { id: 'u1', name: 'Free Water', category: 'non-coffee', price: 0, stock: null }];
+    const model = new InventoryModel(products, seedToppings);
+    expect(model.sortInventorySmallToLarge().map((x) => x.id)).toEqual(['b1', 't1', 'c1']);
+
+    model.restockItem('b1', 30); // เค้กเหลือ 32 ต้องไปอยู่ท้ายสุด
+    model.deductStock([{ id: 'c1', quantity: 19 }]); // เครื่องดื่มเหลือ 1 ต้องขึ้นมาอยู่หัวแถว
+    expect(model.sortInventorySmallToLarge().map((x) => x.id)).toEqual(['c1', 't1', 'b1']);
+  });
 });
