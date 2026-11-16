@@ -104,7 +104,7 @@ class InventoryModel {
     const addStock = (list) =>
       list.map((item) => {
         if (item.id !== id) return item;
-        updatedItem = { ...item, stock: (item.stock ?? 0) + qty };
+        updatedItem = { ...item, stock: (item.stock !== undefined && item.stock !== null ? item.stock : 0) + qty };
         return updatedItem;
       });
 
@@ -139,7 +139,7 @@ class InventoryModel {
   }
 
   validateNewProduct({ name, price, stock }) {
-    if (!String(name ?? '').trim() || !(Number(price) > 0)) return 'กรุณากรอกชื่อเมนูและราคา';
+    if (!String(name !== undefined && name !== null ? name : '').trim() || !(Number(price) > 0)) return 'กรุณากรอกชื่อเมนูและราคา';
     if (stock !== undefined && !(Number(stock) >= 0)) return 'จำนวนสต็อกต้องไม่ติดลบ';
     return null;
   }
@@ -156,7 +156,7 @@ class InventoryModel {
     const invalid = this.validateProductPatch(patch);
     if (invalid) return { ok: false, status: 400, error: invalid };
 
-    const category = patch.category ?? prev.category;
+    const category = patch.category !== undefined && patch.category !== null ? patch.category : prev.category;
     const updated = {
       ...prev,
       ...patch,

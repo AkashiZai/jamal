@@ -8,7 +8,7 @@ on:
 
 jobs:
   unit-test-and-coverage:
-    name: Unit Tests & Coverage (>=80% models)
+    name: Unit Tests, Coverage & Plato Report
     runs-on: ubuntu-latest
     defaults:
       run:
@@ -22,6 +22,14 @@ jobs:
           cache-dependency-path: frontend/package-lock.json
       - run: npm ci
       - run: npm run test:coverage
+      - name: Run Plato Static Complexity Analysis
+        run: npm run plato
+      - name: Upload Plato Report Artifact
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: plato-complexity-report
+          path: reports/plato
 
   ui-test-and-static-check:
     name: UI Tests (5 Cases) & Static Check
@@ -37,6 +45,8 @@ jobs:
           cache: 'npm'
           cache-dependency-path: frontend/package-lock.json
       - run: npm ci
+      - name: ESLint Static Check
+        run: npm run lint
       - run: npx playwright install --with-deps chromium
       - run: npm run test:ui
 

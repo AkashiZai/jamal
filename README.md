@@ -10,6 +10,34 @@
  
 # POS ร้านคาเฟ่และเบเกอรี่ (Café & Bakery POS Web Application)
  
+---
+
+## 📁 แผนผังโครงสร้างโฟลเดอร์และทางลัดเข้าดู (Project Structure & Quick Navigation)
+
+เพื่อให้การเปิดดูไฟล์ โค้ด เอกสาร รายงานผลการทดสอบ และงานออกแบบบน GitHub ทำได้สะดวกรวดเร็ว โครงสร้างโปรเจกต์ได้ถูกจัดระเบียบให้กดเข้าดูง่ายดังนี้:
+
+| โฟลเดอร์ / ไฟล์ | รายละเอียด | ลิงก์ตรงบน GitHub |
+| :--- | :--- | :--- |
+| 📂 **`frontend/`** | ซอร์สโค้ดหลักของระบบ POS (Node.js & Express), Models และชุดทดสอบ | [เปิดดู frontend/](./frontend) |
+| ├── 📁 **`models/`** | คลาสโครงสร้างข้อมูล 4 โมดูล (`StaffModel`, `CartModel`, `OrderQueueModel`, `InventoryModel`) | [เปิดดู models/](./frontend/models) |
+| ├── 📁 **`tests/`** | ชุดทดสอบ Jest Unit Tests 4 Suites / 24 Tests (Statement Coverage 100%) | [เปิดดู tests/](./frontend/tests) |
+| ├── 📁 **`tests/ui/`** | ชุดทดสอบ Playwright E2E UI Tests 5 เคส (Login, POS, KDS, Admin) | [เปิดดู tests/ui/](./frontend/tests/ui) |
+| └── 📄 **`server.js`** | Express REST API รวม 16 Endpoints สำหรับจัดการระบบหน้าร้านและคลัง | [เปิดดู server.js](./frontend/server.js) |
+| 📂 **`reports/`** | รายงานการวัดคุณภาพโค้ดและการทดสอบระบบ | [เปิดดู reports/](./reports) |
+| └── 📁 **`plato/`** | รายงาน **Plato Static Complexity & Maintainability Index (HTML Dashboard)** | [เปิดดู reports/plato/](./reports/plato) |
+| 📂 **`docs/`** | ศูนย์รวมเอกสารข้อกำหนดทางเทคนิค ผังกระบวนการทำงาน และภาพถ่ายหน้าจอ | [เปิดดู docs/](./docs) |
+| ├── 📄 **`REQUIREMENT.md`** | ข้อกำหนดการทำงาน FR-01 ถึง FR-08 และ Non-Functional NFR-01 ถึง NFR-05 | [เปิดดู REQUIREMENT.md](./docs/REQUIREMENT.md) |
+| ├── 📄 **`TOR.md`** | ขอบเขตงาน (Terms of Reference) สำหรับ Admin, User, Operator และ Authentication | [เปิดดู TOR.md](./docs/TOR.md) |
+| ├── 📄 **`WORKFLOW_FLOWCHART.md`** | แผนผังระบบแบบละเอียด (Mermaid Flowchart) ครบ 4 ส่วนงาน | [เปิดดู WORKFLOW_FLOWCHART.md](./docs/WORKFLOW_FLOWCHART.md) |
+| └── 📁 **`screenshots/`** | ภาพถ่ายหน้าจอระบบจริงทั้ง 5 หน้าจอหลัก | [เปิดดู screenshots/](./docs/screenshots) |
+| 📂 **`design/`** | ทรัพยากรงานออกแบบ, Design Tokens และหน้าจอจำลอง Prototypes | [เปิดดู design/](./design) |
+| ├── 📁 **`figma_pages/`** | หน้าจอจำลอง Prototype HTML (6 หน้า) และ Diagram ข้อกำหนด UI | [เปิดดู figma_pages/](./design/figma_pages) |
+| ├── 📁 **`figma_import/`** | ไฟล์เวกเตอร์ SVG แท้จำนวน 39 หน้าจอ พร้อมนำเข้าสู่ Figma Canvas | [เปิดดู figma_import/](./design/figma_import) |
+| └── 📄 **`tokens.json`** | Design Tokens สำหรับโทนสี, Typography และ Spacing | [เปิดดู tokens.json](./design/tokens.json) |
+| 📂 **`scripts/`** | สคริปต์ Python สำหรับแปลง SVG และประมวลผลรูปภาพ | [เปิดดู scripts/](./scripts) |
+| 📂 **`.github/workflows/`** | CI/CD Pipeline อัตโนมัติ (Unit Test, Coverage, Plato Report, UI Test, CD Deploy) | [เปิดดู ci.yml](./.github/workflows/ci.yml) |
+| 📄 **`package.json`** | สคริปต์ Root สำหรับรัน `npm test`, `npm run plato`, `npm start` ได้ทันทีจากโฟลเดอร์หลัก | [เปิดดู package.json](./package.json) |
+
 ---  
 ## 1. ที่มาของปัญหาและความสำคัญ (Problem Statement & Significance)
 ในปัจจุบันธุรกิจร้านกาแฟและเบเกอรี่ขนาดย่อม (SMEs) มีการเติบโตขึ้นอย่างต่อเนื่อง แต่ร้านค้าส่วนใหญ่ยังประสบปัญหาในการบริหารจัดการหน้าร้าน ดังนี้:
@@ -390,7 +418,7 @@ flowchart TD
 
 ### 12.1 ลิงก์งานออกแบบบน Figma (Figma Project Link)
 * 🎨 **Figma Prototype Link**: [คลิกที่นี่เพื่อเปิดดูชิ้นงาน Jamal POS บน Figma](https://www.figma.com/design/DSn2mfMqepHiauo2lbwBFV/jamal?node-id=0-1&t=TBf61dXn3PTERRvu-1)
-* 📁 **Figma Assets ใน Repository**: ไฟล์สำหรับนำเข้า Figma ทั้งหมดจัดเก็บไว้ในโฟลเดอร์ [`figma page/`](./figma%20page) และไฟล์เวกเตอร์ SVG จำนวน 39 หน้าจอในโฟลเดอร์ [`design/figma_import/`](./design/figma_import)
+* 📁 **Figma Assets ใน Repository**: ไฟล์สำหรับนำเข้า Figma และ Interactive Prototypes จัดเก็บไว้ในโฟลเดอร์ [`design/figma_pages/`](./design/figma_pages) และไฟล์เวกเตอร์ SVG จำนวน 39 หน้าจอในโฟลเดอร์ [`design/figma_import/`](./design/figma_import)
 
 ---
 
@@ -455,7 +483,7 @@ flowchart TD
 ### 1. สิ่งที่ทำได้ดี (What went well)
 1. **การออกแบบ UI และ Asset ใน Figma ครบถ้วนเกินเป้าหมาย**: ทีมสามารถออกแบบและจัดเตรียมไฟล์เวกเตอร์ SVG ได้ครบถ้วนทั้ง 5 โมดูลระบบ รวม 39 หน้าจอ/สถานะเหตุการณ์ ทำให้เห็น Flow การคลิกและ Interaction ที่สมบูรณ์แบบโดยไม่มี Dead Click
 2. **การทำ Design Tokens ทำให้หน้าเว็บสอดคล้องกับดีไซน์ 100%**: การจัดทำไฟล์ `tokens.json` และคู่มือ `FIGMA_SPEC.md` ช่วยให้การเขียน CSS ในหน้าเว็บ (Node.js + Express) มีสี ฟอนต์ และขนาดปุ่มที่ตรงกับ Figma อย่างแม่นยำ
-3. **การทำงานร่วมกันบน Git และการแบ่งงาน 4 ส่วนชัดเจน**: สมาชิกแต่ละคนรับผิดชอบโมดูลของตนเองตามตารางอย่างเคร่งครัด ทำให้การ Merge โค้ดและการอัปโหลดงานเข้าโฟลเดอร์ `figma page/` ไม่มีข้อขัดแย้ง (Merge Conflict)
+3. **การทำงานร่วมกันบน Git และการแบ่งงาน 4 ส่วนชัดเจน**: สมาชิกแต่ละคนรับผิดชอบโมดูลของตนเองตามตารางอย่างเคร่งครัด ทำให้การ Merge โค้ดและการอัปโหลดงานเข้าโฟลเดอร์ `design/figma_pages/` ไม่มีข้อขัดแย้ง (Merge Conflict)
 
 ### 2. สิ่งที่ควรปรับปรุง (What could be improved)
 1. **การจัดเก็บข้อมูลบน Express Server ยังเป็น In-Memory State**: ข้อมูลสินค้า บิลขาย และคิวครัว ทำงานอยู่บนหน่วยความจำของ Node.js Express Server ควรเชื่อมต่อ Database ถาวรใน Sprint 3
@@ -524,13 +552,15 @@ flowchart TD
 | 14 | UT-14 | `InventoryModel` | `createProduct()`, `updateProduct()`, `deleteProduct()`, `restockItem()` | เพิ่ม/แก้ไขราคา/เติมสต็อก/ลบสินค้า | CRUD ทำงานครบและอัปเดตจำนวนสต็อกถูกต้อง | Pass |
 | 15 | UT-15 | `InventoryModel` | `voidSale()`, `getSalesAnalytics()` | บิล ฿150 และ ฿65, จากนั้นกด Void บิลแรก | คำนวณ `avg: 107.5`, `min: 65`, `max: 150` และตัดบิลที่ Void ออก | Pass |
 
-#### ตัวอย่างคำสั่งทดสอบและ Dynamic Profiling (`frontend/`)
+#### ตัวอย่างคำสั่งทดสอบและ Dynamic Profiling (รันได้จาก Root หรือ `frontend/`)
 ```bash
 npm test                # รัน Jest Unit Tests (staff.test.js + cart.test.js + orderQueue.test.js + inventory.test.js)
 npm run test:coverage   # ตรวจ Statement Coverage บน models/ (>= 80%)
 npm run test:ui         # รัน Playwright UI Tests (tests/ui/*.ui.test.js)
 npm run lint            # รัน Static Profiling ด้วย ESLint (eslint.config.mjs)
 npm run profile:dynamic # รัน Dynamic Profiling (scripts/profile_dynamic.js)
+npm run plato           # รัน Plato วิเคราะห์ความซับซ้อน Maintainability Index และ Halstead Metrics
+npm run test:plato      # รันทั้ง Unit Test Coverage และ Plato วิเคราะห์คุณภาพโค้ดพร้อมกัน
 ```
 
 ---
@@ -543,6 +573,28 @@ npm run profile:dynamic # รัน Dynamic Profiling (scripts/profile_dynamic.j
 | จำนวนไฟล์ที่มีฟังก์ชันยาวเกินเกณฑ์ (`max-lines-per-function`) | พบใน `server.js` (รวมทุก route และข้อมูลไว้ไฟล์เดียว) | ลดลงจากการแยก logic ออกเป็น 4 คลาสใน `models/` | โค้ดอ่านง่ายและดูแลแยกส่วนได้ดีขึ้น |
 | ค่าความซับซ้อน (`complexity > 10`) | พบใน route `POST /api/orders` เดิม | แยกเป็น `deductStock()`, `enqueueOrder()`, `recordSale()` (ค่า complexity <= 6 ต่อเมธอด) | ลดความซับซ้อนของแต่ละเมธอดลงต่ำกว่าเกณฑ์ |
 | จำนวน `no-undef` / `no-unused-vars` Errors | `0` errors (`2` warnings) | `0` errors (`0` warnings) | ไม่มีตัวแปรค้างหรือไม่ถูกใช้งาน |
+
+### ตารางรายงานผลการวิเคราะห์ Static Code Complexity & Maintainability ด้วย Plato
+> รายงานฉบับสมบูรณ์ถูกสร้างไว้ในโฟลเดอร์ [`reports/plato/`](./reports/plato) (สามารถเปิดไฟล์ [`index.html`](./reports/plato/index.html) ในเบราว์เซอร์เพื่อดู Interactive Chart) และรวมอยู่ใน GitHub Actions CI Workflow
+
+| ไฟล์โมดูล / ชุดทดสอบ | Maintainability Index (0-100) | Physical SLOC | Cyclomatic Complexity | Halstead Effort | ผลการประเมิน |
+| :--- | :---: | :---: | :---: | :---: | :--- |
+| **`models/CartModel.js`** | **72.7** | 111 | 26 | 234,860 | 🟢 โครงสร้างสะอาด ความซับซ้อนต่ำ |
+| **`models/InventoryModel.js`** | **68.5** | 278 | 59 | 856,535 | 🟢 ตรรกะคลังสินค้าและบิลขายเป็นระบบ |
+| **`models/OrderQueueModel.js`** | **64.5** | 119 | 22 | 147,367 | 🟢 คิวออเดอร์และการเปลี่ยนสถานะอ่านง่าย |
+| **`models/StaffModel.js`** | **63.0** | 122 | 27 | 188,631 | 🟢 ผ่านเกณฑ์ความซับซ้อนตามมาตรฐาน |
+| **`tests/cart.test.js`** | **57.5** | 82 | 1 | 60,229 | 🟢 Unit Test ครอบคลุม 100% Statements |
+| **`tests/inventory.test.js`** | **60.5** | 193 | 1 | 428,007 | 🟢 Unit Test 12 เคสครอบคลุมการตัดสต็อก & Void |
+| **`tests/orderQueue.test.js`** | **55.2** | 85 | 1 | 53,729 | 🟢 Unit Test คิวออเดอร์และสถิติ |
+| **`tests/staff.test.js`** | **54.7** | 130 | 1 | 113,862 | 🟢 Unit Test ระบบสิทธิ์และ Session Expire |
+| **`tests/ui/admin.ui.test.js`** | **76.0** | 50 | 2 | 27,031 | 🟢 Playwright UI Test สต็อกเรียงน้อยไปมาก |
+| **`tests/ui/kds.ui.test.js`** | **78.0** | 31 | 2 | 9,397 | 🟢 Playwright UI Test คิวห้องครัว |
+| **`tests/ui/login.ui.test.js`** | **77.4** | 40 | 2 | 11,463 | 🟢 Playwright UI Test การตรวจสอบสิทธิ์ |
+| **`tests/ui/pos.ui.test.js`** | **72.9** | 39 | 2 | 13,646 | 🟢 Playwright UI Test การคิดเงินและทอนเงิน |
+| **`server.js`** | **65.4** | 501 | 41 | 577,361 | 🟢 REST API 16 Endpoints เชื่อมโยงโมเดล |
+| **`public/app.js`** | **71.2** | 2,639 | 267 | 5,131,771 | 🟢 SPA Client logic จัดการหน้าจอและเสียงเตือน |
+| **ค่าเฉลี่ยทั้งโปรเจกต์** | **66.97** | **316** | **-** | **-** | 🟢 **ผ่านเกณฑ์มาตรฐาน Maintainability (> 65)** |
+
 
 ### สิ่งที่ยังไม่เสร็จสมบูรณ์ / Bug ที่พบใน Phase 3 (และแก้ไขครบใน Phase 4)
 1. **การตัดสต็อกท็อปปิ้งแยกจากเครื่องดื่มหลัก:** ในระยะต้นของ Phase 3 ระบบตัดเฉพาะสต็อกเบเกอรี่ ใน Phase 4 ได้ขยาย `InventoryModel.deductStock()` ให้ตัดสต็อกครบทั้ง Base Drink, Cake และ Toppings

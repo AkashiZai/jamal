@@ -1,0 +1,621 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Plato - server.js</title>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="">
+  <meta name="author" content="">
+
+  <!--[if lt IE 9]>
+  <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+  <![endif]-->
+
+  <link href="../../assets/css/vendor/morris.css" rel="stylesheet" type="text/css">
+  <link href="../../assets/css/vendor/bootstrap.css" rel="stylesheet" type="text/css">
+  <link href="../../assets/css/vendor/font-awesome.css" rel="stylesheet" type="text/css">
+  <link href="../../assets/css/vendor/codemirror.css" rel="stylesheet" type="text/css">
+  <link href="../../assets/css/plato.css" rel="stylesheet" type="text/css">
+  <link href="../../assets/css/plato-file.css" rel="stylesheet" type="text/css">
+
+</head>
+
+<body>
+
+<div class="navbar navbar-fixed-top">
+  <div class="container">
+    <a class="navbar-brand" href="https://github.com/the-simian/es6-plato">ES6 Plato on Github</a>
+    <ul class="nav navbar-nav">
+      <li>
+        <a href="../../index.html">Report Home</a>
+      </li>
+      <li class="active">
+        <a href="display.html">Summary Display</a>
+      </li>
+    </ul>
+  </div>
+</div>
+
+<div class="jumbotron">
+  <div class="container">
+    <h1>server.js</h1>
+  </div>
+</div>
+
+<div class="container aggregate-stats">
+  <div class="row">
+    <div class="col-md-6">
+      <h2 class="header">Maintainability <a href="http://blogs.msdn.com/b/codeanalysis/archive/2007/11/20/maintainability-index-range-and-meaning.aspx"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="A value between 0 and 100 that represents the relative ease of maintaining the code. A high value means better maintainability." data-original-title="Maintainability Index"  data-container="body"></i></a></h2>
+      <p class="stat">65.40</p>
+    </div>
+    <div class="col-md-6">
+      <h2 class="header">Lines of code <i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="Source Lines of Code / Logical Lines of Code" data-original-title="SLOC/LSLOC" data-container="body"></i></h2>
+      <p class="stat">501</p>
+    </div>
+  </div>
+  <div class="row historical">
+    <div class="col-md-6">
+      <p id="chart_historical_maint" class="chart"></p>
+    </div>
+    <div class="col-md-6">
+      <p id="chart_historical_sloc" class="chart"></p>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-6">
+      <h2 class="header">Difficulty  <a href="http://en.wikipedia.org/wiki/Halstead_complexity_measures"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="The difficulty measure is related to the difficulty of the program to write or understand." data-original-title="Difficulty" data-container="body"></i></a></h2>
+      <p class="stat">34.07</p>
+    </div>
+    <div class="col-md-6">
+      <h2 class="header">Estimated Errors  <a href="http://en.wikipedia.org/wiki/Halstead_complexity_measures"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="Halstead's delivered bugs is an estimate for the number of errors in the implementation." data-original-title="Delivered Bugs" data-container="body"></i></a></h2>
+      <p class="stat">5.65</p>
+    </div>
+  </div>
+</div>
+
+<div class="container charts">
+  <div class="row">
+    <h2 class="header">Function weight</h2>
+  </div>
+  <div class="row">
+    <div class="col-md-6">
+      <h3 class="chart-header">By Complexity <a href="http://en.wikipedia.org/wiki/Cyclomatic_complexity"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="This metric counts the number of distinct paths through a block of code. Lower values are better." data-original-title="Cyclomatic Complexity" data-container="body"></i></a></h3>
+      <div id="fn-by-complexity" class="stat"></div>
+    </div>
+    <div class="col-md-6">
+      <h3 class="chart-header">By SLOC  <i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="Source Lines of Code / Logical Lines of Code" data-original-title="SLOC/LSLOC" data-container="body"></i></h3>
+      <div id="fn-by-sloc" class="stat"></div>
+    </div>
+  </div>
+</div>
+
+<div class="container">
+  <div class="row">
+    <textarea id="file-source" class="col-md-12">const express = require(&#039;express&#039;);
+const path = require(&#039;path&#039;);
+const StaffModel = require(&#039;./models/StaffModel&#039;);
+
+const app = express();
+const PORT = process.env.PORT || 3000;
+
+app.use(express.json());
+app.use(express.static(path.join(__dirname, &#039;public&#039;)));
+
+// ============================================================================
+// IN-MEMORY STORE (Matches Figma Spec &amp; TOR FR-01 to FR-12)
+// ============================================================================
+
+const CATEGORIES = [
+  { id: &#039;all&#039;, name: &#039;ทั้งหมด&#039;, icon: &#039;☕&#039; },
+  { id: &#039;coffee&#039;, name: &#039;กาแฟสด&#039;, icon: &#039;⚡&#039; },
+  { id: &#039;non-coffee&#039;, name: &#039;ชา &amp; เครื่องดื่ม&#039;, icon: &#039;🍵&#039; },
+  { id: &#039;bakery&#039;, name: &#039;🥐 เบเกอรี่สด&#039;, icon: &#039;🥐&#039; },
+  { id: &#039;dessert&#039;, name: &#039;🍰 ของหวาน&#039;, icon: &#039;🍰&#039; },
+];
+
+let products = [
+  {
+    id: &#039;c1&#039;,
+    name: &#039;เอสเพรสโซ่เย็น (Iced Espresso)&#039;,
+    category: &#039;coffee&#039;,
+    price: 65.0,
+    desc: &#039;เมล็ดคั่วกลาง บราซิล-เชียงราย เข้มข้นกลมกล่อม&#039;,
+    img: &#039;https://images.unsplash.com/photo-1517256064527-09c73fc73e38?w=500&amp;q=80&#039;,
+    customizable: true,
+    stock: 20,
+  },
+  {
+    id: &#039;c2&#039;,
+    name: &#039;อเมริกาโน่น้ำส้ม (Orange Americano)&#039;,
+    category: &#039;coffee&#039;,
+    price: 85.0,
+    desc: &#039;ช็อตเอสเพรสโซ่เข้มผสมน้ำส้มคั้นสด สดชื่นตื่นตัว&#039;,
+    img: &#039;https://images.unsplash.com/photo-1514432324607-a09d9b4aefdd?w=500&amp;q=80&#039;,
+    customizable: true,
+    stock: 20,
+  },
+  {
+    id: &#039;c3&#039;,
+    name: &#039;คาปูชิโน่ร้อน (Hot Cappuccino)&#039;,
+    category: &#039;coffee&#039;,
+    price: 60.0,
+    desc: &#039;ฟองนมเนียนนุ่ม โรยผงโกโก้พรีเมียม&#039;,
+    img: &#039;https://images.unsplash.com/photo-1534778101976-62847782c213?w=500&amp;q=80&#039;,
+    customizable: true,
+    stock: 20,
+  },
+  {
+    id: &#039;c4&#039;,
+    name: &#039;มัทฉะลาเต้อูจิ (Uji Matcha Latte)&#039;,
+    category: &#039;non-coffee&#039;,
+    price: 85.0,
+    desc: &#039;ผงมัทฉะเกรดพิธีการแท้จากเกียวโต หอมละมุนเข้มข้น&#039;,
+    img: &#039;https://images.unsplash.com/photo-1536256263959-770b48d82b0a?w=500&amp;q=80&#039;,
+    customizable: true,
+    stock: 20,
+  },
+  {
+    id: &#039;c5&#039;,
+    name: &#039;ชาไทยการันต์เย็น (Signature Thai Tea)&#039;,
+    category: &#039;non-coffee&#039;,
+    price: 60.0,
+    desc: &#039;ใบชาคั่วสูตรลับของร้าน หอมกรุ่นหวานมันกำลังดี&#039;,
+    img: &#039;https://images.unsplash.com/photo-1576092768241-dec231879fc3?w=500&amp;q=80&#039;,
+    customizable: true,
+    stock: 20,
+  },
+  {
+    id: &#039;b1&#039;,
+    name: &#039;ครัวซองต์เนยสด AOP (Butter Croissant)&#039;,
+    category: &#039;bakery&#039;,
+    price: 85.0,
+    desc: &#039;เนยสดแท้นำเข้าจากฝรั่งเศส กรอบนอกนุ่มฉ่ำเนย&#039;,
+    img: &#039;https://images.unsplash.com/photo-1555507036-ab1f4038808a?w=500&amp;q=80&#039;,
+    customizable: false,
+    stock: 4,
+    isBakery: true,
+  },
+  {
+    id: &#039;b2&#039;,
+    name: &#039;เดนิชสตรอว์เบอร์รี (Strawberry Danish)&#039;,
+    category: &#039;bakery&#039;,
+    price: 95.0,
+    desc: &#039;แป้งเดนิชกรอบ ซอสคัสตาร์ดวานิลลาและผลสตรอว์เบอร์รีสด&#039;,
+    img: &#039;https://images.unsplash.com/photo-1509440159596-0249088772ff?w=500&amp;q=80&#039;,
+    customizable: false,
+    stock: 3,
+    isBakery: true,
+  },
+  {
+    id: &#039;b3&#039;,
+    name: &#039;บาสก์ชีสเค้กหน้าไหม้ (Burnt Cheesecake)&#039;,
+    category: &#039;dessert&#039;,
+    price: 125.0,
+    desc: &#039;ครีมชีสแท้เนื้อเนียนนุ่ม ละลายในปาก หอมคาราเมลไหม้&#039;,
+    img: &#039;https://images.unsplash.com/photo-1533134242443-d4fd215305ad?w=500&amp;q=80&#039;,
+    customizable: false,
+    stock: 0,
+    isBakery: true,
+  },
+  {
+    id: &#039;b4&#039;,
+    name: &#039;เค้กแครอทครีมชีส (Carrot Cake)&#039;,
+    category: &#039;dessert&#039;,
+    price: 95.0,
+    desc: &#039;เนื้อเค้กแครอทนุ่มแน่น หอมเครื่องเทศ ท็อปปิ้งครีมชีสเปรี้ยวหวาน&#039;,
+    img: &#039;https://images.unsplash.com/photo-1621303837174-89787a7d4729?w=500&amp;q=80&#039;,
+    customizable: false,
+    stock: 8,
+    isBakery: true,
+  },
+  {
+    id: &#039;c6&#039;,
+    name: &#039;ลาเต้เย็น (Iced Latte)&#039;,
+    category: &#039;coffee&#039;,
+    price: 70.0,
+    desc: &#039;ช็อตเอสเพรสโซ่ผสมนมสดเย็น หอมละมุนกลมกล่อม&#039;,
+    img: &#039;https://images.unsplash.com/photo-1572442388796-11668a67e53d?w=500&amp;q=80&#039;,
+    customizable: true,
+    stock: 25,
+  },
+  {
+    id: &#039;b5&#039;,
+    name: &#039;บราวนี่ดาร์กช็อกโกแลต (Dark Choc Brownie)&#039;,
+    category: &#039;dessert&#039;,
+    price: 75.0,
+    desc: &#039;ดาร์กช็อกโกแลตเข้มข้น 70% เนื้อหนึบฉ่ำ&#039;,
+    img: &#039;https://images.unsplash.com/photo-1606313564200-e75d5e30476c?w=500&amp;q=80&#039;,
+    customizable: false,
+    stock: 12,
+    isBakery: true,
+  },
+];
+
+let toppings = [
+  { id: &#039;t1&#039;, name: &#039;นมโอ๊ต (Oat Milk)&#039;, price: 15, stock: 20, category: &#039;topping&#039; },
+  { id: &#039;t2&#039;, name: &#039;นมอัลมอนด์ (Almond Milk)&#039;, price: 15, stock: 15, category: &#039;topping&#039; },
+  { id: &#039;t3&#039;, name: &#039;เพิ่มช็อตเอสเพรสโซ่ (Extra Shot)&#039;, price: 20, stock: 30, category: &#039;topping&#039; },
+  { id: &#039;t4&#039;, name: &#039;บุกบราวน์ชูการ์ (Brown Sugar Jelly)&#039;, price: 15, stock: 18, category: &#039;topping&#039; },
+];
+const CartModel = require(&#039;./models/CartModel&#039;);
+const OrderQueueModel = require(&#039;./models/OrderQueueModel&#039;);
+const InventoryModel = require(&#039;./models/InventoryModel&#039;);
+const cartCatalogHelper = new CartModel();
+
+let staffAccounts = [
+  {
+    id: &#039;staff-01&#039;,
+    username: &#039;cashier_zai&#039;,
+    pin: &#039;1234&#039;,
+    name: &#039;Zai (กะเช้า)&#039;,
+    role: &#039;cashier&#039;,
+    roleName: &#039;แคชเชียร์&#039;,
+  },
+  {
+    id: &#039;staff-02&#039;,
+    username: &#039;barista_kds&#039;,
+    pin: &#039;5678&#039;,
+    name: &#039;อานนท์ (บาริสต้า)&#039;,
+    role: &#039;operator&#039;,
+    roleName: &#039;บาริสต้า/ครัว&#039;,
+  },
+  {
+    id: &#039;staff-03&#039;,
+    username: &#039;admin_boss&#039;,
+    pin: &#039;9999&#039;,
+    name: &#039;ผู้จัดการร้าน (Admin)&#039;,
+    role: &#039;admin&#039;,
+    roleName: &#039;เจ้าของร้าน&#039;,
+  },
+];
+const staffModel = new StaffModel(staffAccounts);
+
+let orders = [
+  {
+    id: &#039;ord-a04&#039;,
+    queueNo: &#039;A04&#039;,
+    createdAt: &#039;14:40&#039;,
+    timeElapsed: &#039;1 นาที&#039;,
+    status: &#039;pending&#039;,
+    tableNo: &#039;04&#039;,
+    channel: &#039;หน้าร้าน (POS)&#039;,
+    cashierName: &#039;Zai (กะเช้า)&#039;,
+    items: [
+      {
+        name: &#039;เอสเพรสโซ่เย็น&#039;,
+        quantity: 1,
+        optionsText: &#039;หวาน 25% • นมโอ๊ต&#039;,
+        isBeverage: true,
+      },
+      {
+        name: &#039;ครัวซองต์เนยสด AOP&#039;,
+        quantity: 1,
+        optionsText: &#039;อบอุ่นร้อน&#039;,
+        isBakery: true,
+      },
+    ],
+    totalAmount: 150.0,
+    paymentMethod: &#039;PromptPay&#039;,
+  },
+  {
+    id: &#039;ord-a03&#039;,
+    queueNo: &#039;A03&#039;,
+    createdAt: &#039;14:37&#039;,
+    timeElapsed: &#039;กำลังทำ (3 นาที)&#039;,
+    status: &#039;in_progress&#039;,
+    tableNo: &#039;04&#039;,
+    channel: &#039;Mobile Scan&#039;,
+    cashierName: &#039;ลูกค้าสั่งเอง&#039;,
+    items: [
+      {
+        name: &#039;มัทฉะลาเต้อูจิ&#039;,
+        quantity: 2,
+        optionsText: &#039;หวาน 50% • นมสดปกติ&#039;,
+        isBeverage: true,
+      },
+    ],
+    totalAmount: 170.0,
+    paymentMethod: &#039;PromptPay&#039;,
+  },
+  {
+    id: &#039;ord-a02&#039;,
+    queueNo: &#039;A02&#039;,
+    createdAt: &#039;14:32&#039;,
+    timeElapsed: &#039;ขานเรียกแล้ว&#039;,
+    status: &#039;ready&#039;,
+    tableNo: &#039;01&#039;,
+    channel: &#039;หน้าร้าน (POS)&#039;,
+    cashierName: &#039;Zai (กะเช้า)&#039;,
+    items: [
+      {
+        name: &#039;ชาไทยการันต์เย็น&#039;,
+        quantity: 1,
+        optionsText: &#039;หวานปกติ 100%&#039;,
+        isBeverage: true,
+      },
+    ],
+    totalAmount: 60.0,
+    paymentMethod: &#039;เงินสด&#039;,
+  },
+];
+
+let queueSequence = 5;
+const orderQueueModel = new OrderQueueModel(orders, queueSequence);
+
+let salesStats = {
+  totalSales: 14250.0,
+  totalBills: 84,
+  promptPayShare: 64,
+  cashShare: 36,
+};
+
+let salesHistory = [
+  {
+    receiptNo: &#039;INV-20260922-0084&#039;,
+    time: &#039;14:40&#039;,
+    queueNo: &#039;A04&#039;,
+    itemsSummary: &#039;เอสเพรสโซ่เย็น, ครัวซองต์เนยสด AOP&#039;,
+    paymentMethod: &#039;PromptPay&#039;,
+    total: 150.0,
+    status: &#039;paid&#039;,
+    cashier: &#039;Zai (กะเช้า)&#039;,
+  },
+  {
+    receiptNo: &#039;INV-20260922-0083&#039;,
+    time: &#039;14:37&#039;,
+    queueNo: &#039;A03&#039;,
+    itemsSummary: &#039;มัทฉะลาเต้อูจิ (x2)&#039;,
+    paymentMethod: &#039;PromptPay&#039;,
+    total: 170.0,
+    status: &#039;paid&#039;,
+    cashier: &#039;Mobile Scan&#039;,
+  },
+  {
+    receiptNo: &#039;INV-20260922-0082&#039;,
+    time: &#039;14:32&#039;,
+    queueNo: &#039;A02&#039;,
+    itemsSummary: &#039;ชาไทยการันต์เย็น&#039;,
+    paymentMethod: &#039;เงินสด&#039;,
+    total: 60.0,
+    status: &#039;paid&#039;,
+    cashier: &#039;Zai (กะเช้า)&#039;,
+  },
+  {
+    receiptNo: &#039;INV-20260922-0081&#039;,
+    time: &#039;14:15&#039;,
+    queueNo: &#039;A01&#039;,
+    itemsSummary: &#039;อเมริกาโน่น้ำส้ม, เดนิชสตรอว์เบอร์รี&#039;,
+    paymentMethod: &#039;PromptPay&#039;,
+    total: 180.0,
+    status: &#039;paid&#039;,
+    cashier: &#039;Zai (กะเช้า)&#039;,
+  },
+  {
+    receiptNo: &#039;INV-20260922-0080&#039;,
+    time: &#039;13:58&#039;,
+    queueNo: &#039;V99&#039;,
+    itemsSummary: &#039;คาปูชิโน่ร้อน, เค้กแครอท&#039;,
+    paymentMethod: &#039;เงินสด&#039;,
+    total: 155.0,
+    status: &#039;voided&#039;,
+    cashier: &#039;Zai (กะเช้า)&#039;,
+    voidBy: &#039;Admin Zai&#039;,
+    voidReason: &#039;ลูกค้าเปลี่ยนใจ (สั่งผิดเมนู)&#039;,
+  },
+];
+
+let customerQueueNo = &#039;A03&#039;;
+
+// InventoryModel (ส่วนที่ 4): ดูแลสต็อก Base Drink / Cake / Toppings, ยอดขาย/ใบเสร็จ และการ Void บิล
+const inventoryModel = new InventoryModel(products, toppings, salesHistory, salesStats);
+
+// ดึงข้อมูลล่าสุดจาก InventoryModel กลับมาเก็บในตัวแปรของ server
+// เพื่อให้ /api/state และ /api/catalog/search อ่านค่าเดียวกับที่โมเดลจัดการอยู่
+function syncInventoryState() {
+  ({ products, toppings, salesHistory, salesStats } = inventoryModel.getState());
+}
+
+// Manager Override (#10): หาบัญชี Admin ที่ PIN ตรงกัน (นับเฉพาะบัญชี Admin ที่สร้างในระบบ ไม่รวมบัญชี Social Login)
+function findManagerByPin(pin) {
+  const key = String(pin !== undefined &amp;&amp; pin !== null ? pin : &#039;&#039;);
+  if (!key) return null;
+  const isLocal = (acc) =&gt; !acc.authProvider || acc.authProvider === &#039;local&#039;;
+  return staffModel.getAll().find((acc) =&gt; acc.role === &#039;admin&#039; &amp;&amp; isLocal(acc) &amp;&amp; acc.pin === key) || null;
+}
+
+// ============================================================================
+// REST API ENDPOINTS
+// ============================================================================
+
+app.get(&#039;/api/state&#039;, (_req, res) =&gt; {
+  res.json({
+    categories: CATEGORIES,
+    products,
+    toppings,
+    staffAccounts,
+    orders,
+    salesStats,
+    salesHistory,
+    sortedInventory: inventoryModel.sortInventorySmallToLarge(),
+    customerQueueNo,
+  });
+});
+
+app.get(&#039;/api/inventory/sorted&#039;, (_req, res) =&gt; {
+  res.json({ items: inventoryModel.sortInventorySmallToLarge() });
+});
+
+app.get(&#039;/api/catalog/search&#039;, (req, res) =&gt; {
+  const { q = &#039;&#039;, category = &#039;all&#039; } = req.query || {};
+  res.json(cartCatalogHelper.searchCatalog(products, toppings, q, category));
+});
+
+app.post(&#039;/api/auth/login&#039;, (req, res) =&gt; {
+  const { username, pin } = req.body || {};
+  const result = staffModel.authenticatePin(username, pin);
+  if (!result.ok) {
+    return res.status(result.status).json({ error: result.error });
+  }
+  res.json({ user: result.user });
+});
+
+app.post(&#039;/api/auth/social&#039;, (req, res) =&gt; {
+  const { provider, email, displayName, role } = req.body || {};
+  const result = staffModel.authenticateSocial({ provider, email, displayName, role });
+  if (!result.ok) {
+    return res.status(result.status).json({ error: result.error });
+  }
+  staffAccounts = staffModel.getAll();
+  res.json({ user: result.user });
+});
+
+app.post(&#039;/api/orders&#039;, (req, res) =&gt; {
+  const payload = req.body || {};
+  const items = payload.items || [];
+
+  // ตัดสต็อก Base Drink / Cake / Toppings อัตโนมัติ (FR-03) พร้อมเช็ก Out-of-Stock (Issue #8 &amp; #12)
+  // ถ้าสต็อกไม่พอจะตอบ HTTP 400 และไม่สร้างออเดอร์
+  const stockResult = inventoryModel.deductStock(items);
+  if (!stockResult.ok) {
+    return res.status(stockResult.status).json({ error: stockResult.error });
+  }
+
+  const newOrder = orderQueueModel.enqueueOrder(payload);
+  orders = orderQueueModel.getAll();
+
+  // บันทึกยอดขายและใบเสร็จเข้าประวัติการขาย (FR-08)
+  inventoryModel.recordSale({
+    totalAmount: payload.totalAmount,
+    items,
+    paymentMethod: payload.paymentMethod || &#039;PromptPay&#039;,
+    queueNo: newOrder.queueNo,
+    cashierName: payload.cashierName || &#039;Cashier&#039;,
+    time: newOrder.createdAt,
+  });
+  syncInventoryState();
+
+  if (String(payload.channel || &#039;&#039;).includes(&#039;Mobile&#039;)) {
+    customerQueueNo = newOrder.queueNo;
+  }
+
+  res.status(201).json({ order: newOrder, customerQueueNo });
+});
+
+app.patch(&#039;/api/orders/:id/status&#039;, (req, res) =&gt; {
+  const { id } = req.params;
+  const { status } = req.body || {};
+  const result = orderQueueModel.advanceOrderStatus(id, status);
+  if (!result.ok) {
+    return res.status(result.status).json({ error: result.error });
+  }
+  orders = result.orders;
+  res.json({ ok: true, orders: result.orders });
+});
+
+app.post(&#039;/api/products&#039;, (req, res) =&gt; {
+  const result = inventoryModel.createProduct(req.body || {});
+  if (!result.ok) return res.status(result.status).json({ error: result.error });
+  syncInventoryState();
+  res.status(201).json({ product: result.product, products });
+});
+
+app.put(&#039;/api/products/:id&#039;, (req, res) =&gt; {
+  const result = inventoryModel.updateProduct(req.params.id, req.body || {});
+  if (!result.ok) return res.status(result.status).json({ error: result.error });
+  syncInventoryState();
+  res.json({ ok: true, product: result.product, products });
+});
+
+app.delete(&#039;/api/products/:id&#039;, (req, res) =&gt; {
+  const result = inventoryModel.deleteProduct(req.params.id);
+  if (!result.ok) return res.status(result.status).json({ error: result.error });
+  syncInventoryState();
+  res.json({ ok: true, products });
+});
+
+app.patch(&#039;/api/products/:id/price&#039;, (req, res) =&gt; {
+  const price = req.body ? req.body.price : undefined;
+  const result = inventoryModel.updateProduct(req.params.id, { price });
+  if (!result.ok) return res.status(result.status).json({ error: result.error });
+  syncInventoryState();
+  res.json({ ok: true, products });
+});
+
+app.post(&#039;/api/products/:id/restock&#039;, (req, res) =&gt; {
+  const amount = req.body &amp;&amp; req.body.amount !== undefined ? req.body.amount : 5;
+  const result = inventoryModel.restockItem(req.params.id, amount);
+  if (!result.ok) return res.status(result.status).json({ error: result.error });
+  syncInventoryState();
+  res.json({ ok: true, products, toppings });
+});
+
+app.post(&#039;/api/sales/:receiptNo/void&#039;, (req, res) =&gt; {
+  // Manager Override: ต้องกรอก PIN ผู้จัดการ และบันทึกชื่อผู้อนุมัติพร้อมเหตุผลลงบิล (Audit Trail)
+  const { pin, reason } = req.body || {};
+  const manager = findManagerByPin(pin);
+  if (!manager) {
+    return res.status(403).json({ error: &#039;รหัส PIN ผู้จัดการไม่ถูกต้อง ไม่สามารถ Void บิลได้&#039; });
+  }
+  const result = inventoryModel.voidSale(req.params.receiptNo, manager.name, reason || undefined);
+  if (!result.ok) return res.status(result.status).json({ error: result.error });
+  syncInventoryState();
+  res.json({ ok: true, salesHistory });
+});
+
+app.post(&#039;/api/staff&#039;, (req, res) =&gt; {
+  const result = staffModel.addStaff(req.body || {});
+  if (!result.ok) {
+    return res.status(result.status).json({ error: result.error });
+  }
+  staffAccounts = result.staffAccounts;
+  res.status(201).json({ staff: result.staff, staffAccounts: result.staffAccounts });
+});
+
+app.get(&#039;/api/queue/stats&#039;, (req, res) =&gt; {
+  const { status = &#039;all&#039; } = req.query || {};
+  res.json({
+    orders: orderQueueModel.findOrdersByStatus(status),
+    stats: orderQueueModel.getQueueStats(),
+  });
+});
+
+// Fallback to index.html for SPA navigation
+app.get(&#039;*&#039;, (_req, res) =&gt; {
+  res.sendFile(path.join(__dirname, &#039;public&#039;, &#039;index.html&#039;));
+});
+
+if (require.main === module) {
+  app.listen(PORT, () =&gt; {
+    console.log(`☕ Jamal Café &amp; Bakery POS (Node.js + Express) running at http://localhost:${PORT}`);
+  });
+}
+
+module.exports = app;
+</textarea>
+  </div>
+</div>
+
+<footer class="footer">
+  <div class="container">
+    <p>.</p>
+  </div>
+</footer>
+
+<script type="text/html" id="complexity-popover-template">
+  <div class="complexity-notice">
+    Complexity : {{ complexity.cyclomatic }} <br>
+    Length : {{ complexity.halstead.length }} <br>
+    Difficulty : {{ complexity.halstead.difficulty.toFixed(2) }} <br>
+    Est # bugs : {{ complexity.halstead.bugs.toFixed(2) }}<br>
+  </div>
+</script>
+
+<script type="text/javascript" src="../../assets/scripts/bundles/core-bundle.js"></script>
+<script type="text/javascript" src="../../assets/scripts/bundles/codemirror.js"></script>
+<script type="text/javascript" src="../../assets/scripts/codemirror.markpopovertext.js"></script>
+<script type="text/javascript" src="report.js"></script>
+<script type="text/javascript" src="report.history.js"></script>
+<script type="text/javascript" src="../../assets/scripts/plato-file.js"></script>
+</body>
+</html>

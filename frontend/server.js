@@ -324,7 +324,7 @@ function syncInventoryState() {
 
 // Manager Override (#10): หาบัญชี Admin ที่ PIN ตรงกัน (นับเฉพาะบัญชี Admin ที่สร้างในระบบ ไม่รวมบัญชี Social Login)
 function findManagerByPin(pin) {
-  const key = String(pin ?? '');
+  const key = String(pin !== undefined && pin !== null ? pin : '');
   if (!key) return null;
   const isLocal = (acc) => !acc.authProvider || acc.authProvider === 'local';
   return staffModel.getAll().find((acc) => acc.role === 'admin' && isLocal(acc) && acc.pin === key) || null;
@@ -441,14 +441,16 @@ app.delete('/api/products/:id', (req, res) => {
 });
 
 app.patch('/api/products/:id/price', (req, res) => {
-  const result = inventoryModel.updateProduct(req.params.id, { price: req.body?.price });
+  const price = req.body ? req.body.price : undefined;
+  const result = inventoryModel.updateProduct(req.params.id, { price });
   if (!result.ok) return res.status(result.status).json({ error: result.error });
   syncInventoryState();
   res.json({ ok: true, products });
 });
 
 app.post('/api/products/:id/restock', (req, res) => {
-  const result = inventoryModel.restockItem(req.params.id, req.body?.amount ?? 5);
+  const amount = req.body && req.body.amount !== undefined ? req.body.amount : 5;
+  const result = inventoryModel.restockItem(req.params.id, amount);
   if (!result.ok) return res.status(result.status).json({ error: result.error });
   syncInventoryState();
   res.json({ ok: true, products, toppings });

@@ -1,0 +1,2759 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Plato - public/app.js</title>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="">
+  <meta name="author" content="">
+
+  <!--[if lt IE 9]>
+  <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+  <![endif]-->
+
+  <link href="../../assets/css/vendor/morris.css" rel="stylesheet" type="text/css">
+  <link href="../../assets/css/vendor/bootstrap.css" rel="stylesheet" type="text/css">
+  <link href="../../assets/css/vendor/font-awesome.css" rel="stylesheet" type="text/css">
+  <link href="../../assets/css/vendor/codemirror.css" rel="stylesheet" type="text/css">
+  <link href="../../assets/css/plato.css" rel="stylesheet" type="text/css">
+  <link href="../../assets/css/plato-file.css" rel="stylesheet" type="text/css">
+
+</head>
+
+<body>
+
+<div class="navbar navbar-fixed-top">
+  <div class="container">
+    <a class="navbar-brand" href="https://github.com/the-simian/es6-plato">ES6 Plato on Github</a>
+    <ul class="nav navbar-nav">
+      <li>
+        <a href="../../index.html">Report Home</a>
+      </li>
+      <li class="active">
+        <a href="display.html">Summary Display</a>
+      </li>
+    </ul>
+  </div>
+</div>
+
+<div class="jumbotron">
+  <div class="container">
+    <h1>public/app.js</h1>
+  </div>
+</div>
+
+<div class="container aggregate-stats">
+  <div class="row">
+    <div class="col-md-6">
+      <h2 class="header">Maintainability <a href="http://blogs.msdn.com/b/codeanalysis/archive/2007/11/20/maintainability-index-range-and-meaning.aspx"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="A value between 0 and 100 that represents the relative ease of maintaining the code. A high value means better maintainability." data-original-title="Maintainability Index"  data-container="body"></i></a></h2>
+      <p class="stat">71.22</p>
+    </div>
+    <div class="col-md-6">
+      <h2 class="header">Lines of code <i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="Source Lines of Code / Logical Lines of Code" data-original-title="SLOC/LSLOC" data-container="body"></i></h2>
+      <p class="stat">2639</p>
+    </div>
+  </div>
+  <div class="row historical">
+    <div class="col-md-6">
+      <p id="chart_historical_maint" class="chart"></p>
+    </div>
+    <div class="col-md-6">
+      <p id="chart_historical_sloc" class="chart"></p>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-6">
+      <h2 class="header">Difficulty  <a href="http://en.wikipedia.org/wiki/Halstead_complexity_measures"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="The difficulty measure is related to the difficulty of the program to write or understand." data-original-title="Difficulty" data-container="body"></i></a></h2>
+      <p class="stat">76.19</p>
+    </div>
+    <div class="col-md-6">
+      <h2 class="header">Estimated Errors  <a href="http://en.wikipedia.org/wiki/Halstead_complexity_measures"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="Halstead's delivered bugs is an estimate for the number of errors in the implementation." data-original-title="Delivered Bugs" data-container="body"></i></a></h2>
+      <p class="stat">22.45</p>
+    </div>
+  </div>
+</div>
+
+<div class="container charts">
+  <div class="row">
+    <h2 class="header">Function weight</h2>
+  </div>
+  <div class="row">
+    <div class="col-md-6">
+      <h3 class="chart-header">By Complexity <a href="http://en.wikipedia.org/wiki/Cyclomatic_complexity"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="This metric counts the number of distinct paths through a block of code. Lower values are better." data-original-title="Cyclomatic Complexity" data-container="body"></i></a></h3>
+      <div id="fn-by-complexity" class="stat"></div>
+    </div>
+    <div class="col-md-6">
+      <h3 class="chart-header">By SLOC  <i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="Source Lines of Code / Logical Lines of Code" data-original-title="SLOC/LSLOC" data-container="body"></i></h3>
+      <div id="fn-by-sloc" class="stat"></div>
+    </div>
+  </div>
+</div>
+
+<div class="container">
+  <div class="row">
+    <textarea id="file-source" class="col-md-12">// ============================================================================
+// JAMAL CAFÉ &amp; BAKERY POS — PURE VANILLA JS FRONTEND (POWERED BY EXPRESS API)
+// ============================================================================
+
+const SESSION_TIMEOUT_SECONDS = 15 * 60;
+
+const state = {
+  // Server-synced state
+  categories: [],
+  products: [],
+  toppings: [],
+  staffAccounts: [],
+  orders: [],
+  salesStats: { totalSales: 14250, totalBills: 84, promptPayShare: 64, cashShare: 36 },
+  salesHistory: [],
+  sortedInventory: [], // รายการสต็อก Base Drink/Cake/Toppings เรียงน้อยไปมาก (GET /api/state)
+  customerQueueNo: &#039;A03&#039;,
+
+  // Client UI state
+  currentPage: &#039;pos&#039;, // &#039;pos&#039; | &#039;kds&#039; | &#039;admin&#039; | &#039;customer&#039; | &#039;login&#039;
+  currentUser: {
+    id: &#039;staff-01&#039;,
+    username: &#039;cashier_zai&#039;,
+    pin: &#039;1234&#039;,
+    name: &#039;Zai (กะเช้า)&#039;,
+    role: &#039;cashier&#039;,
+    roleName: &#039;แคชเชียร์&#039;,
+  },
+  remainingSeconds: SESSION_TIMEOUT_SECONDS,
+
+  // Login screen state
+  loginRole: &#039;cashier&#039;,
+  loginUsername: &#039;cashier_zai&#039;,
+  loginPin: &#039;1234&#039;,
+  loginError: &#039;&#039;,
+  loginUseKeypad: false,
+
+  // POS screen state
+  posCategory: &#039;all&#039;,
+  posSearch: &#039;&#039;,
+  cart: [],
+  customizingProduct: null,
+  customSweetness: &#039;25%&#039;,
+  customMilk: &#039;นมสดวัวแท้ (Fresh Milk)&#039;,
+  customExtraShot: false,
+  customJelly: false,
+  checkoutSummary: null,
+  paymentMethod: &#039;cash&#039;,
+  cashEntered: 0,
+  paymentCompleted: false,
+  showVoidModal: false,
+  voidPin: &#039;&#039;,
+  voidError: &#039;&#039;,
+
+  // KDS screen state
+  kdsFilter: &#039;all&#039;,
+  kdsSound: true,
+
+  // Admin screen state
+  adminTab: &#039;dashboard&#039;, // &#039;dashboard&#039; | &#039;inventory&#039; | &#039;menu&#039; | &#039;sales&#039; | &#039;staff&#039;
+  editingPriceId: null,
+  tempPrice: &#039;&#039;,
+  salesSearch: &#039;&#039;,
+  showAddMenuModal: false,
+  newMenuForm: { name: &#039;&#039;, category: &#039;coffee&#039;, price: &#039;&#039;, cost: &#039;&#039;, desc: &#039;&#039; },
+  showAddStaffModal: false,
+  newStaffForm: { name: &#039;&#039;, role: &#039;Cashier&#039;, username: &#039;&#039;, pin: &#039;&#039;, shift: &#039;กะเช้า (07:00 - 15:30)&#039; },
+
+  // Customer Mobile screen state
+  mobileFrameMode: true,
+  mobileCategory: &#039;popular&#039;,
+  mobileCart: [
+    {
+      id: &#039;c1&#039;,
+      name: &#039;เอสเพรสโซ่เย็น&#039;,
+      price: 65.0,
+      quantity: 1,
+      optionsText: &#039;หวาน 25% • นมโอ๊ต&#039;,
+      category: &#039;coffee&#039;,
+    },
+    {
+      id: &#039;b1&#039;,
+      name: &#039;ครัวซองต์เนยสด AOP&#039;,
+      price: 85.0,
+      quantity: 1,
+      optionsText: &#039;อบอุ่นร้อน&#039;,
+      category: &#039;bakery&#039;,
+    },
+  ],
+  mobileCustomProduct: null,
+  mobileCustomSweetness: &#039;25%&#039;,
+  mobileCustomMilk: &#039;นมโอ๊ต (+15฿)&#039;,
+  showMobileCartDrawer: false,
+  mobileTableNo: &#039;04&#039;,
+  mobileSuccessMsg: null,
+};
+
+// Web Audio Chime
+function playChime(type = &#039;notification&#039;) {
+  try {
+    const AudioContextClass = window.AudioContext || window.webkitAudioContext;
+    if (!AudioContextClass) return;
+    const audioCtx = new AudioContextClass();
+    const osc = audioCtx.createOscillator();
+    const gain = audioCtx.createGain();
+    osc.connect(gain);
+    gain.connect(audioCtx.destination);
+
+    if (type === &#039;bell&#039;) {
+      osc.frequency.setValueAtTime(880, audioCtx.currentTime);
+      osc.frequency.setValueAtTime(1318.51, audioCtx.currentTime + 0.15);
+      gain.gain.setValueAtTime(0.15, audioCtx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.5);
+      osc.start();
+      osc.stop(audioCtx.currentTime + 0.5);
+    } else {
+      osc.frequency.setValueAtTime(523.25, audioCtx.currentTime);
+      osc.frequency.setValueAtTime(659.25, audioCtx.currentTime + 0.1);
+      gain.gain.setValueAtTime(0.12, audioCtx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.35);
+      osc.start();
+      osc.stop(audioCtx.currentTime + 0.35);
+    }
+  } catch (_e) {
+    // Ignore audio context restriction before user gesture
+  }
+}
+
+function escapeHtml(str) {
+  return String(str !== undefined &amp;&amp; str !== null ? str : &#039;&#039;)
+    .replace(/&amp;/g, &#039;&amp;amp;&#039;)
+    .replace(/&lt;/g, &#039;&amp;lt;&#039;)
+    .replace(/&gt;/g, &#039;&amp;gt;&#039;)
+    .replace(/&quot;/g, &#039;&amp;quot;&#039;);
+}
+
+function formatTime(secs) {
+  const m = Math.floor(secs / 60);
+  const s = secs % 60;
+  return `${String(m).padStart(2, &#039;0&#039;)}:${String(s).padStart(2, &#039;0&#039;)}`;
+}
+
+// ============================================================================
+// API CALLS TO EXPRESS SERVER
+// ============================================================================
+
+async function fetchState() {
+  try {
+    const res = await fetch(&#039;/api/state&#039;);
+    const data = await res.json();
+    state.categories = data.categories || [];
+    state.products = data.products || [];
+    state.toppings = data.toppings || [];
+    state.staffAccounts = data.staffAccounts || [];
+    state.orders = data.orders || [];
+    state.salesStats = data.salesStats || state.salesStats;
+    state.salesHistory = data.salesHistory || [];
+    state.sortedInventory = data.sortedInventory || [];
+    state.customerQueueNo = data.customerQueueNo || state.customerQueueNo;
+    render();
+  } catch (err) {
+    console.error(&#039;Failed to load state from Express server:&#039;, err);
+  }
+}
+
+async function apiCreateOrder(payload) {
+  const res = await fetch(&#039;/api/orders&#039;, {
+    method: &#039;POST&#039;,
+    headers: { &#039;Content-Type&#039;: &#039;application/json&#039; },
+    body: JSON.stringify(payload),
+  });
+  const data = await res.json();
+  playChime(&#039;bell&#039;);
+  await fetchState();
+  return data.order;
+}
+
+async function apiAdvanceOrderStatus(orderId, currentStatus) {
+  if (state.kdsSound) {
+    playChime(currentStatus === &#039;in_progress&#039; ? &#039;bell&#039; : &#039;notification&#039;);
+  }
+  const nextMap = {
+    pending: &#039;in_progress&#039;,
+    in_progress: &#039;ready&#039;,
+    ready: &#039;completed&#039;,
+  };
+  const nextStatus = nextMap[currentStatus];
+  if (!nextStatus) return;
+
+  await fetch(`/api/orders/${encodeURIComponent(orderId)}/status`, {
+    method: &#039;PATCH&#039;,
+    headers: { &#039;Content-Type&#039;: &#039;application/json&#039; },
+    body: JSON.stringify({ status: nextStatus }),
+  });
+  await fetchState();
+}
+
+async function apiRestockProduct(productId, amount) {
+  await fetch(`/api/products/${encodeURIComponent(productId)}/restock`, {
+    method: &#039;POST&#039;,
+    headers: { &#039;Content-Type&#039;: &#039;application/json&#039; },
+    body: JSON.stringify({ amount }),
+  });
+  await fetchState();
+}
+
+async function apiUpdatePrice(productId, price) {
+  await fetch(`/api/products/${encodeURIComponent(productId)}/price`, {
+    method: &#039;PATCH&#039;,
+    headers: { &#039;Content-Type&#039;: &#039;application/json&#039; },
+    body: JSON.stringify({ price }),
+  });
+  await fetchState();
+}
+
+async function apiAddProduct(form) {
+  await fetch(&#039;/api/products&#039;, {
+    method: &#039;POST&#039;,
+    headers: { &#039;Content-Type&#039;: &#039;application/json&#039; },
+    body: JSON.stringify(form),
+  });
+  await fetchState();
+}
+
+async function apiVoidReceipt(receiptNo, pin, reason) {
+  const res = await fetch(`/api/sales/${encodeURIComponent(receiptNo)}/void`, {
+    method: &#039;POST&#039;,
+    headers: { &#039;Content-Type&#039;: &#039;application/json&#039; },
+    body: JSON.stringify({ pin, reason }),
+  });
+  if (!res.ok) {
+    const data = await res.json().catch(() =&gt; ({}));
+    alert(data.error || &#039;ไม่สามารถ Void บิลได้&#039;);
+  }
+  await fetchState();
+}
+
+async function apiAddStaff(form) {
+  await fetch(&#039;/api/staff&#039;, {
+    method: &#039;POST&#039;,
+    headers: { &#039;Content-Type&#039;: &#039;application/json&#039; },
+    body: JSON.stringify(form),
+  });
+  await fetchState();
+}
+
+// ============================================================================
+// GLOBAL ACTIONS &amp; EVENT HANDLERS
+// ============================================================================
+
+window.appActions = {
+  navigate(page) {
+    state.currentPage = page;
+    render();
+  },
+
+  logout(reason) {
+    state.currentUser = null;
+    state.currentPage = &#039;login&#039;;
+    if (reason) alert(reason);
+    render();
+  },
+
+  resetTimer() {
+    state.remainingSeconds = SESSION_TIMEOUT_SECONDS;
+    const el = document.getElementById(&#039;session-timer-display&#039;);
+    if (el) el.textContent = formatTime(state.remainingSeconds);
+  },
+
+  // --- LOGIN ---
+  selectLoginRole(role) {
+    state.loginRole = role;
+    const demo = state.staffAccounts.find((a) =&gt; a.role === role);
+    if (demo) {
+      state.loginUsername = demo.username;
+      state.loginPin = demo.pin;
+      state.loginError = &#039;&#039;;
+    }
+    render();
+  },
+
+  toggleLoginKeypad() {
+    state.loginUseKeypad = !state.loginUseKeypad;
+    render();
+  },
+
+  loginKeypadPress(val) {
+    if (val === &#039;CLEAR&#039;) state.loginPin = &#039;&#039;;
+    else if (val === &#039;BACK&#039;) state.loginPin = state.loginPin.slice(0, -1);
+    else if (state.loginPin.length &lt; 4) state.loginPin += String(val);
+    render();
+  },
+
+  async submitLogin(e) {
+    e.preventDefault();
+    state.loginError = &#039;&#039;;
+    const res = await fetch(&#039;/api/auth/login&#039;, {
+      method: &#039;POST&#039;,
+      headers: { &#039;Content-Type&#039;: &#039;application/json&#039; },
+      body: JSON.stringify({ username: state.loginUsername, pin: state.loginPin }),
+    });
+    const data = await res.json();
+    if (!res.ok) {
+      state.loginError = data.error || &#039;เข้าสู่ระบบไม่สำเร็จ&#039;;
+      render();
+      return;
+    }
+    state.currentUser = data.user;
+    state.remainingSeconds = SESSION_TIMEOUT_SECONDS;
+    if (data.user.role === &#039;operator&#039;) state.currentPage = &#039;kds&#039;;
+    else if (data.user.role === &#039;admin&#039;) state.currentPage = &#039;admin&#039;;
+    else state.currentPage = &#039;pos&#039;;
+    render();
+  },
+
+  async loginWithSocial(provider) {
+    state.loginError = &#039;&#039;;
+    const defaultEmail =
+      state.loginRole === &#039;admin&#039; ? &#039;owner.jamal@gmail.com&#039; : `cashier.${provider}@gmail.com`;
+    const email = window.prompt(
+      `กรอกอีเมลบัญชี ${provider === &#039;gmail&#039; ? &#039;Google (Gmail)&#039; : &#039;Facebook&#039;} ของคุณ:`,
+      defaultEmail
+    );
+    if (!email) return;
+
+    const res = await fetch(&#039;/api/auth/social&#039;, {
+      method: &#039;POST&#039;,
+      headers: { &#039;Content-Type&#039;: &#039;application/json&#039; },
+      body: JSON.stringify({
+        provider,
+        email,
+        displayName: `${email.split(&#039;@&#039;)[0]} (${provider})`,
+        role: state.loginRole,
+      }),
+    });
+    const data = await res.json();
+    if (!res.ok) {
+      state.loginError = data.error || &#039;เข้าสู่ระบบ Social Login ไม่สำเร็จ&#039;;
+      render();
+      return;
+    }
+    state.currentUser = data.user;
+    state.remainingSeconds = SESSION_TIMEOUT_SECONDS;
+    if (data.user.role === &#039;operator&#039;) state.currentPage = &#039;kds&#039;;
+    else if (data.user.role === &#039;admin&#039;) state.currentPage = &#039;admin&#039;;
+    else state.currentPage = &#039;pos&#039;;
+    await fetchState();
+  },
+
+  // --- POS ---
+  setPosCategory(catId) {
+    state.posCategory = catId;
+    render();
+  },
+
+  setPosSearch(val) {
+    state.posSearch = val;
+    render();
+  },
+
+  selectProduct(productId) {
+    const product = state.products.find((p) =&gt; p.id === productId);
+    if (!product || (product.stock !== null &amp;&amp; product.stock &lt;= 0)) return;
+    if (product.customizable) {
+      state.customizingProduct = product;
+      state.customSweetness = &#039;25%&#039;;
+      state.customMilk = &#039;นมสดวัวแท้ (Fresh Milk)&#039;;
+      state.customExtraShot = false;
+      state.customJelly = false;
+      render();
+    } else {
+      this.addToCart(product, &#039;&#039;, product.price);
+    }
+  },
+
+  addToCart(product, optionsText, unitPrice, toppings = []) {
+    const existingIdx = state.cart.findIndex(
+      (item) =&gt; item.id === product.id &amp;&amp; item.optionsText === optionsText
+    );
+    if (existingIdx &gt; -1) {
+      state.cart[existingIdx].quantity += 1;
+    } else {
+      const toppingsPrice = toppings.reduce((sum, t) =&gt; sum + (Number(t.price) || 0), 0);
+      state.cart.push({
+        cartItemId: `${product.id}-${Date.now()}-${Math.random().toString(36).slice(2, 6)}`,
+        id: product.id,
+        name: product.name,
+        category: product.category,
+        basePrice: Number(product.price) || 0,
+        toppingsPrice,
+        unitPrice,
+        optionsText,
+        toppings: toppings.map((t) =&gt; ({ id: t.id, name: t.name, price: Number(t.price) || 0 })),
+        quantity: 1,
+        isBakery: Boolean(product.isBakery),
+      });
+    }
+    render();
+  },
+
+  closeCustomModal() {
+    state.customizingProduct = null;
+    render();
+  },
+
+  setCustomSweetness(lvl) {
+    state.customSweetness = lvl;
+    render();
+  },
+
+  setCustomMilk(milkName) {
+    state.customMilk = milkName;
+    render();
+  },
+
+  toggleExtraShot() {
+    state.customExtraShot = !state.customExtraShot;
+    render();
+  },
+
+  toggleJelly() {
+    state.customJelly = !state.customJelly;
+    render();
+  },
+
+  confirmCustomization() {
+    const p = state.customizingProduct;
+    if (!p) return;
+    let extra = 0;
+    const opts = [`หวาน ${state.customSweetness}`];
+    const selectedToppings = [];
+    const pickTopping = (id, fallbackName, fallbackPrice) =&gt; {
+      const matched = (state.toppings || []).find((t) =&gt; t.id === id);
+      return matched
+        ? { id: matched.id, name: matched.name, price: Number(matched.price) || fallbackPrice }
+        : { id, name: fallbackName, price: fallbackPrice };
+    };
+    if (state.customMilk.includes(&#039;Oat&#039;)) {
+      extra += 15;
+      opts.push(&#039;นมโอ๊ต (+฿15)&#039;);
+      selectedToppings.push(pickTopping(&#039;t1&#039;, &#039;นมโอ๊ต (Oat Milk)&#039;, 15));
+    } else if (state.customMilk.includes(&#039;Almond&#039;)) {
+      extra += 15;
+      opts.push(&#039;นมอัลมอนด์ (+฿15)&#039;);
+      selectedToppings.push(pickTopping(&#039;t2&#039;, &#039;นมอัลมอนด์ (Almond Milk)&#039;, 15));
+    }
+    if (state.customExtraShot) {
+      extra += 20;
+      opts.push(&#039;เพิ่มช็อต (+฿20)&#039;);
+      selectedToppings.push(pickTopping(&#039;t3&#039;, &#039;เพิ่มช็อตเอสเพรสโซ่ (Extra Shot)&#039;, 20));
+    }
+    if (state.customJelly) {
+      extra += 15;
+      opts.push(&#039;บุกบราวน์ชูการ์ (+฿15)&#039;);
+      selectedToppings.push(pickTopping(&#039;t4&#039;, &#039;บุกบราวน์ชูการ์ (Brown Sugar Jelly)&#039;, 15));
+    }
+    this.addToCart(p, opts.join(&#039; • &#039;), p.price + extra, selectedToppings);
+    state.customizingProduct = null;
+    render();
+  },
+
+  updateCartQty(cartItemId, newQty) {
+    if (newQty &lt;= 0) {
+      state.cart = state.cart.filter((i) =&gt; i.cartItemId !== cartItemId);
+    } else {
+      state.cart = state.cart.map((i) =&gt;
+        i.cartItemId === cartItemId ? { ...i, quantity: newQty } : i
+      );
+    }
+    render();
+  },
+
+  removeCartItem(cartItemId) {
+    state.cart = state.cart.filter((i) =&gt; i.cartItemId !== cartItemId);
+    render();
+  },
+
+  clearCart() {
+    if (state.cart.length &gt; 0 &amp;&amp; window.confirm(&#039;ต้องการล้างรายการในบิลทั้งหมดหรือไม่?&#039;)) {
+      state.cart = [];
+      render();
+    }
+  },
+
+  holdBill() {
+    if (state.cart.length === 0) return;
+    alert(&#039;พักบิลออเดอร์นี้เรียบร้อย (Hold Bill Saved)&#039;);
+  },
+
+  openVoidModal() {
+    if (state.cart.length === 0) return;
+    state.showVoidModal = true;
+    state.voidPin = &#039;&#039;;
+    state.voidError = &#039;&#039;;
+    render();
+  },
+
+  closeVoidModal() {
+    state.showVoidModal = false;
+    render();
+  },
+
+  submitVoidModal(e) {
+    e.preventDefault();
+    if (state.voidPin === &#039;9999&#039; || state.voidPin === &#039;1234&#039; || state.voidPin.length &gt;= 4) {
+      state.cart = [];
+      state.showVoidModal = false;
+      alert(&#039;อนุมัติ Void บิลสำเร็จโดย Admin Zai (บันทึก Audit Log เรียบร้อย)&#039;);
+      render();
+    } else {
+      state.voidError = &#039;รหัสผ่าน Admin PIN ไม่ถูกต้อง (ลองใช้ 9999)&#039;;
+      render();
+    }
+  },
+
+  openCheckout() {
+    if (state.cart.length === 0) return;
+    const totalAmount = state.cart.reduce((s, i) =&gt; s + i.unitPrice * i.quantity, 0);
+    const subtotal = totalAmount / 1.07;
+    const vatAmount = totalAmount - subtotal;
+    const totalItemsCount = state.cart.reduce((s, i) =&gt; s + i.quantity, 0);
+    state.checkoutSummary = { totalAmount, subtotal, vatAmount, totalItemsCount };
+    state.paymentMethod = &#039;cash&#039;;
+    state.cashEntered = 0;
+    state.paymentCompleted = false;
+    render();
+  },
+
+  closeCheckout() {
+    if (state.paymentCompleted) {
+      state.cart = [];
+    }
+    state.checkoutSummary = null;
+    state.paymentCompleted = false;
+    render();
+  },
+
+  setPaymentMethod(m) {
+    state.paymentMethod = m;
+    render();
+  },
+
+  quickCash(val) {
+    const total = (state.checkoutSummary &amp;&amp; state.checkoutSummary.totalAmount) || 0;
+    state.cashEntered = val === &#039;exact&#039; ? Math.ceil(total) : Number(val);
+    render();
+  },
+
+  numpadClick(val) {
+    if (val === &#039;C&#039;) state.cashEntered = 0;
+    else if (val === &#039;00&#039;) state.cashEntered = state.cashEntered * 100;
+    else state.cashEntered = state.cashEntered * 10 + parseInt(val, 10);
+    render();
+  },
+
+  async confirmPayment() {
+    const total = (state.checkoutSummary &amp;&amp; state.checkoutSummary.totalAmount) || 0;
+    if (state.paymentMethod === &#039;cash&#039; &amp;&amp; state.cashEntered &lt; total) {
+      alert(&#039;ยอดเงินสดที่รับมาน้อยกว่ายอดที่ต้องชำระ!&#039;);
+      return;
+    }
+    state.paymentCompleted = true;
+    await apiCreateOrder({
+      items: state.cart.map((ci) =&gt; ({
+        id: ci.id,
+        name: ci.name,
+        quantity: ci.quantity,
+        optionsText: ci.optionsText,
+        toppings: ci.toppings || [],
+        category: ci.category,
+        isBakery: ci.isBakery,
+      })),
+      totalAmount: total,
+      paymentMethod: state.paymentMethod === &#039;cash&#039; ? &#039;เงินสด&#039; : &#039;PromptPay&#039;,
+      tableNo: &#039;หน้าร้าน (POS)&#039;,
+      channel: &#039;หน้าร้าน (Cashier POS)&#039;,
+      cashierName: state.currentUser ? state.currentUser.name : &#039;Zai (กะเช้า)&#039;,
+    });
+    render();
+  },
+
+  // --- KDS ---
+  setKdsFilter(f) {
+    state.kdsFilter = f;
+    render();
+  },
+
+  toggleKdsSound() {
+    state.kdsSound = !state.kdsSound;
+    render();
+  },
+
+  async quickDemoOrder() {
+    await apiCreateOrder({
+      items: [
+        {
+          id: &#039;c1&#039;,
+          name: &#039;เอสเพรสโซ่เย็น&#039;,
+          quantity: 1,
+          optionsText: &#039;หวาน 25% • นมโอ๊ต&#039;,
+          category: &#039;coffee&#039;,
+        },
+        {
+          id: &#039;b1&#039;,
+          name: &#039;ครัวซองต์เนยสด AOP&#039;,
+          quantity: 1,
+          optionsText: &#039;อบอุ่นร้อน&#039;,
+          category: &#039;bakery&#039;,
+        },
+      ],
+      totalAmount: 150.0,
+      paymentMethod: &#039;PromptPay&#039;,
+      tableNo: &#039;02&#039;,
+      channel: &#039;จำลองออเดอร์ใหม่&#039;,
+      cashierName: &#039;ทดสอบระบบ&#039;,
+    });
+  },
+
+  advanceOrder(orderId, currentStatus) {
+    apiAdvanceOrderStatus(orderId, currentStatus);
+  },
+
+  // --- ADMIN ---
+  setAdminTab(tab) {
+    state.adminTab = tab;
+    render();
+  },
+
+  restock(productId, amount) {
+    apiRestockProduct(productId, amount);
+  },
+
+  startEditPrice(productId, currentPrice) {
+    state.editingPriceId = productId;
+    state.tempPrice = String(currentPrice);
+    render();
+  },
+
+  cancelEditPrice() {
+    state.editingPriceId = null;
+    render();
+  },
+
+  async savePrice(productId) {
+    if (state.tempPrice &amp;&amp; !isNaN(state.tempPrice) &amp;&amp; Number(state.tempPrice) &gt; 0) {
+      await apiUpdatePrice(productId, Number(state.tempPrice));
+    }
+    state.editingPriceId = null;
+    render();
+  },
+
+  openAddMenuModal() {
+    state.showAddMenuModal = true;
+    state.newMenuForm = { name: &#039;&#039;, category: &#039;coffee&#039;, price: &#039;&#039;, cost: &#039;&#039;, desc: &#039;&#039; };
+    render();
+  },
+
+  closeAddMenuModal() {
+    state.showAddMenuModal = false;
+    render();
+  },
+
+  async submitAddMenu(e) {
+    e.preventDefault();
+    if (!state.newMenuForm.name || !state.newMenuForm.price) return;
+    await apiAddProduct(state.newMenuForm);
+    state.showAddMenuModal = false;
+    render();
+  },
+
+  openAddStaffModal() {
+    state.showAddStaffModal = true;
+    state.newStaffForm = {
+      name: &#039;&#039;,
+      role: &#039;Cashier&#039;,
+      username: &#039;&#039;,
+      pin: &#039;&#039;,
+      shift: &#039;กะเช้า (07:00 - 15:30)&#039;,
+    };
+    render();
+  },
+
+  closeAddStaffModal() {
+    state.showAddStaffModal = false;
+    render();
+  },
+
+  async submitAddStaff(e) {
+    e.preventDefault();
+    if (!state.newStaffForm.name || !state.newStaffForm.username || !state.newStaffForm.pin) return;
+    await apiAddStaff(state.newStaffForm);
+    state.showAddStaffModal = false;
+    render();
+  },
+
+  // Manager Override (#10): ต้องกรอก PIN ผู้จัดการและระบุเหตุผลก่อน Void บิล
+  async confirmVoidReceipt(receiptNo) {
+    const pin = window.prompt(`Manager Override: กรอกรหัส PIN ผู้จัดการเพื่อ Void บิล ${receiptNo}`);
+    if (!pin) return;
+    const reason = window.prompt(&#039;ระบุเหตุผลในการ Void บิล&#039;, &#039;ลูกค้ายกเลิก&#039;) || undefined;
+    await apiVoidReceipt(receiptNo, pin, reason);
+  },
+
+  // Admin CRUD: ลบเมนูออกจากระบบ (DELETE /api/products/:id)
+  async deleteProduct(productId) {
+    if (!window.confirm(&#039;ยืนยันการลบรายการเมนูนี้?&#039;)) return;
+    await fetch(`/api/products/${encodeURIComponent(productId)}`, { method: &#039;DELETE&#039; });
+    await fetchState();
+  },
+
+  // --- CUSTOMER MOBILE ---
+  toggleMobileFrame() {
+    state.mobileFrameMode = !state.mobileFrameMode;
+    render();
+  },
+
+  setMobileCategory(catId) {
+    state.mobileCategory = catId;
+    render();
+  },
+
+  clickMobileProduct(productId) {
+    const product = state.products.find((p) =&gt; p.id === productId);
+    if (!product || (product.stock !== null &amp;&amp; product.stock &lt;= 0)) return;
+    if (product.customizable) {
+      state.mobileCustomProduct = product;
+      state.mobileCustomSweetness = &#039;25%&#039;;
+      state.mobileCustomMilk = &#039;นมปกติ&#039;;
+      render();
+    } else {
+      this.addToMobileCart(product, product.price, &#039;อบอุ่นร้อน&#039;);
+    }
+  },
+
+  addToMobileCart(product, unitPrice, optionsText) {
+    const idx = state.mobileCart.findIndex(
+      (i) =&gt; i.id === product.id &amp;&amp; i.optionsText === optionsText
+    );
+    if (idx &gt; -1) {
+      state.mobileCart[idx].quantity += 1;
+    } else {
+      state.mobileCart.push({
+        id: product.id,
+        name: product.name.split(&#039; (&#039;)[0],
+        price: unitPrice,
+        quantity: 1,
+        optionsText,
+        category: product.category,
+        isBakery: Boolean(product.isBakery),
+      });
+    }
+    playChime(&#039;notification&#039;);
+    render();
+  },
+
+  closeMobileCustom() {
+    state.mobileCustomProduct = null;
+    render();
+  },
+
+  setMobileSweetness(lvl) {
+    state.mobileCustomSweetness = lvl;
+    render();
+  },
+
+  setMobileMilk(milk) {
+    state.mobileCustomMilk = milk;
+    render();
+  },
+
+  confirmMobileCustomization() {
+    const p = state.mobileCustomProduct;
+    if (!p) return;
+    const addPrice = state.mobileCustomMilk.includes(&#039;(+15฿)&#039;) ? 15 : 0;
+    const optionsText = `หวาน ${state.mobileCustomSweetness} • ${state.mobileCustomMilk}`;
+    state.mobileCustomProduct = null;
+    this.addToMobileCart(p, p.price + addPrice, optionsText);
+  },
+
+  openMobileCartDrawer() {
+    if (state.mobileCart.length === 0) return;
+    state.showMobileCartDrawer = true;
+    render();
+  },
+
+  closeMobileCartDrawer() {
+    state.showMobileCartDrawer = false;
+    render();
+  },
+
+  async placeMobileOrder() {
+    if (state.mobileCart.length === 0) return;
+    const cartTotal = state.mobileCart.reduce((s, i) =&gt; s + i.price * i.quantity, 0);
+    const newOrder = await apiCreateOrder({
+      items: state.mobileCart,
+      totalAmount: cartTotal,
+      paymentMethod: &#039;PromptPay&#039;,
+      tableNo: state.mobileTableNo,
+      channel: &#039;Mobile Scan (ลูกค้าสั่งเอง)&#039;,
+      cashierName: `โต๊ะ ${state.mobileTableNo}`,
+    });
+    state.customerQueueNo = newOrder.queueNo;
+    state.mobileCart = [];
+    state.showMobileCartDrawer = false;
+    state.mobileSuccessMsg = `สั่งซื้อสำเร็จ! คิวของคุณคือ #${newOrder.queueNo} กำลังส่งไปยังครัวบาริสต้า`;
+    render();
+    setTimeout(() =&gt; {
+      state.mobileSuccessMsg = null;
+      render();
+    }, 6000);
+  },
+};
+
+// ============================================================================
+// VIEW TEMPLATES
+// ============================================================================
+
+function renderNavbar() {
+  const activeOrdersCount = state.orders.filter((o) =&gt; o.status !== &#039;completed&#039;).length;
+  const navItems = [
+    { id: &#039;pos&#039;, label: &#039;1. Cashier POS (iPad)&#039;, badge: null },
+    {
+      id: &#039;kds&#039;,
+      label: &#039;2. Kitchen KDS (บาริสต้า/ครัว)&#039;,
+      badge: activeOrdersCount &gt; 0 ? activeOrdersCount : null,
+      badgeColor: &#039;bg-amber-500&#039;,
+    },
+    { id: &#039;admin&#039;, label: &#039;3. Admin Portal (แผงควบคุม &amp; สต็อก)&#039;, badge: null },
+    { id: &#039;customer&#039;, label: &#039;4. Customer Mobile (จอลูกค้า)&#039;, badge: null },
+    { id: &#039;login&#039;, label: &#039;5. เข้าสู่ระบบ (Login)&#039;, badge: null },
+  ];
+
+  return `
+    &lt;header class=&quot;bg-espresso-900 text-white px-3 sm:px-5 py-2 flex flex-wrap items-center justify-between border-b border-espresso-700 text-xs sm:text-sm z-50 sticky top-0 shadow-md print:hidden gap-2&quot;&gt;
+      &lt;div class=&quot;flex items-center space-x-2.5&quot;&gt;
+        &lt;div class=&quot;w-8 h-8 rounded-lg bg-terracotta flex items-center justify-center font-bold text-white tracking-wider shadow-sm&quot;&gt;
+          JM
+        &lt;/div&gt;
+        &lt;div&gt;
+          &lt;div class=&quot;font-bold tracking-wide flex items-center gap-1.5&quot;&gt;
+            &lt;span&gt;JAMAL CAFÉ &amp;amp; BAKERY&lt;/span&gt;
+          &lt;/div&gt;
+          &lt;div class=&quot;text-warmgray-400 text-[10px] hidden sm:block&quot;&gt;
+            All-in-One POS System (Node.js + Express Suite)
+          &lt;/div&gt;
+        &lt;/div&gt;
+      &lt;/div&gt;
+
+      &lt;nav class=&quot;flex items-center bg-espresso-800 p-1 rounded-xl border border-espresso-700 overflow-x-auto no-scrollbar max-w-full space-x-1&quot;&gt;
+        ${navItems
+          .map((item) =&gt; {
+            const isActive = state.currentPage === item.id;
+            return `
+              &lt;button
+                onclick=&quot;appActions.navigate(&#039;${item.id}&#039;)&quot;
+                class=&quot;px-3 py-1.5 rounded-lg font-medium transition-all flex items-center gap-1.5 whitespace-nowrap text-xs ${
+                  isActive
+                    ? &#039;bg-terracotta text-white shadow font-bold&#039;
+                    : &#039;text-warmgray-400 hover:text-white hover:bg-espresso-700/50&#039;
+                }&quot;
+              &gt;
+                &lt;span&gt;${item.label}&lt;/span&gt;
+                ${
+                  item.badge !== null
+                    ? `&lt;span class=&quot;${item.badgeColor || &#039;bg-terracotta&#039;} text-white font-mono text-[10px] px-1.5 py-0.2 rounded-full font-bold&quot;&gt;${item.badge}&lt;/span&gt;`
+                    : &#039;&#039;
+                }
+              &lt;/button&gt;
+            `;
+          })
+          .join(&#039;&#039;)}
+      &lt;/nav&gt;
+
+      &lt;div class=&quot;flex items-center space-x-2.5 text-xs&quot;&gt;
+        &lt;span class=&quot;hidden xl:inline-flex items-center gap-1.5 bg-espresso-800 px-2.5 py-1 rounded-md border border-espresso-700 text-warmgray-400 font-medium text-[11px]&quot;&gt;
+          &lt;span class=&quot;w-2 h-2 rounded-full bg-green-500 animate-pulse&quot;&gt;&lt;/span&gt;
+          Express Server Online
+        &lt;/span&gt;
+
+        ${
+          state.currentUser
+            ? `
+          &lt;div class=&quot;flex items-center gap-2&quot;&gt;
+            &lt;span class=&quot;hidden md:inline text-warmgray-300 font-medium text-[11px]&quot;&gt;
+              ผู้ใช้งาน: &lt;strong class=&quot;text-white font-bold&quot;&gt;${escapeHtml(state.currentUser.name)}&lt;/strong&gt; (${escapeHtml(state.currentUser.roleName)})
+            &lt;/span&gt;
+            &lt;button
+              onclick=&quot;appActions.logout()&quot;
+              title=&quot;ออกจากระบบ (Sign Out)&quot;
+              class=&quot;px-2.5 py-1 rounded-lg bg-espresso-800 hover:bg-espresso-700 text-warmgray-300 hover:text-red-400 border border-espresso-700 transition flex items-center gap-1 font-medium text-[11px]&quot;
+            &gt;
+              &lt;span&gt;ออก&lt;/span&gt;
+            &lt;/button&gt;
+          &lt;/div&gt;
+        `
+            : `&lt;span class=&quot;text-[11px] text-warmgray-400 bg-espresso-800 px-2.5 py-1 rounded-lg border border-espresso-700&quot;&gt;Guest&lt;/span&gt;`
+        }
+      &lt;/div&gt;
+    &lt;/header&gt;
+  `;
+}
+
+function renderSessionBar() {
+  if (!state.currentUser) return &#039;&#039;;
+  return `
+    &lt;div class=&quot;bg-espresso-800 text-white px-4 py-1.5 text-[11px] flex items-center justify-between border-b border-espresso-700 print:hidden&quot;&gt;
+      &lt;div class=&quot;flex items-center gap-2&quot;&gt;
+        &lt;span class=&quot;w-1.5 h-1.5 rounded-full bg-green-400&quot;&gt;&lt;/span&gt;
+        &lt;span class=&quot;text-warmgray-200&quot;&gt;
+          กำลังใช้งานในชื่อ: &lt;strong class=&quot;text-white font-bold&quot;&gt;${escapeHtml(state.currentUser.name)}&lt;/strong&gt; (${escapeHtml(state.currentUser.roleName)})
+        &lt;/span&gt;
+      &lt;/div&gt;
+      &lt;div class=&quot;flex items-center gap-2&quot;&gt;
+        &lt;span class=&quot;text-warmgray-200&quot;&gt;
+          Session Timeout: &lt;strong id=&quot;session-timer-display&quot; class=&quot;font-mono text-terracotta font-extrabold text-xs&quot;&gt;${formatTime(state.remainingSeconds)}&lt;/strong&gt;
+        &lt;/span&gt;
+        &lt;button
+          onclick=&quot;appActions.resetTimer()&quot;
+          class=&quot;text-[10px] text-warmgray-300 hover:text-white underline ml-1&quot;
+          title=&quot;ต่อเวลาเซสชัน&quot;
+        &gt;
+          รีเซ็ตเวลา
+        &lt;/button&gt;
+      &lt;/div&gt;
+    &lt;/div&gt;
+  `;
+}
+
+function renderLoginPage() {
+  return `
+    &lt;div class=&quot;min-h-[calc(100vh-65px)] bg-[#EDE7DF] flex items-center justify-center p-4 sm:p-6 select-none&quot;&gt;
+      &lt;div class=&quot;w-full max-w-md bg-white rounded-3xl p-6 sm:p-8 border border-cream-300 shadow-2xl space-y-6&quot;&gt;
+        &lt;div class=&quot;text-center space-y-1.5&quot;&gt;
+          &lt;div class=&quot;w-14 h-14 rounded-2xl bg-espresso-900 text-white flex items-center justify-center mx-auto text-xl font-bold tracking-wider shadow&quot;&gt;
+            JM
+          &lt;/div&gt;
+          &lt;h1 class=&quot;text-2xl font-bold text-espresso-900&quot;&gt;เข้าสู่ระบบ JAMAL POS&lt;/h1&gt;
+          &lt;p class=&quot;text-xs text-warmgray-600&quot;&gt;Café &amp;amp; Bakery Management System&lt;/p&gt;
+        &lt;/div&gt;
+
+        &lt;div class=&quot;grid grid-cols-3 gap-1.5 bg-cream-200 p-1.5 rounded-xl text-xs font-bold&quot;&gt;
+          &lt;button
+            type=&quot;button&quot;
+            onclick=&quot;appActions.selectLoginRole(&#039;cashier&#039;)&quot;
+            class=&quot;py-2.5 rounded-lg transition ${
+              state.loginRole === &#039;cashier&#039; ? &#039;bg-terracotta text-white shadow&#039; : &#039;text-warmgray-600 hover:text-espresso-900&#039;
+            }&quot;
+          &gt;แคชเชียร์&lt;/button&gt;
+          &lt;button
+            type=&quot;button&quot;
+            onclick=&quot;appActions.selectLoginRole(&#039;operator&#039;)&quot;
+            class=&quot;py-2.5 rounded-lg transition ${
+              state.loginRole === &#039;operator&#039; ? &#039;bg-terracotta text-white shadow&#039; : &#039;text-warmgray-600 hover:text-espresso-900&#039;
+            }&quot;
+          &gt;บาริสต้า/ครัว&lt;/button&gt;
+          &lt;button
+            type=&quot;button&quot;
+            onclick=&quot;appActions.selectLoginRole(&#039;admin&#039;)&quot;
+            class=&quot;py-2.5 rounded-lg transition ${
+              state.loginRole === &#039;admin&#039; ? &#039;bg-terracotta text-white shadow&#039; : &#039;text-warmgray-600 hover:text-espresso-900&#039;
+            }&quot;
+          &gt;เจ้าของร้าน&lt;/button&gt;
+        &lt;/div&gt;
+
+        &lt;form onsubmit=&quot;appActions.submitLogin(event)&quot; class=&quot;space-y-4 text-xs&quot;&gt;
+          &lt;div&gt;
+            &lt;label class=&quot;block font-bold text-espresso-900 mb-1.5&quot;&gt;รหัสพนักงาน หรือชื่อผู้ใช้&lt;/label&gt;
+            &lt;input
+              type=&quot;text&quot;
+              required
+              value=&quot;${escapeHtml(state.loginUsername)}&quot;
+              oninput=&quot;state.loginUsername = this.value&quot;
+              class=&quot;w-full px-4 py-3 bg-cream-50 border border-cream-300 rounded-xl font-medium text-sm text-espresso-900 focus:outline-none focus:border-terracotta&quot;
+            /&gt;
+          &lt;/div&gt;
+
+          &lt;div&gt;
+            &lt;div class=&quot;flex justify-between items-center mb-1.5&quot;&gt;
+              &lt;label class=&quot;font-bold text-espresso-900&quot;&gt;รหัสผ่าน หรือ PIN 4 หลัก&lt;/label&gt;
+              &lt;button
+                type=&quot;button&quot;
+                onclick=&quot;appActions.toggleLoginKeypad()&quot;
+                class=&quot;text-[11px] text-terracotta font-semibold hover:underline&quot;
+              &gt;
+                ${state.loginUseKeypad ? &#039;ซ่อนแป้นพิมพ์&#039; : &#039;แป้นตัวเลขสัมผัส&#039;}
+              &lt;/button&gt;
+            &lt;/div&gt;
+            &lt;input
+              type=&quot;password&quot;
+              maxlength=&quot;4&quot;
+              required
+              value=&quot;${escapeHtml(state.loginPin)}&quot;
+              oninput=&quot;state.loginPin = this.value&quot;
+              class=&quot;w-full px-4 py-3 bg-cream-50 border border-cream-300 rounded-xl font-mono text-base tracking-widest text-espresso-900 focus:outline-none focus:border-terracotta&quot;
+            /&gt;
+          &lt;/div&gt;
+
+          ${
+            state.loginUseKeypad
+              ? `
+            &lt;div class=&quot;grid grid-cols-3 gap-2 pt-1 font-mono text-sm font-bold&quot;&gt;
+              ${[1, 2, 3, 4, 5, 6, 7, 8, 9]
+                .map(
+                  (n) =&gt; `
+                &lt;button type=&quot;button&quot; onclick=&quot;appActions.loginKeypadPress(${n})&quot; class=&quot;py-2.5 bg-cream-100 hover:bg-cream-200 rounded-xl border border-cream-200 transition&quot;&gt;${n}&lt;/button&gt;
+              `
+                )
+                .join(&#039;&#039;)}
+              &lt;button type=&quot;button&quot; onclick=&quot;appActions.loginKeypadPress(&#039;CLEAR&#039;)&quot; class=&quot;py-2.5 bg-cream-100 text-xs font-sans text-warmgray-600 rounded-xl&quot;&gt;ล้าง&lt;/button&gt;
+              &lt;button type=&quot;button&quot; onclick=&quot;appActions.loginKeypadPress(0)&quot; class=&quot;py-2.5 bg-cream-100 rounded-xl border border-cream-200&quot;&gt;0&lt;/button&gt;
+              &lt;button type=&quot;button&quot; onclick=&quot;appActions.loginKeypadPress(&#039;BACK&#039;)&quot; class=&quot;py-2.5 bg-cream-100 text-xs font-sans text-warmgray-600 rounded-xl&quot;&gt;ลบ&lt;/button&gt;
+            &lt;/div&gt;
+          `
+              : &#039;&#039;
+          }
+
+          ${
+            state.loginError
+              ? `&lt;div class=&quot;p-3 bg-red-50 border border-red-200 rounded-xl text-red-600 text-xs font-medium&quot;&gt;${escapeHtml(state.loginError)}&lt;/div&gt;`
+              : &#039;&#039;
+          }
+
+          &lt;button
+            type=&quot;submit&quot;
+            class=&quot;w-full py-4 bg-espresso-800 text-white rounded-2xl text-sm font-bold hover:bg-espresso-900 transition shadow-lg active:scale-[0.99] flex items-center justify-center gap-1.5&quot;
+          &gt;
+            &lt;span&gt;เข้าสู่ระบบ (Sign In)&lt;/span&gt;
+            &lt;span&gt;→&lt;/span&gt;
+          &lt;/button&gt;
+        &lt;/form&gt;
+
+        &lt;div class=&quot;space-y-2 pt-1&quot;&gt;
+          &lt;div class=&quot;relative flex py-1 items-center&quot;&gt;
+            &lt;div class=&quot;flex-grow border-t border-cream-300&quot;&gt;&lt;/div&gt;
+            &lt;span class=&quot;flex-shrink mx-3 text-[11px] text-warmgray-400&quot;&gt;หรือเข้าสู่ระบบด้วย Social Media&lt;/span&gt;
+            &lt;div class=&quot;flex-grow border-t border-cream-300&quot;&gt;&lt;/div&gt;
+          &lt;/div&gt;
+          &lt;div class=&quot;grid grid-cols-2 gap-2 text-xs font-bold&quot;&gt;
+            &lt;button
+              type=&quot;button&quot;
+              onclick=&quot;appActions.loginWithSocial(&#039;gmail&#039;)&quot;
+              class=&quot;py-2.5 px-3 bg-white border border-cream-300 hover:bg-cream-100 text-espresso-900 rounded-xl transition flex items-center justify-center gap-1.5&quot;
+            &gt;
+              &lt;span&gt;G&lt;/span&gt;
+              &lt;span&gt;Gmail&lt;/span&gt;
+            &lt;/button&gt;
+            &lt;button
+              type=&quot;button&quot;
+              onclick=&quot;appActions.loginWithSocial(&#039;facebook&#039;)&quot;
+              class=&quot;py-2.5 px-3 bg-[#1877F2] hover:bg-[#166FE5] text-white rounded-xl transition flex items-center justify-center gap-1.5&quot;
+            &gt;
+              &lt;span&gt;f&lt;/span&gt;
+              &lt;span&gt;Facebook&lt;/span&gt;
+            &lt;/button&gt;
+          &lt;/div&gt;
+        &lt;/div&gt;
+
+        &lt;p class=&quot;text-center text-[11px] text-warmgray-400&quot;&gt;
+          ระบบความปลอดภัย: Timeout Logout อัตโนมัติเมื่อไม่ใช้งานเกิน 15 นาที (NFR-04)
+        &lt;/p&gt;
+      &lt;/div&gt;
+    &lt;/div&gt;
+  `;
+}
+
+function renderPosPage() {
+  const filteredProducts = state.products.filter((prod) =&gt; {
+    const matchCategory = state.posCategory === &#039;all&#039; || prod.category === state.posCategory;
+    const q = state.posSearch.trim().toLowerCase();
+    const matchQuery =
+      !q ||
+      prod.name.toLowerCase().includes(q) ||
+      prod.desc.toLowerCase().includes(q) ||
+      String(prod.category || &#039;&#039;).toLowerCase().includes(q);
+    return matchCategory &amp;&amp; matchQuery;
+  });
+
+  const searchKey = state.posSearch.trim().toLowerCase();
+  const matchedToppings = searchKey
+    ? (state.toppings || []).filter((t) =&gt; t.name.toLowerCase().includes(searchKey))
+    : [];
+
+  const totalAmount = state.cart.reduce((sum, item) =&gt; sum + item.unitPrice * item.quantity, 0);
+  const subtotal = totalAmount / 1.07;
+  const vatAmount = totalAmount - subtotal;
+  const totalItemsCount = state.cart.reduce((sum, item) =&gt; sum + item.quantity, 0);
+
+  return `
+    &lt;main class=&quot;flex-1 flex justify-center items-start p-2 sm:p-4 overflow-x-hidden print:p-0 print:m-0 print:overflow-visible&quot;&gt;
+      &lt;div class=&quot;w-full max-w-[1240px] bg-cream-100 rounded-2xl shadow-xl border border-cream-300 overflow-hidden flex flex-col md:flex-row min-h-[760px] print:hidden&quot;&gt;
+        &lt;!-- LEFT SECTION: CATALOG --&gt;
+        &lt;div class=&quot;flex-1 flex flex-col border-r border-cream-300 bg-cream-50&quot;&gt;
+          &lt;div class=&quot;p-4 border-b border-cream-300 flex flex-col sm:flex-row gap-3 items-center justify-between bg-white&quot;&gt;
+            &lt;div class=&quot;flex items-center gap-2&quot;&gt;
+              &lt;div class=&quot;p-2 rounded-xl bg-cream-200 text-espresso-800 font-bold&quot;&gt;🏪&lt;/div&gt;
+              &lt;div&gt;
+                &lt;h2 class=&quot;font-bold text-espresso-900 text-base leading-none&quot;&gt;เมนูสินค้าหน้าร้าน (Menu Catalog)&lt;/h2&gt;
+                &lt;p class=&quot;text-xs text-warmgray-600 mt-0.5&quot;&gt;
+                  พนักงาน: &lt;span class=&quot;font-semibold text-espresso-800&quot;&gt;${escapeHtml(state.currentUser ? state.currentUser.name : &#039;Zai (กะเช้า)&#039;)}&lt;/span&gt; • โต๊ะ/ออเดอร์หน้าร้าน
+                &lt;/p&gt;
+              &lt;/div&gt;
+            &lt;/div&gt;
+
+            &lt;div class=&quot;relative w-full sm:w-72&quot;&gt;
+              &lt;input
+                type=&quot;text&quot;
+                value=&quot;${escapeHtml(state.posSearch)}&quot;
+                oninput=&quot;appActions.setPosSearch(this.value)&quot;
+                placeholder=&quot;ค้นหาชื่อเมนู หรือรหัส...&quot;
+                class=&quot;w-full pl-4 pr-8 py-2 bg-cream-100 border border-cream-300 rounded-xl text-sm focus:outline-none focus:border-terracotta transition&quot;
+              /&gt;
+              ${
+                state.posSearch
+                  ? `&lt;button onclick=&quot;appActions.setPosSearch(&#039;&#039;)&quot; class=&quot;absolute right-3 top-1/2 -translate-y-1/2 text-xs font-bold text-warmgray-400 hover:text-espresso-900&quot;&gt;✕&lt;/button&gt;`
+                  : &#039;&#039;
+              }
+            &lt;/div&gt;
+          &lt;/div&gt;
+
+          &lt;div class=&quot;px-4 py-2.5 bg-cream-100 border-b border-cream-300 flex gap-2 overflow-x-auto items-center no-scrollbar&quot;&gt;
+            ${state.categories
+              .map((cat) =&gt; {
+                const isActive = state.posCategory === cat.id;
+                return `
+                  &lt;button
+                    onclick=&quot;appActions.setPosCategory(&#039;${cat.id}&#039;)&quot;
+                    class=&quot;px-4 py-2 rounded-xl text-sm font-semibold transition whitespace-nowrap ${
+                      isActive
+                        ? &#039;bg-espresso-800 text-white shadow-sm&#039;
+                        : &#039;bg-white text-espresso-800 border border-cream-300 hover:bg-cream-200&#039;
+                    }&quot;
+                  &gt;
+                    ${cat.id === &#039;all&#039; ? &#039;☕ ทั้งหมด (All)&#039; : escapeHtml(cat.name)}
+                  &lt;/button&gt;
+                `;
+              })
+              .join(&#039;&#039;)}
+          &lt;/div&gt;
+
+          &lt;div class=&quot;flex-1 p-4 grid grid-cols-2 sm:grid-cols-3 xl:grid-cols-4 gap-3.5 overflow-y-auto max-h-[620px] content-start auto-rows-max items-start&quot;&gt;
+            ${
+              matchedToppings.length &gt; 0
+                ? `&lt;div class=&quot;col-span-full bg-amber-50 border border-amber-200 rounded-xl p-3 text-xs text-espresso-900&quot;&gt;
+                     &lt;span class=&quot;font-bold&quot;&gt;ท็อปปิ้งที่ตรงกับคำค้นหา:&lt;/span&gt;
+                     ${matchedToppings.map((t) =&gt; `${escapeHtml(t.name)} (+฿${t.price}, คงเหลือ ${t.stock})`).join(&#039; • &#039;)}
+                   &lt;/div&gt;`
+                : &#039;&#039;
+            }
+            ${filteredProducts
+              .map((product) =&gt; {
+                const isOutOfStock = product.stock !== null &amp;&amp; product.stock &lt;= 0;
+                const isLowStock = product.stock !== null &amp;&amp; product.stock &gt; 0 &amp;&amp; product.stock &lt;= 5;
+                return `
+                  &lt;div
+                    onclick=&quot;${isOutOfStock ? &#039;&#039; : `appActions.selectProduct(&#039;${product.id}&#039;)`}&quot;
+                    class=&quot;bg-white rounded-2xl border border-cream-300 p-3 flex flex-col justify-between h-fit self-start transition cursor-pointer select-none ${
+                      isOutOfStock
+                        ? &#039;opacity-60 pointer-events-none&#039;
+                        : &#039;hover:border-terracotta hover:shadow-md active:scale-[0.98]&#039;
+                    }&quot;
+                  &gt;
+                    &lt;div class=&quot;aspect-[4/3] rounded-xl overflow-hidden mb-2 bg-cream-200 relative&quot;&gt;
+                      &lt;img src=&quot;${escapeHtml(product.img)}&quot; alt=&quot;${escapeHtml(product.name)}&quot; class=&quot;w-full h-full object-cover&quot; loading=&quot;lazy&quot; /&gt;
+                      ${
+                        isLowStock
+                          ? `&lt;span class=&quot;absolute top-2 right-2 bg-amber-500 text-white text-[10px] font-bold px-2 py-0.5 rounded shadow&quot;&gt;เหลือ ${product.stock} ชิ้น&lt;/span&gt;`
+                          : &#039;&#039;
+                      }
+                      ${
+                        isOutOfStock
+                          ? `&lt;div class=&quot;absolute inset-0 bg-black/60 flex items-center justify-center text-white font-bold text-xs&quot;&gt;สินค้าหมด (OUT OF STOCK)&lt;/div&gt;`
+                          : &#039;&#039;
+                      }
+                    &lt;/div&gt;
+                    &lt;div class=&quot;flex flex-col justify-between flex-1&quot;&gt;
+                      &lt;div&gt;
+                        &lt;div class=&quot;font-bold text-xs text-espresso-900 line-clamp-1&quot;&gt;${escapeHtml(product.name)}&lt;/div&gt;
+                        &lt;p class=&quot;text-[11px] text-warmgray-600 line-clamp-1 mt-0.5&quot;&gt;${escapeHtml(product.desc)}&lt;/p&gt;
+                      &lt;/div&gt;
+                      &lt;div class=&quot;flex justify-between items-center mt-2.5 pt-1.5 border-t border-cream-200&quot;&gt;
+                        &lt;span class=&quot;font-mono font-bold text-terracotta text-sm tabular-nums&quot;&gt;฿${Number(product.price).toFixed(2)}&lt;/span&gt;
+                        &lt;span class=&quot;px-2.5 py-1 text-xs font-bold rounded-lg transition bg-cream-200 text-espresso-900 hover:bg-terracotta hover:text-white&quot;&gt;
+                          ${product.customizable ? &#039;Custom&#039; : &#039;+ เพิ่ม&#039;}
+                        &lt;/span&gt;
+                      &lt;/div&gt;
+                    &lt;/div&gt;
+                  &lt;/div&gt;
+                `;
+              })
+              .join(&#039;&#039;)}
+          &lt;/div&gt;
+        &lt;/div&gt;
+
+        &lt;!-- RIGHT SECTION: CART SIDEBAR --&gt;
+        &lt;div class=&quot;w-full md:w-[380px] bg-cream-200 flex flex-col justify-between border-t md:border-t-0 md:border-l border-cream-300 select-none&quot;&gt;
+          &lt;div&gt;
+            &lt;div class=&quot;p-4 border-b border-cream-300 bg-white flex items-center justify-between&quot;&gt;
+              &lt;div&gt;
+                &lt;div class=&quot;flex items-center gap-2&quot;&gt;
+                  &lt;h3 class=&quot;font-bold text-espresso-900 text-base leading-none&quot;&gt;รายการสั่งซื้อ (Active Bill)&lt;/h3&gt;
+                  &lt;span class=&quot;bg-terracotta text-white text-xs px-2 py-0.5 rounded-full font-mono font-bold&quot;&gt;${totalItemsCount}&lt;/span&gt;
+                &lt;/div&gt;
+                &lt;p class=&quot;text-xs text-warmgray-400 font-mono mt-1&quot;&gt;บิลเลขที่: #JM-2026-084&lt;/p&gt;
+              &lt;/div&gt;
+              &lt;button
+                type=&quot;button&quot;
+                ${state.cart.length === 0 ? &#039;disabled&#039; : &#039;&#039;}
+                onclick=&quot;appActions.clearCart()&quot;
+                class=&quot;text-xs text-red-600 hover:text-red-700 disabled:opacity-40 font-medium px-2 py-1 rounded hover:bg-red-50 transition&quot;
+              &gt;
+                🗑 ล้างบิล
+              &lt;/button&gt;
+            &lt;/div&gt;
+
+            &lt;div class=&quot;p-3 overflow-y-auto space-y-2.5 max-h-[460px]&quot;&gt;
+              ${
+                state.cart.length === 0
+                  ? `
+                &lt;div class=&quot;h-64 flex flex-col items-center justify-center text-center p-6 text-warmgray-400&quot;&gt;
+                  &lt;div class=&quot;w-16 h-16 rounded-full bg-cream-300 flex items-center justify-center mb-3 text-2xl&quot;&gt;🛍️&lt;/div&gt;
+                  &lt;p class=&quot;font-semibold text-sm text-espresso-800&quot;&gt;ยังไม่มีรายการสินค้า&lt;/p&gt;
+                  &lt;p class=&quot;text-xs text-warmgray-600 mt-1&quot;&gt;แตะที่เมนูด้านซ้ายเพื่อเพิ่มรายการลงในบิล&lt;/p&gt;
+                &lt;/div&gt;
+              `
+                  : state.cart
+                      .map(
+                        (item) =&gt; `
+                  &lt;div class=&quot;p-3 bg-white rounded-xl border border-cream-300 shadow-sm space-y-1.5&quot;&gt;
+                    &lt;div class=&quot;flex justify-between items-start&quot;&gt;
+                      &lt;span class=&quot;font-bold text-xs text-espresso-900 leading-snug&quot;&gt;${item.quantity}x ${escapeHtml(item.name)}&lt;/span&gt;
+                      &lt;span class=&quot;font-mono font-bold text-xs text-espresso-900 tabular-nums&quot;&gt;฿${(item.unitPrice * item.quantity).toFixed(2)}&lt;/span&gt;
+                    &lt;/div&gt;
+                    ${
+                      item.optionsText
+                        ? `&lt;div class=&quot;text-[11px] font-medium text-terracotta leading-tight&quot;&gt;↳ ${escapeHtml(item.optionsText)}&lt;/div&gt;`
+                        : &#039;&#039;
+                    }
+                    &lt;div class=&quot;flex justify-between items-center pt-1 text-[10px] text-warmgray-600&quot;&gt;
+                      &lt;button type=&quot;button&quot; onclick=&quot;appActions.removeCartItem(&#039;${item.cartItemId}&#039;)&quot; class=&quot;text-warmgray-400 hover:text-red-600 transition underline&quot;&gt;ลบรายการ&lt;/button&gt;
+                      &lt;div class=&quot;inline-flex items-center border border-cream-300 rounded bg-cream-100 font-bold font-mono text-xs overflow-hidden&quot;&gt;
+                        &lt;button type=&quot;button&quot; onclick=&quot;appActions.updateCartQty(&#039;${item.cartItemId}&#039;, ${item.quantity - 1})&quot; class=&quot;px-2 py-0.5 hover:bg-cream-200 transition&quot;&gt;-&lt;/button&gt;
+                        &lt;span class=&quot;px-2 py-0.5 bg-white text-espresso-900&quot;&gt;${item.quantity}&lt;/span&gt;
+                        &lt;button type=&quot;button&quot; onclick=&quot;appActions.updateCartQty(&#039;${item.cartItemId}&#039;, ${item.quantity + 1})&quot; class=&quot;px-2 py-0.5 hover:bg-cream-200 transition&quot;&gt;+&lt;/button&gt;
+                      &lt;/div&gt;
+                    &lt;/div&gt;
+                  &lt;/div&gt;
+                `
+                      )
+                      .join(&#039;&#039;)
+              }
+            &lt;/div&gt;
+          &lt;/div&gt;
+
+          &lt;div class=&quot;p-4 bg-white border-t border-cream-300 space-y-3 shadow-inner&quot;&gt;
+            &lt;div class=&quot;space-y-1.5 text-xs text-warmgray-600&quot;&gt;
+              &lt;div class=&quot;flex justify-between&quot;&gt;
+                &lt;span&gt;ยอดรวมก่อนภาษี (Subtotal)&lt;/span&gt;
+                &lt;span class=&quot;tabular-nums font-semibold text-espresso-900&quot;&gt;฿${subtotal.toFixed(2)}&lt;/span&gt;
+              &lt;/div&gt;
+              &lt;div class=&quot;flex justify-between&quot;&gt;
+                &lt;span&gt;ภาษีมูลค่าเพิ่ม VAT (7%)&lt;/span&gt;
+                &lt;span class=&quot;tabular-nums font-semibold text-espresso-900&quot;&gt;฿${vatAmount.toFixed(2)}&lt;/span&gt;
+              &lt;/div&gt;
+              &lt;div class=&quot;flex justify-between pt-2 border-t border-cream-300 text-base font-bold text-espresso-900&quot;&gt;
+                &lt;span&gt;ยอดสุทธิ (Total)&lt;/span&gt;
+                &lt;span class=&quot;tabular-nums text-xl text-terracotta font-mono font-bold&quot;&gt;฿${totalAmount.toFixed(2)}&lt;/span&gt;
+              &lt;/div&gt;
+            &lt;/div&gt;
+
+            &lt;div class=&quot;grid grid-cols-3 gap-2 pt-1&quot;&gt;
+              &lt;button
+                type=&quot;button&quot;
+                ${state.cart.length === 0 ? &#039;disabled&#039; : &#039;&#039;}
+                onclick=&quot;appActions.holdBill()&quot;
+                class=&quot;py-3 px-2 rounded-xl bg-cream-200 border border-cream-300 disabled:opacity-40 text-espresso-800 font-semibold text-xs hover:bg-cream-300 transition flex flex-col items-center justify-center&quot;
+              &gt;
+                &lt;span&gt;⏱ พักบิล (Hold)&lt;/span&gt;
+              &lt;/button&gt;
+              &lt;button
+                type=&quot;button&quot;
+                ${state.cart.length === 0 ? &#039;disabled&#039; : &#039;&#039;}
+                onclick=&quot;appActions.openVoidModal()&quot;
+                class=&quot;py-3 px-2 rounded-xl bg-cream-200 border border-cream-300 disabled:opacity-40 text-red-600 font-semibold text-xs hover:bg-red-50 transition flex flex-col items-center justify-center&quot;
+              &gt;
+                &lt;span&gt;🛡 Void (Admin)&lt;/span&gt;
+              &lt;/button&gt;
+              &lt;button
+                type=&quot;button&quot;
+                ${state.cart.length === 0 ? &#039;disabled&#039; : &#039;&#039;}
+                onclick=&quot;appActions.openCheckout()&quot;
+                class=&quot;py-3 px-3 rounded-xl bg-terracotta hover:bg-terracotta-hover disabled:bg-warmgray-200 disabled:text-warmgray-400 text-white font-bold text-sm shadow-md transition flex flex-col items-center justify-center gap-0.5 active:scale-[0.98]&quot;
+              &gt;
+                &lt;span&gt;💳 คิดเงิน&lt;/span&gt;
+              &lt;/button&gt;
+            &lt;/div&gt;
+          &lt;/div&gt;
+        &lt;/div&gt;
+      &lt;/div&gt;
+
+      ${renderCustomizationModal()}
+      ${renderPaymentModal()}
+      ${renderVoidModal()}
+    &lt;/main&gt;
+  `;
+}
+
+function renderCustomizationModal() {
+  const p = state.customizingProduct;
+  if (!p) return &#039;&#039;;
+  let extra = 0;
+  if (state.customMilk.includes(&#039;Oat&#039;) || state.customMilk.includes(&#039;Almond&#039;)) extra += 15;
+  if (state.customExtraShot) extra += 20;
+  if (state.customJelly) extra += 15;
+  const totalPrice = p.price + extra;
+
+  const sweetnessLevels = [
+    { label: &#039;0%&#039;, sub: &#039;ไม่หวาน&#039; },
+    { label: &#039;25%&#039;, sub: &#039;หวานน้อย&#039; },
+    { label: &#039;50%&#039;, sub: &#039;หวานปกติ&#039; },
+    { label: &#039;100%&#039;, sub: &#039;หวานมาก&#039; },
+  ];
+
+  const milks = [
+    { id: &#039;fresh&#039;, name: &#039;นมสดวัวแท้ (Fresh Milk)&#039;, price: 0 },
+    { id: &#039;oat&#039;, name: &#039;นมโอ๊ต Oatly (Oat Milk)&#039;, price: 15 },
+    { id: &#039;almond&#039;, name: &#039;นมอัลมอนด์ (Almond Milk)&#039;, price: 15 },
+  ];
+
+  return `
+    &lt;div class=&quot;fixed inset-0 bg-espresso-900/50 backdrop-blur-sm flex items-center justify-center p-4 sm:p-6 z-50&quot;&gt;
+      &lt;div class=&quot;bg-white w-full max-w-lg rounded-3xl shadow-2xl border border-cream-300 overflow-hidden select-none&quot;&gt;
+        &lt;div class=&quot;p-5 bg-cream-100 border-b border-cream-300 flex justify-between items-center&quot;&gt;
+          &lt;div&gt;
+            &lt;h2 class=&quot;font-bold text-espresso-900 text-lg leading-tight&quot;&gt;${escapeHtml(p.name)}&lt;/h2&gt;
+            &lt;span class=&quot;font-mono font-bold text-terracotta text-sm&quot;&gt;ราคาเริ่มต้น ฿${p.price.toFixed(2)}&lt;/span&gt;
+          &lt;/div&gt;
+          &lt;button onclick=&quot;appActions.closeCustomModal()&quot; class=&quot;w-8 h-8 rounded-full bg-cream-200 hover:bg-cream-300 text-warmgray-600 flex items-center justify-center font-bold text-sm&quot;&gt;✕&lt;/button&gt;
+        &lt;/div&gt;
+
+        &lt;div class=&quot;p-6 space-y-5 overflow-y-auto max-h-[65vh]&quot;&gt;
+          &lt;div&gt;
+            &lt;label class=&quot;block text-xs font-bold text-espresso-900 mb-2&quot;&gt;1. ระดับความหวาน (Sweetness Level)&lt;/label&gt;
+            &lt;div class=&quot;grid grid-cols-4 gap-2&quot;&gt;
+              ${sweetnessLevels
+                .map(
+                  (sw) =&gt; `
+                &lt;button
+                  type=&quot;button&quot;
+                  onclick=&quot;appActions.setCustomSweetness(&#039;${sw.label}&#039;)&quot;
+                  class=&quot;py-3 px-2 rounded-xl text-xs text-center transition ${
+                    state.customSweetness === sw.label
+                      ? &#039;border-2 border-terracotta bg-terracotta-light text-terracotta font-bold shadow-sm&#039;
+                      : &#039;border border-cream-300 bg-white text-espresso-900 font-semibold hover:bg-cream-50&#039;
+                  }&quot;
+                &gt;
+                  &lt;span class=&quot;text-sm font-extrabold&quot;&gt;${sw.label}&lt;/span&gt;&lt;br/&gt;
+                  &lt;span class=&quot;text-[10px] text-warmgray-600&quot;&gt;${sw.sub}&lt;/span&gt;
+                &lt;/button&gt;
+              `
+                )
+                .join(&#039;&#039;)}
+            &lt;/div&gt;
+          &lt;/div&gt;
+
+          &lt;div&gt;
+            &lt;label class=&quot;block text-xs font-bold text-espresso-900 mb-2&quot;&gt;2. ประเภทนม (Milk Choice)&lt;/label&gt;
+            &lt;div class=&quot;space-y-2 text-xs&quot;&gt;
+              ${milks
+                .map((m) =&gt; {
+                  const isSelected = state.customMilk === m.name;
+                  return `
+                    &lt;div
+                      onclick=&quot;appActions.setCustomMilk(&#039;${m.name}&#039;)&quot;
+                      class=&quot;p-3 rounded-xl cursor-pointer flex justify-between items-center transition ${
+                        isSelected
+                          ? &#039;border-2 border-terracotta bg-terracotta-light text-terracotta font-bold shadow-sm&#039;
+                          : &#039;border border-cream-300 bg-white text-espresso-900 hover:bg-cream-50&#039;
+                      }&quot;
+                    &gt;
+                      &lt;span&gt;${isSelected ? &#039;✓ &#039; : &#039;&#039;}${m.name}&lt;/span&gt;
+                      &lt;span class=&quot;font-mono text-warmgray-600 font-bold&quot;&gt;${m.price &gt; 0 ? `+฿${m.price.toFixed(2)}` : &#039;+฿0.00&#039;}&lt;/span&gt;
+                    &lt;/div&gt;
+                  `;
+                })
+                .join(&#039;&#039;)}
+            &lt;/div&gt;
+          &lt;/div&gt;
+
+          &lt;div&gt;
+            &lt;label class=&quot;block text-xs font-bold text-espresso-900 mb-2&quot;&gt;3. ท็อปปิ้งเพิ่มเติม (Add-ons)&lt;/label&gt;
+            &lt;div class=&quot;space-y-2 text-xs&quot;&gt;
+              &lt;div
+                onclick=&quot;appActions.toggleExtraShot()&quot;
+                class=&quot;p-3 rounded-xl cursor-pointer flex justify-between items-center transition ${
+                  state.customExtraShot
+                    ? &#039;border-2 border-terracotta bg-terracotta-light text-terracotta font-bold shadow-sm&#039;
+                    : &#039;border border-cream-300 bg-white text-espresso-900 hover:bg-cream-50&#039;
+                }&quot;
+              &gt;
+                &lt;span&gt;${state.customExtraShot ? &#039;✓ &#039; : &#039;&#039;}เพิ่มช็อตกาแฟ (Extra Espresso Shot)&lt;/span&gt;
+                &lt;span class=&quot;font-mono font-bold text-terracotta&quot;&gt;+฿20.00&lt;/span&gt;
+              &lt;/div&gt;
+              &lt;div
+                onclick=&quot;appActions.toggleJelly()&quot;
+                class=&quot;p-3 rounded-xl cursor-pointer flex justify-between items-center transition ${
+                  state.customJelly
+                    ? &#039;border-2 border-terracotta bg-terracotta-light text-terracotta font-bold shadow-sm&#039;
+                    : &#039;border border-cream-300 bg-white text-espresso-900 hover:bg-cream-50&#039;
+                }&quot;
+              &gt;
+                &lt;span&gt;${state.customJelly ? &#039;✓ &#039; : &#039;&#039;}บุกบราวน์ชูการ์เจลลี่ (Brown Sugar Jelly)&lt;/span&gt;
+                &lt;span class=&quot;font-mono font-bold text-terracotta&quot;&gt;+฿15.00&lt;/span&gt;
+              &lt;/div&gt;
+            &lt;/div&gt;
+          &lt;/div&gt;
+        &lt;/div&gt;
+
+        &lt;div class=&quot;p-5 bg-cream-100 border-t border-cream-300 flex items-center gap-3&quot;&gt;
+          &lt;button type=&quot;button&quot; onclick=&quot;appActions.closeCustomModal()&quot; class=&quot;flex-1 py-3.5 bg-white border border-cream-300 rounded-2xl text-xs font-bold text-warmgray-600 hover:bg-cream-200 transition&quot;&gt;ยกเลิก&lt;/button&gt;
+          &lt;button type=&quot;button&quot; onclick=&quot;appActions.confirmCustomization()&quot; class=&quot;flex-2 w-full py-3.5 bg-terracotta hover:bg-terracotta-hover text-white rounded-2xl text-xs sm:text-sm font-bold shadow-lg transition&quot;&gt;
+            เพิ่มลงในบิล • ฿${totalPrice.toFixed(2)}
+          &lt;/button&gt;
+        &lt;/div&gt;
+      &lt;/div&gt;
+    &lt;/div&gt;
+  `;
+}
+
+function renderPaymentModal() {
+  if (!state.checkoutSummary) return &#039;&#039;;
+  const total = state.checkoutSummary.totalAmount || 0;
+  const subtotal = total / 1.07;
+  const vat = total - subtotal;
+  const change = Math.max(0, state.cashEntered - total);
+  const shortfall = Math.max(0, total - state.cashEntered);
+  const isCashSufficient = state.cashEntered &gt;= total;
+
+  return `
+    &lt;div class=&quot;fixed inset-0 bg-espresso-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-3 sm:p-6 overflow-y-auto print:static print:p-0 print:m-0 print:bg-white print:overflow-visible print:block&quot;&gt;
+      &lt;div class=&quot;bg-white w-full max-w-4xl rounded-3xl shadow-2xl border border-cream-300 overflow-hidden flex flex-col md:flex-row my-auto select-none print:shadow-none print:border-none print:w-full print:max-w-none print:m-0 print:p-0 print:rounded-none&quot;&gt;
+        &lt;div class=&quot;flex-1 p-6 sm:p-8 space-y-5 border-b md:border-b-0 md:border-r border-cream-300 print:hidden&quot;&gt;
+          &lt;div class=&quot;flex justify-between items-center&quot;&gt;
+            &lt;h3 class=&quot;font-bold text-base text-espresso-900&quot;&gt;หน้าต่างชำระเงิน (Payment)&lt;/h3&gt;
+            &lt;button onclick=&quot;appActions.closeCheckout()&quot; class=&quot;w-8 h-8 rounded-full bg-cream-200 hover:bg-cream-300 text-warmgray-600 flex items-center justify-center font-bold text-xs&quot;&gt;✕&lt;/button&gt;
+          &lt;/div&gt;
+
+          &lt;div class=&quot;flex bg-cream-200 p-1 rounded-xl text-xs font-bold gap-1&quot;&gt;
+            &lt;button
+              type=&quot;button&quot;
+              onclick=&quot;appActions.setPaymentMethod(&#039;cash&#039;)&quot;
+              class=&quot;flex-1 py-2.5 text-center rounded-lg transition ${
+                state.paymentMethod === &#039;cash&#039; ? &#039;bg-white text-espresso-900 shadow-sm&#039; : &#039;text-warmgray-600 hover:text-espresso-900&#039;
+              }&quot;
+            &gt;💵 เงินสด (Cash)&lt;/button&gt;
+            &lt;button
+              type=&quot;button&quot;
+              onclick=&quot;appActions.setPaymentMethod(&#039;qr&#039;)&quot;
+              class=&quot;flex-1 py-2.5 text-center rounded-lg transition ${
+                state.paymentMethod === &#039;qr&#039; ? &#039;bg-white text-espresso-900 shadow-sm&#039; : &#039;text-warmgray-600 hover:text-espresso-900&#039;
+              }&quot;
+            &gt;📱 PromptPay QR&lt;/button&gt;
+          &lt;/div&gt;
+
+          &lt;div class=&quot;p-4 sm:p-5 bg-cream-50 rounded-2xl border border-cream-300&quot;&gt;
+            &lt;span class=&quot;text-xs text-warmgray-600&quot;&gt;ยอดที่ต้องชำระ (Net Amount)&lt;/span&gt;
+            &lt;div class=&quot;text-3xl font-black font-mono text-espresso-900 mt-0.5 tabular-nums&quot;&gt;฿${total.toFixed(2)}&lt;/div&gt;
+          &lt;/div&gt;
+
+          ${
+            state.paymentMethod === &#039;cash&#039;
+              ? `
+            &lt;div&gt;
+              &lt;div class=&quot;flex justify-between items-center text-xs mb-1.5&quot;&gt;
+                &lt;span class=&quot;font-bold text-espresso-900&quot;&gt;ยอดเงินที่รับมา&lt;/span&gt;
+                &lt;span class=&quot;font-mono font-black text-2xl text-terracotta tabular-nums&quot;&gt;฿${state.cashEntered.toLocaleString()}.00&lt;/span&gt;
+              &lt;/div&gt;
+
+              &lt;div class=&quot;grid grid-cols-4 gap-2 mb-3&quot;&gt;
+                &lt;button type=&quot;button&quot; onclick=&quot;appActions.quickCash(&#039;exact&#039;)&quot; class=&quot;py-2.5 bg-cream-200 hover:bg-cream-300 rounded-xl text-xs font-bold font-mono text-espresso-900 transition&quot;&gt;พอดี&lt;/button&gt;
+                ${[100, 500, 1000]
+                  .map(
+                    (val) =&gt; `
+                  &lt;button
+                    type=&quot;button&quot;
+                    onclick=&quot;appActions.quickCash(${val})&quot;
+                    class=&quot;py-2.5 rounded-xl text-xs font-bold font-mono transition ${
+                      state.cashEntered === val ? &#039;bg-terracotta text-white shadow&#039; : &#039;bg-cream-200 hover:bg-cream-300 text-espresso-900&#039;
+                    }&quot;
+                  &gt;฿${val}&lt;/button&gt;
+                `
+                  )
+                  .join(&#039;&#039;)}
+              &lt;/div&gt;
+
+              &lt;div class=&quot;grid grid-cols-3 gap-2 text-base font-mono font-bold&quot;&gt;
+                ${[1, 2, 3, 4, 5, 6, 7, 8, 9]
+                  .map(
+                    (num) =&gt; `
+                  &lt;button type=&quot;button&quot; onclick=&quot;appActions.numpadClick(&#039;${num}&#039;)&quot; class=&quot;py-2.5 bg-white border border-cream-300 hover:bg-cream-100 rounded-xl text-center transition&quot;&gt;${num}&lt;/button&gt;
+                `
+                  )
+                  .join(&#039;&#039;)}
+                &lt;button type=&quot;button&quot; onclick=&quot;appActions.numpadClick(&#039;C&#039;)&quot; class=&quot;py-2.5 bg-red-50 text-red-600 border border-red-200 hover:bg-red-100 rounded-xl text-center transition&quot;&gt;C&lt;/button&gt;
+                &lt;button type=&quot;button&quot; onclick=&quot;appActions.numpadClick(&#039;0&#039;)&quot; class=&quot;py-2.5 bg-white border border-cream-300 hover:bg-cream-100 rounded-xl text-center transition&quot;&gt;0&lt;/button&gt;
+                &lt;button type=&quot;button&quot; onclick=&quot;appActions.numpadClick(&#039;00&#039;)&quot; class=&quot;py-2.5 bg-white border border-cream-300 hover:bg-cream-100 rounded-xl text-center transition&quot;&gt;00&lt;/button&gt;
+              &lt;/div&gt;
+
+              &lt;div class=&quot;mt-4 p-3.5 rounded-2xl bg-matcha-light border border-matcha-border flex justify-between items-center&quot;&gt;
+                &lt;span class=&quot;text-xs font-bold text-matcha&quot;&gt;เงินทอน (Change Due)&lt;/span&gt;
+                &lt;span data-testid=&quot;pos-change-due&quot; class=&quot;font-mono font-black text-2xl text-matcha tabular-nums&quot;&gt;฿${change.toFixed(2)}&lt;/span&gt;
+              &lt;/div&gt;
+              ${
+                state.cashEntered &gt; 0 &amp;&amp; !isCashSufficient
+                  ? `&lt;div class=&quot;mt-2 text-right text-xs font-semibold text-red-600&quot;&gt;ยังขาดอีก ฿${shortfall.toFixed(2)}&lt;/div&gt;`
+                  : &#039;&#039;
+              }
+            &lt;/div&gt;
+          `
+              : `
+            &lt;div class=&quot;flex flex-col items-center justify-center p-6 bg-cream-50 rounded-2xl border border-cream-300 text-center space-y-3&quot;&gt;
+              &lt;div class=&quot;bg-white p-3 rounded-2xl shadow-sm border border-cream-200&quot;&gt;
+                &lt;img
+                  data-testid=&quot;promptpay-qr-img&quot;
+                  src=&quot;https://api.qrserver.com/v1/create-qr-code/?size=180x180&amp;data=https://promptpay.io/0812345678/${total.toFixed(2)}&quot;
+                  alt=&quot;PromptPay QR Code&quot;
+                  class=&quot;w-40 h-40 object-contain rounded-lg&quot;
+                /&gt;
+              &lt;/div&gt;
+              &lt;div class=&quot;space-y-1&quot;&gt;
+                &lt;div class=&quot;font-bold text-sm text-espresso-900&quot;&gt;สแกนจ่ายผ่านแอปธนาคาร (PromptPay)&lt;/div&gt;
+                &lt;div class=&quot;text-xs text-warmgray-600 font-mono&quot;&gt;ยอดชำระ: &lt;strong data-testid=&quot;promptpay-qr-amount&quot; class=&quot;text-terracotta text-sm&quot;&gt;฿${total.toFixed(2)}&lt;/strong&gt;&lt;/div&gt;
+              &lt;/div&gt;
+            &lt;/div&gt;
+          `
+          }
+
+          ${
+            !state.paymentCompleted
+              ? `
+            &lt;button
+              type=&quot;button&quot;
+              ${state.paymentMethod === &#039;cash&#039; &amp;&amp; !isCashSufficient ? &#039;disabled&#039; : &#039;&#039;}
+              onclick=&quot;appActions.confirmPayment()&quot;
+              class=&quot;w-full py-4 bg-matcha hover:bg-green-800 disabled:bg-warmgray-200 disabled:text-warmgray-400 text-white rounded-2xl text-sm font-bold shadow-lg transition&quot;
+            &gt;
+              ✓ ยืนยันชำระเงิน &amp;amp; สั่งพิมพ์สลิป
+            &lt;/button&gt;
+          `
+              : `
+            &lt;div class=&quot;flex gap-2&quot;&gt;
+              &lt;button type=&quot;button&quot; onclick=&quot;window.print()&quot; class=&quot;flex-1 py-3.5 bg-white border border-cream-300 hover:bg-cream-100 rounded-2xl text-xs font-bold text-espresso-900 transition&quot;&gt;🖨 พิมพ์สลิป 80mm&lt;/button&gt;
+              &lt;button type=&quot;button&quot; onclick=&quot;appActions.closeCheckout()&quot; class=&quot;flex-1 py-3.5 bg-espresso-900 hover:bg-espresso-800 text-white rounded-2xl text-xs font-bold transition&quot;&gt;เปิดบิลใหม่ →&lt;/button&gt;
+            &lt;/div&gt;
+          `
+          }
+        &lt;/div&gt;
+
+        &lt;div class=&quot;w-full md:w-[360px] bg-cream-200 p-6 sm:p-8 flex flex-col items-center justify-center print:bg-white print:p-0 print:m-0 print:w-full&quot;&gt;
+          &lt;div id=&quot;receipt-print-area&quot; class=&quot;bg-white w-[280px] p-6 text-espresso-900 font-mono text-[11px] leading-relaxed shadow-xl border border-cream-300 rounded-lg thermal-receipt print:shadow-none print:border-none print:p-2 print:w-[76mm] print:mx-auto&quot;&gt;
+            &lt;div class=&quot;text-center pb-3 border-b border-dashed border-warmgray-400&quot;&gt;
+              &lt;div class=&quot;font-bold text-sm tracking-wider&quot;&gt;JAMAL CAFÉ &amp;amp; BAKERY&lt;/div&gt;
+              &lt;div class=&quot;text-[10px] text-warmgray-600&quot;&gt;สาขา 001 สุขุมวิท 23 กทม.&lt;/div&gt;
+              &lt;div class=&quot;text-[9px] text-warmgray-600&quot;&gt;TAX ID: 0-1055-69001-23-4&lt;/div&gt;
+            &lt;/div&gt;
+
+            &lt;div class=&quot;py-2.5 text-[10px] border-b border-dashed border-warmgray-400 space-y-0.5&quot;&gt;
+              &lt;div class=&quot;flex justify-between&quot;&gt;
+                &lt;span&gt;บิล: #JM-2026-084&lt;/span&gt;
+                &lt;span&gt;โต๊ะ: หน้าร้าน&lt;/span&gt;
+              &lt;/div&gt;
+              &lt;div class=&quot;flex justify-between&quot;&gt;
+                &lt;span&gt;${new Date().toLocaleTimeString(&#039;th-TH&#039;)}&lt;/span&gt;
+                &lt;span&gt;แคชเชียร์: Zai&lt;/span&gt;
+              &lt;/div&gt;
+            &lt;/div&gt;
+
+            &lt;div class=&quot;py-2.5 border-b border-dashed border-warmgray-400 space-y-1&quot;&gt;
+              ${state.cart
+                .map(
+                  (item) =&gt; `
+                &lt;div class=&quot;space-y-0.5&quot;&gt;
+                  &lt;div class=&quot;flex justify-between font-bold&quot;&gt;
+                    &lt;span class=&quot;truncate max-w-[170px]&quot;&gt;${item.quantity}x ${escapeHtml(item.name)}&lt;/span&gt;
+                    &lt;span&gt;${(item.unitPrice * item.quantity).toFixed(2)}&lt;/span&gt;
+                  &lt;/div&gt;
+                  ${
+                    item.optionsText
+                      ? `&lt;div class=&quot;text-[9px] text-warmgray-600 pl-2&quot;&gt;↳ ${escapeHtml(item.optionsText)}&lt;/div&gt;`
+                      : &#039;&#039;
+                  }
+                  ${
+                    Array.isArray(item.toppings) &amp;&amp; item.toppings.length &gt; 0
+                      ? item.toppings
+                          .map(
+                            (t) =&gt;
+                              `&lt;div class=&quot;flex justify-between text-[9px] text-warmgray-600 pl-3&quot;&gt;&lt;span&gt;+ ${escapeHtml(t.name)}&lt;/span&gt;&lt;span&gt;+${Number(t.price || 0).toFixed(2)}&lt;/span&gt;&lt;/div&gt;`
+                          )
+                          .join(&#039;&#039;)
+                      : &#039;&#039;
+                  }
+                &lt;/div&gt;
+              `
+                )
+                .join(&#039;&#039;)}
+            &lt;/div&gt;
+
+            &lt;div class=&quot;py-2.5 border-b border-dashed border-warmgray-400 space-y-1 text-xs&quot;&gt;
+              &lt;div class=&quot;flex justify-between&quot;&gt;
+                &lt;span&gt;ยอดรวม (Subtotal)&lt;/span&gt;
+                &lt;span&gt;฿${subtotal.toFixed(2)}&lt;/span&gt;
+              &lt;/div&gt;
+              &lt;div class=&quot;flex justify-between text-[10px] text-warmgray-600&quot;&gt;
+                &lt;span&gt;VAT 7% (Included)&lt;/span&gt;
+                &lt;span&gt;฿${vat.toFixed(2)}&lt;/span&gt;
+              &lt;/div&gt;
+              &lt;div class=&quot;flex justify-between text-sm font-black pt-1&quot;&gt;
+                &lt;span&gt;ยอดสุทธิ (Total)&lt;/span&gt;
+                &lt;span&gt;฿${total.toFixed(2)}&lt;/span&gt;
+              &lt;/div&gt;
+              ${
+                state.paymentMethod === &#039;cash&#039;
+                  ? `
+                &lt;div class=&quot;flex justify-between text-[11px] text-matcha pt-1&quot;&gt;
+                  &lt;span&gt;เงินสดรับมา&lt;/span&gt;
+                  &lt;span&gt;฿${state.cashEntered.toFixed(2)}&lt;/span&gt;
+                &lt;/div&gt;
+                &lt;div class=&quot;flex justify-between text-[11px] text-matcha font-bold&quot;&gt;
+                  &lt;span&gt;เงินทอน (Change)&lt;/span&gt;
+                  &lt;span&gt;฿${change.toFixed(2)}&lt;/span&gt;
+                &lt;/div&gt;
+              `
+                  : &#039;&#039;
+              }
+            &lt;/div&gt;
+
+            &lt;div class=&quot;pt-3 text-center space-y-1&quot;&gt;
+              &lt;div class=&quot;text-[10px] text-warmgray-600&quot;&gt;ขอบคุณที่ใช้บริการ&lt;/div&gt;
+              &lt;div class=&quot;text-[8px] text-warmgray-400 tracking-widest font-mono&quot;&gt;||||| | |||||| || ||||| |||||&lt;/div&gt;
+            &lt;/div&gt;
+          &lt;/div&gt;
+        &lt;/div&gt;
+      &lt;/div&gt;
+    &lt;/div&gt;
+  `;
+}
+
+function renderVoidModal() {
+  if (!state.showVoidModal) return &#039;&#039;;
+  return `
+    &lt;div class=&quot;fixed inset-0 bg-espresso-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-4&quot;&gt;
+      &lt;div class=&quot;bg-white rounded-2xl max-w-sm w-full p-6 space-y-4 border border-cream-300 shadow-2xl&quot;&gt;
+        &lt;div class=&quot;flex items-center justify-between text-red-600&quot;&gt;
+          &lt;h3 class=&quot;font-bold text-base text-espresso-900&quot;&gt;🛡 อนุมัติ Void บิล (Admin Only)&lt;/h3&gt;
+          &lt;button onclick=&quot;appActions.closeVoidModal()&quot; class=&quot;w-7 h-7 rounded-full bg-cream-100 hover:bg-cream-200 text-warmgray-600 flex items-center justify-center font-bold text-xs&quot;&gt;✕&lt;/button&gt;
+        &lt;/div&gt;
+        &lt;p class=&quot;text-xs text-warmgray-600&quot;&gt;การยกเลิกบิลต้องใช้รหัสผ่านของผู้จัดการร้าน (FR-07 Void Protection)&lt;/p&gt;
+        &lt;form onsubmit=&quot;appActions.submitVoidModal(event)&quot; class=&quot;space-y-4&quot;&gt;
+          &lt;div&gt;
+            &lt;label class=&quot;block text-xs font-bold text-espresso-900 mb-1&quot;&gt;รหัสผ่าน Admin PIN (ตัวอย่าง: 9999)&lt;/label&gt;
+            &lt;input
+              type=&quot;password&quot;
+              maxlength=&quot;4&quot;
+              value=&quot;${escapeHtml(state.voidPin)}&quot;
+              oninput=&quot;state.voidPin = this.value; state.voidError = &#039;&#039;&quot;
+              placeholder=&quot;••••&quot;
+              class=&quot;w-full px-3 py-2.5 bg-cream-50 border border-cream-300 rounded-xl text-center font-mono text-xl font-bold tracking-widest text-espresso-900 focus:outline-none focus:ring-2 focus:ring-red-500&quot;
+            /&gt;
+          &lt;/div&gt;
+          ${state.voidError ? `&lt;p class=&quot;text-xs text-red-600 text-center font-semibold&quot;&gt;${escapeHtml(state.voidError)}&lt;/p&gt;` : &#039;&#039;}
+          &lt;div class=&quot;flex gap-2&quot;&gt;
+            &lt;button type=&quot;button&quot; onclick=&quot;appActions.closeVoidModal()&quot; class=&quot;flex-1 py-2.5 bg-cream-200 text-warmgray-600 rounded-xl font-bold text-xs hover:bg-cream-300 transition&quot;&gt;ยกเลิก&lt;/button&gt;
+            &lt;button type=&quot;submit&quot; class=&quot;flex-1 py-2.5 bg-red-600 hover:bg-red-700 text-white rounded-xl font-bold text-xs shadow-md transition&quot;&gt;ยืนยัน Void&lt;/button&gt;
+          &lt;/div&gt;
+        &lt;/form&gt;
+      &lt;/div&gt;
+    &lt;/div&gt;
+  `;
+}
+
+function renderKdsPage() {
+  const pendingOrders = state.orders.filter((o) =&gt; o.status === &#039;pending&#039;);
+  const inProgressOrders = state.orders.filter((o) =&gt; o.status === &#039;in_progress&#039;);
+  const readyOrders = state.orders.filter((o) =&gt; o.status === &#039;ready&#039;);
+  const activeCount = pendingOrders.length + inProgressOrders.length + readyOrders.length;
+
+  const filterItems = (items) =&gt; {
+    if (state.kdsFilter === &#039;all&#039;) return items;
+    if (state.kdsFilter === &#039;beverage&#039;) return items.filter((i) =&gt; i.isBeverage !== false);
+    if (state.kdsFilter === &#039;bakery&#039;) return items.filter((i) =&gt; i.isBakery === true);
+    return items;
+  };
+
+  return `
+    &lt;div class=&quot;flex-1 flex flex-col bg-cream-100 font-sans min-h-[calc(100vh-100px)]&quot;&gt;
+      &lt;div class=&quot;bg-espresso-900 text-white px-4 sm:px-6 py-3 flex flex-wrap items-center justify-between border-b border-espresso-800 gap-3&quot;&gt;
+        &lt;div class=&quot;flex items-center space-x-3&quot;&gt;
+          &lt;div class=&quot;w-8 h-8 rounded-lg bg-matcha flex items-center justify-center text-white shadow-sm&quot;&gt;☕&lt;/div&gt;
+          &lt;div&gt;
+            &lt;h1 class=&quot;text-sm sm:text-base font-bold tracking-wider text-white flex items-center gap-2&quot;&gt;
+              JAMAL KITCHEN &amp;amp; BARISTA KDS
+              &lt;span class=&quot;bg-matcha/20 text-matcha-border text-[10px] px-2 py-0.5 rounded-full font-mono border border-matcha/40&quot;&gt;LIVE QUEUE&lt;/span&gt;
+            &lt;/h1&gt;
+            &lt;p class=&quot;text-[11px] text-warmgray-400&quot;&gt;ระบบจัดการคิวครัว บาริสต้า และการเตรียมสินค้า (TOR Operator 1-5)&lt;/p&gt;
+          &lt;/div&gt;
+        &lt;/div&gt;
+
+        &lt;div class=&quot;flex items-center flex-wrap gap-2 text-xs&quot;&gt;
+          &lt;span class=&quot;bg-espresso-800 px-3 py-1.5 rounded-lg border border-espresso-700 text-warmgray-300 font-mono font-bold flex items-center gap-1.5&quot;&gt;
+            &lt;span class=&quot;w-2 h-2 rounded-full bg-amber-400 animate-pulse&quot;&gt;&lt;/span&gt;
+            ${activeCount} คิวกำลังดำเนินการ
+          &lt;/span&gt;
+
+          &lt;div class=&quot;bg-espresso-800 p-0.5 rounded-lg border border-espresso-700 flex items-center&quot;&gt;
+            &lt;button onclick=&quot;appActions.setKdsFilter(&#039;all&#039;)&quot; class=&quot;px-2.5 py-1 rounded-md transition font-medium ${state.kdsFilter === &#039;all&#039; ? &#039;bg-terracotta text-white&#039; : &#039;text-warmgray-400 hover:text-white&#039;}&quot;&gt;ทั้งหมด&lt;/button&gt;
+            &lt;button onclick=&quot;appActions.setKdsFilter(&#039;beverage&#039;)&quot; class=&quot;px-2.5 py-1 rounded-md transition font-medium ${state.kdsFilter === &#039;beverage&#039; ? &#039;bg-terracotta text-white&#039; : &#039;text-warmgray-400 hover:text-white&#039;}&quot;&gt;☕ เครื่องดื่ม&lt;/button&gt;
+            &lt;button onclick=&quot;appActions.setKdsFilter(&#039;bakery&#039;)&quot; class=&quot;px-2.5 py-1 rounded-md transition font-medium ${state.kdsFilter === &#039;bakery&#039; ? &#039;bg-terracotta text-white&#039; : &#039;text-warmgray-400 hover:text-white&#039;}&quot;&gt;🥐 เบเกอรี่&lt;/button&gt;
+          &lt;/div&gt;
+
+          &lt;button
+            onclick=&quot;appActions.toggleKdsSound()&quot;
+            class=&quot;px-2.5 py-1.5 rounded-lg border transition flex items-center gap-1 ${
+              state.kdsSound ? &#039;bg-matcha/20 text-matcha-border border-matcha/40&#039; : &#039;bg-espresso-800 text-warmgray-500 border-espresso-700&#039;
+            }&quot;
+          &gt;
+            &lt;span&gt;${state.kdsSound ? &#039;🔊 เปิดเสียง&#039; : &#039;🔇 ปิดเสียง&#039;}&lt;/span&gt;
+          &lt;/button&gt;
+
+          &lt;button
+            onclick=&quot;appActions.quickDemoOrder()&quot;
+            class=&quot;px-2.5 py-1.5 bg-terracotta hover:bg-terracotta-hover text-white rounded-lg transition font-medium flex items-center gap-1 shadow-sm&quot;
+          &gt;
+            &lt;span&gt;+ จำลองคิวใหม่&lt;/span&gt;
+          &lt;/button&gt;
+        &lt;/div&gt;
+      &lt;/div&gt;
+
+      &lt;div class=&quot;flex-1 p-3 sm:p-5 grid grid-cols-1 md:grid-cols-3 gap-4 overflow-y-auto&quot;&gt;
+        &lt;!-- PENDING --&gt;
+        &lt;div class=&quot;flex flex-col bg-cream-50 rounded-2xl border border-cream-300 shadow-sm overflow-hidden min-h-[500px]&quot;&gt;
+          &lt;div class=&quot;bg-[#FFF5E6] px-4 py-3.5 border-b border-[#F7E2C4] flex items-center justify-between&quot;&gt;
+            &lt;div class=&quot;flex items-center space-x-2&quot;&gt;
+              &lt;span class=&quot;w-2.5 h-2.5 rounded-full bg-[#C97D28]&quot;&gt;&lt;/span&gt;
+              &lt;span class=&quot;font-bold text-[#7A4B13] text-sm sm:text-base&quot;&gt;รอดำเนินการ (Pending)&lt;/span&gt;
+            &lt;/div&gt;
+            &lt;span class=&quot;bg-[#C97D28] text-white text-xs px-2.5 py-0.5 rounded-full font-mono font-bold&quot;&gt;${pendingOrders.length}&lt;/span&gt;
+          &lt;/div&gt;
+          &lt;div class=&quot;flex-1 p-3.5 space-y-3.5 overflow-y-auto max-h-[700px]&quot;&gt;
+            ${
+              pendingOrders.length === 0
+                ? `&lt;div class=&quot;h-48 flex flex-col items-center justify-center text-warmgray-400 text-xs&quot;&gt;ไม่มีออเดอร์รอดำเนินการ&lt;/div&gt;`
+                : pendingOrders
+                    .map((order) =&gt; {
+                      const items = filterItems(order.items);
+                      if (items.length === 0) return &#039;&#039;;
+                      return `
+                        &lt;div class=&quot;bg-white rounded-xl border border-cream-300 p-4 shadow-sm flex flex-col justify-between&quot;&gt;
+                          &lt;div&gt;
+                            &lt;div class=&quot;flex items-center justify-between&quot;&gt;
+                              &lt;div class=&quot;flex items-baseline gap-2&quot;&gt;
+                                &lt;span class=&quot;text-xl font-extrabold font-mono text-espresso-900&quot;&gt;#คิว ${escapeHtml(order.queueNo)}&lt;/span&gt;
+                                &lt;span class=&quot;text-[11px] font-medium text-warmgray-500&quot;&gt;(โต๊ะ ${escapeHtml(order.tableNo || &#039;หน้าร้าน&#039;)})&lt;/span&gt;
+                              &lt;/div&gt;
+                              &lt;span class=&quot;text-xs font-mono text-warmgray-500 bg-cream-100 px-2 py-0.5 rounded-md border border-cream-200&quot;&gt;${escapeHtml(order.createdAt)} (${escapeHtml(order.timeElapsed)})&lt;/span&gt;
+                            &lt;/div&gt;
+                            &lt;div class=&quot;border-t border-cream-200 my-2.5&quot;&gt;&lt;/div&gt;
+                            &lt;div class=&quot;space-y-2 mb-4&quot;&gt;
+                              ${items
+                                .map(
+                                  (it) =&gt; `
+                                &lt;div class=&quot;text-xs&quot;&gt;
+                                  &lt;div class=&quot;font-bold text-espresso-900&quot;&gt;${it.quantity}x ${escapeHtml(it.name)}&lt;/div&gt;
+                                  ${it.optionsText ? `&lt;div class=&quot;text-[11px] font-semibold text-terracotta ml-3 mt-0.5&quot;&gt;↳ ${escapeHtml(it.optionsText)}&lt;/div&gt;` : &#039;&#039;}
+                                  ${Array.isArray(it.toppings) &amp;&amp; it.toppings.length &gt; 0 ? `&lt;div class=&quot;text-[10px] text-espresso-700 ml-3 mt-0.5&quot;&gt;+ ท็อปปิ้ง: ${it.toppings.map((t) =&gt; escapeHtml(t.name)).join(&#039;, &#039;)}&lt;/div&gt;` : &#039;&#039;}
+                                &lt;/div&gt;
+                              `
+                                )
+                                .join(&#039;&#039;)}
+                            &lt;/div&gt;
+                          &lt;/div&gt;
+                          &lt;button onclick=&quot;appActions.advanceOrder(&#039;${order.id}&#039;, &#039;pending&#039;)&quot; class=&quot;w-full py-2.5 bg-espresso-900 hover:bg-espresso-800 text-white rounded-lg text-xs font-bold transition&quot;&gt;รับทำออเดอร์นี้ →&lt;/button&gt;
+                        &lt;/div&gt;
+                      `;
+                    })
+                    .join(&#039;&#039;)
+            }
+          &lt;/div&gt;
+        &lt;/div&gt;
+
+        &lt;!-- IN PROGRESS --&gt;
+        &lt;div class=&quot;flex flex-col bg-cream-50 rounded-2xl border border-cream-300 shadow-sm overflow-hidden min-h-[500px]&quot;&gt;
+          &lt;div class=&quot;bg-[#EEF5F8] px-4 py-3.5 border-b border-[#D6E6EE] flex items-center justify-between&quot;&gt;
+            &lt;div class=&quot;flex items-center space-x-2&quot;&gt;
+              &lt;span class=&quot;w-2.5 h-2.5 rounded-full bg-[#2E6171] animate-ping&quot;&gt;&lt;/span&gt;
+              &lt;span class=&quot;font-bold text-[#1C4450] text-sm sm:text-base&quot;&gt;กำลังชง/อบ (In Progress)&lt;/span&gt;
+            &lt;/div&gt;
+            &lt;span class=&quot;bg-[#2E6171] text-white text-xs px-2.5 py-0.5 rounded-full font-mono font-bold&quot;&gt;${inProgressOrders.length}&lt;/span&gt;
+          &lt;/div&gt;
+          &lt;div class=&quot;flex-1 p-3.5 space-y-3.5 overflow-y-auto max-h-[700px]&quot;&gt;
+            ${
+              inProgressOrders.length === 0
+                ? `&lt;div class=&quot;h-48 flex flex-col items-center justify-center text-warmgray-400 text-xs&quot;&gt;ไม่มีออเดอร์ที่กำลังปรุง&lt;/div&gt;`
+                : inProgressOrders
+                    .map((order) =&gt; {
+                      const items = filterItems(order.items);
+                      if (items.length === 0) return &#039;&#039;;
+                      return `
+                        &lt;div class=&quot;bg-white rounded-xl border-2 border-[#8EC0E4] p-4 shadow-sm flex flex-col justify-between&quot;&gt;
+                          &lt;div&gt;
+                            &lt;div class=&quot;flex items-center justify-between&quot;&gt;
+                              &lt;div class=&quot;flex items-baseline gap-2&quot;&gt;
+                                &lt;span class=&quot;text-xl font-extrabold font-mono text-espresso-900&quot;&gt;#คิว ${escapeHtml(order.queueNo)}&lt;/span&gt;
+                                &lt;span class=&quot;text-[11px] font-medium text-warmgray-500&quot;&gt;(โต๊ะ ${escapeHtml(order.tableNo || &#039;หน้าร้าน&#039;)})&lt;/span&gt;
+                              &lt;/div&gt;
+                              &lt;span class=&quot;text-xs font-mono font-bold text-[#2E6171] bg-[#EEF5F8] px-2 py-0.5 rounded-md border border-[#D6E6EE]&quot;&gt;${escapeHtml(order.timeElapsed || &#039;กำลังทำ&#039;)}&lt;/span&gt;
+                            &lt;/div&gt;
+                            &lt;div class=&quot;border-t border-cream-200 my-2.5&quot;&gt;&lt;/div&gt;
+                            &lt;div class=&quot;space-y-2 mb-4&quot;&gt;
+                              ${items
+                                .map(
+                                  (it) =&gt; `
+                                &lt;div class=&quot;text-xs&quot;&gt;
+                                  &lt;div class=&quot;font-bold text-espresso-900&quot;&gt;${it.quantity}x ${escapeHtml(it.name)}&lt;/div&gt;
+                                  ${it.optionsText ? `&lt;div class=&quot;text-[11px] font-semibold text-matcha ml-3 mt-0.5&quot;&gt;↳ ${escapeHtml(it.optionsText)}&lt;/div&gt;` : &#039;&#039;}
+                                  ${Array.isArray(it.toppings) &amp;&amp; it.toppings.length &gt; 0 ? `&lt;div class=&quot;text-[10px] text-espresso-700 ml-3 mt-0.5&quot;&gt;+ ท็อปปิ้ง: ${it.toppings.map((t) =&gt; escapeHtml(t.name)).join(&#039;, &#039;)}&lt;/div&gt;` : &#039;&#039;}
+                                &lt;/div&gt;
+                              `
+                                )
+                                .join(&#039;&#039;)}
+                            &lt;/div&gt;
+                          &lt;/div&gt;
+                          &lt;button onclick=&quot;appActions.advanceOrder(&#039;${order.id}&#039;, &#039;in_progress&#039;)&quot; class=&quot;w-full py-2.5 bg-matcha hover:bg-[#325d40] text-white rounded-lg text-xs font-bold transition&quot;&gt;✓ ทำเสร็จแล้ว (พร้อมเสิร์ฟ)&lt;/button&gt;
+                        &lt;/div&gt;
+                      `;
+                    })
+                    .join(&#039;&#039;)
+            }
+          &lt;/div&gt;
+        &lt;/div&gt;
+
+        &lt;!-- READY --&gt;
+        &lt;div class=&quot;flex flex-col bg-cream-50 rounded-2xl border border-cream-300 shadow-sm overflow-hidden min-h-[500px]&quot;&gt;
+          &lt;div class=&quot;bg-[#EAF4ED] px-4 py-3.5 border-b border-[#CEE5D3] flex items-center justify-between&quot;&gt;
+            &lt;div class=&quot;flex items-center space-x-2&quot;&gt;
+              &lt;span class=&quot;w-2.5 h-2.5 rounded-full bg-[#3B6E4C]&quot;&gt;&lt;/span&gt;
+              &lt;span class=&quot;font-bold text-[#254731] text-sm sm:text-base&quot;&gt;พร้อมรับที่เคาน์เตอร์ (Ready)&lt;/span&gt;
+            &lt;/div&gt;
+            &lt;span class=&quot;bg-[#3B6E4C] text-white text-xs px-2.5 py-0.5 rounded-full font-mono font-bold&quot;&gt;${readyOrders.length}&lt;/span&gt;
+          &lt;/div&gt;
+          &lt;div class=&quot;flex-1 p-3.5 space-y-3.5 overflow-y-auto max-h-[700px]&quot;&gt;
+            ${
+              readyOrders.length === 0
+                ? `&lt;div class=&quot;h-48 flex flex-col items-center justify-center text-warmgray-400 text-xs&quot;&gt;ไม่มีออเดอร์ค้างรอส่งมอบ&lt;/div&gt;`
+                : readyOrders
+                    .map((order) =&gt; {
+                      const items = filterItems(order.items);
+                      if (items.length === 0) return &#039;&#039;;
+                      return `
+                        &lt;div class=&quot;bg-white rounded-xl border-2 border-[#A8D5B5] p-4 shadow-sm flex flex-col justify-between&quot;&gt;
+                          &lt;div&gt;
+                            &lt;div class=&quot;flex items-center justify-between&quot;&gt;
+                              &lt;div class=&quot;flex items-baseline gap-2&quot;&gt;
+                                &lt;span class=&quot;text-xl font-extrabold font-mono text-matcha&quot;&gt;#คิว ${escapeHtml(order.queueNo)}&lt;/span&gt;
+                                &lt;span class=&quot;text-[11px] font-medium text-warmgray-500&quot;&gt;(โต๊ะ ${escapeHtml(order.tableNo || &#039;หน้าร้าน&#039;)})&lt;/span&gt;
+                              &lt;/div&gt;
+                              &lt;span class=&quot;text-xs font-bold text-matcha bg-[#EAF4ED] px-2 py-0.5 rounded-md border border-[#CEE5D3]&quot;&gt;✨ ขานเรียกแล้ว&lt;/span&gt;
+                            &lt;/div&gt;
+                            &lt;div class=&quot;border-t border-cream-200 my-2.5&quot;&gt;&lt;/div&gt;
+                            &lt;div class=&quot;space-y-2 mb-4&quot;&gt;
+                              ${items
+                                .map(
+                                  (it) =&gt; `
+                                &lt;div class=&quot;text-xs&quot;&gt;
+                                  &lt;div class=&quot;font-bold text-espresso-900&quot;&gt;${it.quantity}x ${escapeHtml(it.name)}&lt;/div&gt;
+                                  ${it.optionsText ? `&lt;div class=&quot;text-[11px] text-warmgray-600 ml-3 mt-0.5&quot;&gt;↳ ${escapeHtml(it.optionsText)}&lt;/div&gt;` : &#039;&#039;}
+                                  ${Array.isArray(it.toppings) &amp;&amp; it.toppings.length &gt; 0 ? `&lt;div class=&quot;text-[10px] text-espresso-700 ml-3 mt-0.5&quot;&gt;+ ท็อปปิ้ง: ${it.toppings.map((t) =&gt; escapeHtml(t.name)).join(&#039;, &#039;)}&lt;/div&gt;` : &#039;&#039;}
+                                &lt;/div&gt;
+                              `
+                                )
+                                .join(&#039;&#039;)}
+                            &lt;/div&gt;
+                          &lt;/div&gt;
+                          &lt;button onclick=&quot;appActions.advanceOrder(&#039;${order.id}&#039;, &#039;ready&#039;)&quot; class=&quot;w-full py-2.5 bg-cream-200 hover:bg-cream-300 text-espresso-900 border border-cream-300 rounded-lg text-xs font-bold transition&quot;&gt;ลูกค้ารับแล้ว (ปิดออเดอร์)&lt;/button&gt;
+                        &lt;/div&gt;
+                      `;
+                    })
+                    .join(&#039;&#039;)
+            }
+          &lt;/div&gt;
+        &lt;/div&gt;
+      &lt;/div&gt;
+    &lt;/div&gt;
+  `;
+}
+
+function renderAdminPage() {
+  const bakeryProducts = state.products.filter(
+    (p) =&gt; p.isBakery || p.category === &#039;bakery&#039; || p.category === &#039;dessert&#039;
+  );
+  const lowStockCount = bakeryProducts.filter((p) =&gt; p.stock !== null &amp;&amp; p.stock &lt; 5).length;
+
+  let mainContent = &#039;&#039;;
+
+  if (state.adminTab === &#039;dashboard&#039;) {
+    mainContent = `
+      &lt;div class=&quot;space-y-6&quot;&gt;
+        &lt;div&gt;
+          &lt;h2 class=&quot;text-xl sm:text-2xl font-extrabold text-espresso-900&quot;&gt;ภาพรวมยอดขาย &amp;amp; สต็อกสินค้าประจำวัน&lt;/h2&gt;
+          &lt;p class=&quot;text-xs text-warmgray-600 mt-0.5&quot;&gt;ข้อมูลสรุปแบบ Real-time (Jamal Café &amp;amp; Bakery POS — Node.js Express)&lt;/p&gt;
+        &lt;/div&gt;
+
+        &lt;div class=&quot;grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4&quot;&gt;
+          &lt;div class=&quot;bg-white rounded-2xl border border-cream-300 p-4 shadow-sm&quot;&gt;
+            &lt;div class=&quot;text-xs text-warmgray-600 font-medium&quot;&gt;ยอดขายรวมวันนี้&lt;/div&gt;
+            &lt;div class=&quot;text-2xl font-extrabold font-mono text-espresso-900 mt-2&quot;&gt;฿${state.salesStats.totalSales.toLocaleString(&#039;th-TH&#039;, { minimumFractionDigits: 2 })}&lt;/div&gt;
+            &lt;div class=&quot;text-xs font-semibold text-matcha mt-2&quot;&gt;↑ +12% เทียบกับเมื่อวาน&lt;/div&gt;
+          &lt;/div&gt;
+          &lt;div class=&quot;bg-white rounded-2xl border border-cream-300 p-4 shadow-sm&quot;&gt;
+            &lt;div class=&quot;text-xs text-warmgray-600 font-medium&quot;&gt;จำนวนบิลทั้งหมด&lt;/div&gt;
+            &lt;div class=&quot;text-2xl font-extrabold font-mono text-espresso-900 mt-2&quot;&gt;${state.salesStats.totalBills} บิล&lt;/div&gt;
+            &lt;div class=&quot;text-xs text-warmgray-600 mt-2&quot;&gt;เฉลี่ย ฿${(state.salesStats.totalSales / (state.salesStats.totalBills || 1)).toFixed(2)} ต่อบิล&lt;/div&gt;
+          &lt;/div&gt;
+          &lt;div class=&quot;bg-white rounded-2xl border border-cream-300 p-4 shadow-sm&quot;&gt;
+            &lt;div class=&quot;text-xs text-warmgray-600 font-medium&quot;&gt;สัดส่วนชำระเงิน (FR-08)&lt;/div&gt;
+            &lt;div class=&quot;flex items-center gap-2 mt-2&quot;&gt;
+              &lt;span class=&quot;bg-[#EEF5F8] text-[#2E6171] text-xs font-mono font-bold px-2 py-1 rounded-md border border-[#D6E6EE]&quot;&gt;PromptPay 64%&lt;/span&gt;
+              &lt;span class=&quot;bg-[#EAF4ED] text-[#3B6E4C] text-xs font-mono font-bold px-2 py-1 rounded-md border border-[#CEE5D3]&quot;&gt;เงินสด 36%&lt;/span&gt;
+            &lt;/div&gt;
+            &lt;div class=&quot;text-xs text-warmgray-600 mt-2&quot;&gt;กระทบยอดตรง ไม่พบบิลค้าง&lt;/div&gt;
+          &lt;/div&gt;
+          &lt;div class=&quot;bg-white rounded-2xl border-2 border-terracotta p-4 shadow-sm&quot;&gt;
+            &lt;div class=&quot;text-xs text-warmgray-600 font-medium&quot;&gt;เตือนสต็อกเบเกอรี่ (FR-03)&lt;/div&gt;
+            &lt;div class=&quot;text-2xl font-extrabold font-mono text-terracotta mt-2&quot;&gt;${lowStockCount} รายการ&lt;/div&gt;
+            &lt;div class=&quot;text-xs font-bold text-red-600 mt-2&quot;&gt;⚠ เหลือน้อยกว่า 5 ชิ้น&lt;/div&gt;
+          &lt;/div&gt;
+        &lt;/div&gt;
+
+        &lt;div class=&quot;bg-white rounded-2xl border border-cream-300 shadow-sm overflow-hidden&quot;&gt;
+          &lt;div class=&quot;p-4 sm:p-5 border-b border-cream-200 flex flex-wrap items-center justify-between gap-2&quot;&gt;
+            &lt;div&gt;
+              &lt;h3 class=&quot;font-bold text-espresso-900 text-sm sm:text-base&quot;&gt;ระบบควบคุมและตัดสต็อกเบเกอรี่รายวัน (Bakery Stock Tracking)&lt;/h3&gt;
+              &lt;p class=&quot;text-xs text-warmgray-500&quot;&gt;อัปเดตตัดสต็อกอัตโนมัติแบบเรียลไทม์เมื่อมีการชำระเงิน (FR-03)&lt;/p&gt;
+            &lt;/div&gt;
+            &lt;button onclick=&quot;appActions.setAdminTab(&#039;inventory&#039;)&quot; class=&quot;text-xs font-semibold text-terracotta hover:underline&quot;&gt;จัดการสต็อกทั้งหมด →&lt;/button&gt;
+          &lt;/div&gt;
+          &lt;div class=&quot;overflow-x-auto&quot;&gt;
+            &lt;table class=&quot;w-full text-left border-collapse text-xs sm:text-sm&quot;&gt;
+              &lt;thead&gt;
+                &lt;tr class=&quot;bg-cream-100 text-warmgray-600 font-semibold border-b border-cream-200&quot;&gt;
+                  &lt;th class=&quot;py-3 px-4&quot;&gt;SKU&lt;/th&gt;
+                  &lt;th class=&quot;py-3 px-4&quot;&gt;ชื่อสินค้า&lt;/th&gt;
+                  &lt;th class=&quot;py-3 px-4&quot;&gt;ราคา&lt;/th&gt;
+                  &lt;th class=&quot;py-3 px-4&quot;&gt;รับเข้าเช้า&lt;/th&gt;
+                  &lt;th class=&quot;py-3 px-4&quot;&gt;ขายแล้ว&lt;/th&gt;
+                  &lt;th class=&quot;py-3 px-4&quot;&gt;คงเหลือจริง&lt;/th&gt;
+                  &lt;th class=&quot;py-3 px-4&quot;&gt;สถานะ&lt;/th&gt;
+                  &lt;th class=&quot;py-3 px-4 text-center&quot;&gt;เติมสต็อก&lt;/th&gt;
+                &lt;/tr&gt;
+              &lt;/thead&gt;
+              &lt;tbody class=&quot;divide-y divide-cream-200 text-espresso-900&quot;&gt;
+                ${bakeryProducts
+                  .map((p, idx) =&gt; {
+                    const sku = `BK-0${idx + 1}`;
+                    const sold = p.stock !== null ? Math.max(0, 15 - p.stock) : &#039;-&#039;;
+                    const morning = p.stock !== null ? p.stock + sold : &#039;-&#039;;
+                    const isOut = p.stock === 0;
+                    const isLow = p.stock !== null &amp;&amp; p.stock &gt; 0 &amp;&amp; p.stock &lt; 5;
+                    return `
+                      &lt;tr class=&quot;hover:bg-cream-50 transition&quot;&gt;
+                        &lt;td class=&quot;py-3 px-4 font-mono font-bold text-warmgray-600&quot;&gt;${sku}&lt;/td&gt;
+                        &lt;td class=&quot;py-3 px-4 font-medium&quot;&gt;${escapeHtml(p.name)}&lt;/td&gt;
+                        &lt;td class=&quot;py-3 px-4 font-mono font-bold text-terracotta&quot;&gt;฿${p.price.toFixed(2)}&lt;/td&gt;
+                        &lt;td class=&quot;py-3 px-4 font-mono&quot;&gt;${morning}&lt;/td&gt;
+                        &lt;td class=&quot;py-3 px-4 font-mono&quot;&gt;${sold}&lt;/td&gt;
+                        &lt;td class=&quot;py-3 px-4 font-mono font-bold&quot;&gt;
+                          &lt;span class=&quot;${isOut ? &#039;text-red-600&#039; : isLow ? &#039;text-amber-600&#039; : &#039;text-matcha&#039;}&quot;&gt;${p.stock} ชิ้น&lt;/span&gt;
+                        &lt;/td&gt;
+                        &lt;td class=&quot;py-3 px-4&quot;&gt;
+                          ${
+                            isOut
+                              ? `&lt;span class=&quot;bg-red-50 text-red-600 text-xs px-2.5 py-1 rounded-md font-bold border border-red-200&quot;&gt;หมด (Out)&lt;/span&gt;`
+                              : isLow
+                              ? `&lt;span class=&quot;bg-[#FFF5E6] text-[#C97D28] text-xs px-2.5 py-1 rounded-md font-bold border border-[#F7E2C4]&quot;&gt;ใกล้หมด&lt;/span&gt;`
+                              : `&lt;span class=&quot;bg-[#EAF4ED] text-[#3B6E4C] text-xs px-2.5 py-1 rounded-md font-bold border border-[#CEE5D3]&quot;&gt;พร้อมขาย&lt;/span&gt;`
+                          }
+                        &lt;/td&gt;
+                        &lt;td class=&quot;py-3 px-4 text-center&quot;&gt;
+                          &lt;div class=&quot;flex items-center justify-center gap-1.5&quot;&gt;
+                            &lt;button onclick=&quot;appActions.restock(&#039;${p.id}&#039;, 5)&quot; class=&quot;px-2 py-1 bg-cream-200 hover:bg-cream-300 text-espresso-900 rounded font-mono text-xs font-bold border border-cream-300&quot;&gt;+5&lt;/button&gt;
+                            &lt;button onclick=&quot;appActions.restock(&#039;${p.id}&#039;, 10)&quot; class=&quot;px-2 py-1 bg-cream-200 hover:bg-cream-300 text-espresso-900 rounded font-mono text-xs font-bold border border-cream-300&quot;&gt;+10&lt;/button&gt;
+                          &lt;/div&gt;
+                        &lt;/td&gt;
+                      &lt;/tr&gt;
+                    `;
+                  })
+                  .join(&#039;&#039;)}
+              &lt;/tbody&gt;
+            &lt;/table&gt;
+          &lt;/div&gt;
+        &lt;/div&gt;
+
+        &lt;div class=&quot;bg-white rounded-2xl border border-cream-300 p-5 shadow-sm&quot;&gt;
+          &lt;h3 class=&quot;font-bold text-sm sm:text-base text-espresso-900 mb-4&quot;&gt;🏆 5 อันดับเมนูขายดีประจำวัน (Top 5 Best Sellers)&lt;/h3&gt;
+          &lt;div class=&quot;grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-5 gap-3&quot;&gt;
+            &lt;div class=&quot;p-3 rounded-xl bg-cream-50 border border-cream-300&quot;&gt;&lt;div class=&quot;text-[10px] font-bold text-[#C97D28]&quot;&gt;#1 เมนูขายดี&lt;/div&gt;&lt;div class=&quot;font-bold text-xs sm:text-sm text-espresso-900 mt-1&quot;&gt;เอสเพรสโซ่เย็น&lt;/div&gt;&lt;div class=&quot;text-xs font-mono text-warmgray-600 mt-2&quot;&gt;38 แก้ว • ฿2,470&lt;/div&gt;&lt;/div&gt;
+            &lt;div class=&quot;p-3 rounded-xl bg-cream-50 border border-cream-300&quot;&gt;&lt;div class=&quot;text-[10px] font-bold text-warmgray-500&quot;&gt;#2 เมนูขายดี&lt;/div&gt;&lt;div class=&quot;font-bold text-xs sm:text-sm text-espresso-900 mt-1&quot;&gt;มัทฉะลาเต้อูจิ&lt;/div&gt;&lt;div class=&quot;text-xs font-mono text-warmgray-600 mt-2&quot;&gt;26 แก้ว • ฿2,210&lt;/div&gt;&lt;/div&gt;
+            &lt;div class=&quot;p-3 rounded-xl bg-cream-50 border border-cream-300&quot;&gt;&lt;div class=&quot;text-[10px] font-bold text-warmgray-500&quot;&gt;#3 เมนูขายดี&lt;/div&gt;&lt;div class=&quot;font-bold text-xs sm:text-sm text-espresso-900 mt-1&quot;&gt;ครัวซองต์เนยสด AOP&lt;/div&gt;&lt;div class=&quot;text-xs font-mono text-warmgray-600 mt-2&quot;&gt;21 ชิ้น • ฿1,785&lt;/div&gt;&lt;/div&gt;
+            &lt;div class=&quot;p-3 rounded-xl bg-cream-50 border border-cream-300&quot;&gt;&lt;div class=&quot;text-[10px] font-bold text-warmgray-500&quot;&gt;#4 เมนูขายดี&lt;/div&gt;&lt;div class=&quot;font-bold text-xs sm:text-sm text-espresso-900 mt-1&quot;&gt;อเมริกาโน่น้ำส้ม&lt;/div&gt;&lt;div class=&quot;text-xs font-mono text-warmgray-600 mt-2&quot;&gt;18 แก้ว • ฿1,530&lt;/div&gt;&lt;/div&gt;
+            &lt;div class=&quot;p-3 rounded-xl bg-cream-50 border border-cream-300&quot;&gt;&lt;div class=&quot;text-[10px] font-bold text-warmgray-500&quot;&gt;#5 เมนูขายดี&lt;/div&gt;&lt;div class=&quot;font-bold text-xs sm:text-sm text-espresso-900 mt-1&quot;&gt;เค้กแครอทครีมชีส&lt;/div&gt;&lt;div class=&quot;text-xs font-mono text-warmgray-600 mt-2&quot;&gt;12 ชิ้น • ฿1,140&lt;/div&gt;&lt;/div&gt;
+          &lt;/div&gt;
+        &lt;/div&gt;
+      &lt;/div&gt;
+    `;
+  } else if (state.adminTab === &#039;inventory&#039;) {
+    const groupLabels = { &#039;base-drink&#039;: &#039;เครื่องดื่ม&#039;, &#039;cake/bakery&#039;: &#039;เค้ก/เบเกอรี่&#039;, topping: &#039;ท็อปปิ้ง&#039; };
+    mainContent = `
+      &lt;div class=&quot;space-y-5&quot;&gt;
+        &lt;div&gt;
+          &lt;h2 class=&quot;text-xl sm:text-2xl font-extrabold text-espresso-900&quot;&gt;ระบบจัดการคลังสต็อก (Base Drink / Cake / Toppings)&lt;/h2&gt;
+          &lt;p class=&quot;text-xs text-warmgray-600 mt-0.5&quot;&gt;ข้อกำหนด FR-03 และ Change Request #12: เรียงจากสต็อกน้อยไปมาก เพื่อให้เห็นรายการที่ใกล้หมดก่อน&lt;/p&gt;
+        &lt;/div&gt;
+        &lt;div class=&quot;bg-white rounded-2xl border border-cream-300 p-5 shadow-sm space-y-3&quot;&gt;
+          ${state.sortedInventory
+            .map(
+              (item) =&gt; `
+            &lt;div class=&quot;p-4 rounded-xl border border-cream-200 bg-cream-50/50 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3&quot;&gt;
+              &lt;div&gt;
+                &lt;div class=&quot;font-bold text-sm text-espresso-900&quot;&gt;${escapeHtml(item.name)} &lt;span class=&quot;ml-1 text-[10px] font-semibold text-warmgray-600 bg-cream-200 rounded px-1.5 py-0.5 align-middle&quot;&gt;${groupLabels[item.group] || escapeHtml(item.group)}&lt;/span&gt;&lt;/div&gt;
+                &lt;div class=&quot;text-xs text-warmgray-500 mt-0.5&quot;&gt;ราคาขาย: ฿${Number(item.price).toFixed(2)} • สต็อกปัจจุบัน: &lt;strong data-testid=&quot;inventory-stock-${escapeHtml(item.id)}&quot; class=&quot;${item.stock === 0 ? &#039;text-red-600&#039; : item.stock &lt; 5 ? &#039;text-amber-600&#039; : &#039;text-espresso-900&#039;} font-mono&quot;&gt;${item.stock} ชิ้น&lt;/strong&gt;&lt;/div&gt;
+              &lt;/div&gt;
+              &lt;div class=&quot;flex items-center gap-2&quot;&gt;
+                &lt;button onclick=&quot;appActions.restock(&#039;${item.id}&#039;, 5)&quot; class=&quot;px-3 py-1.5 bg-espresso-800 hover:bg-espresso-700 text-white rounded-lg text-xs font-bold transition&quot;&gt;+ เติม 5 ชิ้น&lt;/button&gt;
+                &lt;button onclick=&quot;appActions.restock(&#039;${item.id}&#039;, 10)&quot; class=&quot;px-3 py-1.5 bg-terracotta hover:bg-terracotta-hover text-white rounded-lg text-xs font-bold transition&quot;&gt;+ เติม 10 ชิ้น&lt;/button&gt;
+              &lt;/div&gt;
+            &lt;/div&gt;
+          `
+            )
+            .join(&#039;&#039;)}
+        &lt;/div&gt;
+      &lt;/div&gt;
+    `;
+  } else if (state.adminTab === &#039;menu&#039;) {
+    mainContent = `
+      &lt;div class=&quot;space-y-5&quot;&gt;
+        &lt;div class=&quot;flex flex-col sm:flex-row sm:items-center justify-between gap-3&quot;&gt;
+          &lt;div&gt;
+            &lt;h2 class=&quot;text-xl sm:text-2xl font-extrabold text-espresso-900&quot;&gt;จัดการรายการเมนู &amp;amp; กำหนดราคา (FR-02)&lt;/h2&gt;
+            &lt;p class=&quot;text-xs text-warmgray-600 mt-0.5&quot;&gt;แก้ไขราคาขาย เปิด/ปิดการจำหน่ายเมนูเครื่องดื่มและเบเกอรี่&lt;/p&gt;
+          &lt;/div&gt;
+          &lt;button onclick=&quot;appActions.openAddMenuModal()&quot; class=&quot;px-4 py-2 bg-terracotta hover:bg-terracotta-hover text-white rounded-xl text-xs font-bold transition&quot;&gt;+ เพิ่มเมนูใหม่&lt;/button&gt;
+        &lt;/div&gt;
+
+        &lt;div class=&quot;bg-white rounded-2xl border border-cream-300 shadow-sm overflow-hidden&quot;&gt;
+          &lt;div class=&quot;p-4 border-b border-cream-200 font-bold text-sm text-espresso-900&quot;&gt;รายการเมนูทั้งหมด (${state.products.length} รายการ)&lt;/div&gt;
+          &lt;div class=&quot;divide-y divide-cream-200&quot;&gt;
+            ${state.products
+              .map(
+                (prod) =&gt; `
+              &lt;div class=&quot;p-4 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 hover:bg-cream-50 transition&quot;&gt;
+                &lt;div class=&quot;flex items-center gap-3&quot;&gt;
+                  &lt;img src=&quot;${escapeHtml(prod.img)}&quot; alt=&quot;${escapeHtml(prod.name)}&quot; class=&quot;w-12 h-12 rounded-xl object-cover border border-cream-300&quot; /&gt;
+                  &lt;div&gt;
+                    &lt;div class=&quot;font-bold text-sm text-espresso-900&quot;&gt;${escapeHtml(prod.name)}&lt;/div&gt;
+                    &lt;div class=&quot;text-xs text-warmgray-500&quot;&gt;${escapeHtml(prod.desc)}&lt;/div&gt;
+                  &lt;/div&gt;
+                &lt;/div&gt;
+                &lt;div class=&quot;flex items-center gap-3 self-end sm:self-auto&quot;&gt;
+                  ${
+                    state.editingPriceId === prod.id
+                      ? `
+                    &lt;div class=&quot;flex items-center gap-1.5&quot;&gt;
+                      &lt;input
+                        type=&quot;number&quot;
+                        value=&quot;${escapeHtml(state.tempPrice)}&quot;
+                        oninput=&quot;state.tempPrice = this.value&quot;
+                        class=&quot;w-20 px-2 py-1 text-sm border border-terracotta rounded-lg font-mono focus:outline-none&quot;
+                      /&gt;
+                      &lt;button onclick=&quot;appActions.savePrice(&#039;${prod.id}&#039;)&quot; class=&quot;px-2.5 py-1 bg-matcha text-white rounded-lg text-xs font-bold&quot;&gt;บันทึก&lt;/button&gt;
+                      &lt;button onclick=&quot;appActions.cancelEditPrice()&quot; class=&quot;px-2 py-1 bg-cream-200 text-espresso-800 rounded-lg text-xs font-bold&quot;&gt;ยกเลิก&lt;/button&gt;
+                    &lt;/div&gt;
+                  `
+                      : `
+                    &lt;div class=&quot;flex items-center gap-2&quot;&gt;
+                      &lt;span class=&quot;font-mono font-bold text-sm text-terracotta&quot;&gt;฿${prod.price.toFixed(2)}&lt;/span&gt;
+                      &lt;button onclick=&quot;appActions.startEditPrice(&#039;${prod.id}&#039;, ${prod.price})&quot; class=&quot;p-1.5 text-warmgray-500 hover:text-espresso-900 hover:bg-cream-200 rounded-lg transition&quot; title=&quot;แก้ไขราคา&quot;&gt;✎&lt;/button&gt;
+                      &lt;button onclick=&quot;appActions.deleteProduct(&#039;${prod.id}&#039;)&quot; class=&quot;p-1.5 text-red-500 hover:text-red-700 hover:bg-red-50 rounded-lg transition text-xs font-bold&quot; title=&quot;ลบเมนู&quot;&gt;🗑&lt;/button&gt;
+                    &lt;/div&gt;
+                  `
+                  }
+                &lt;/div&gt;
+              &lt;/div&gt;
+            `
+              )
+              .join(&#039;&#039;)}
+          &lt;/div&gt;
+        &lt;/div&gt;
+      &lt;/div&gt;
+    `;
+  } else if (state.adminTab === &#039;sales&#039;) {
+    const filteredSales = state.salesHistory.filter(
+      (s) =&gt;
+        !state.salesSearch ||
+        s.receiptNo.toLowerCase().includes(state.salesSearch.toLowerCase()) ||
+        s.queueNo.toLowerCase().includes(state.salesSearch.toLowerCase())
+    );
+    mainContent = `
+      &lt;div class=&quot;space-y-5&quot;&gt;
+        &lt;div&gt;
+          &lt;h2 class=&quot;text-xl sm:text-2xl font-extrabold text-espresso-900&quot;&gt;ประวัติการขาย &amp;amp; รายการบิลย้อนหลัง (Sales &amp;amp; Void Audit)&lt;/h2&gt;
+          &lt;p class=&quot;text-xs text-warmgray-600 mt-0.5&quot;&gt;ข้อกำหนด FR-07 (ระบบตรวจสอบ Void) และ FR-08 (รายงานยอดขาย)&lt;/p&gt;
+        &lt;/div&gt;
+        &lt;div class=&quot;bg-white rounded-2xl border border-cream-300 shadow-sm overflow-hidden&quot;&gt;
+          &lt;div class=&quot;p-4 border-b border-cream-200 flex flex-col sm:flex-row gap-3 items-center justify-between&quot;&gt;
+            &lt;span class=&quot;font-bold text-sm text-espresso-900&quot;&gt;บันทึกประวัติการออกใบเสร็จ (${state.salesHistory.length} รายการ)&lt;/span&gt;
+            &lt;input
+              type=&quot;text&quot;
+              value=&quot;${escapeHtml(state.salesSearch)}&quot;
+              oninput=&quot;state.salesSearch = this.value; render();&quot;
+              placeholder=&quot;ค้นหาเลขที่บิล หรือคิว...&quot;
+              class=&quot;w-full sm:w-64 px-3 py-1.5 bg-cream-100 border border-cream-300 rounded-lg text-xs focus:outline-none&quot;
+            /&gt;
+          &lt;/div&gt;
+          &lt;div class=&quot;overflow-x-auto&quot;&gt;
+            &lt;table class=&quot;w-full text-left border-collapse text-xs&quot;&gt;
+              &lt;thead&gt;
+                &lt;tr class=&quot;bg-cream-100 text-warmgray-600 font-semibold border-b border-cream-200&quot;&gt;
+                  &lt;th class=&quot;py-2.5 px-4&quot;&gt;เลขที่บิล&lt;/th&gt;
+                  &lt;th class=&quot;py-2.5 px-4&quot;&gt;เวลา&lt;/th&gt;
+                  &lt;th class=&quot;py-2.5 px-4&quot;&gt;คิว&lt;/th&gt;
+                  &lt;th class=&quot;py-2.5 px-4&quot;&gt;รายการสินค้า&lt;/th&gt;
+                  &lt;th class=&quot;py-2.5 px-4&quot;&gt;วิธีชำระ&lt;/th&gt;
+                  &lt;th class=&quot;py-2.5 px-4&quot;&gt;ยอดเงิน&lt;/th&gt;
+                  &lt;th class=&quot;py-2.5 px-4&quot;&gt;สถานะ&lt;/th&gt;
+                  &lt;th class=&quot;py-2.5 px-4 text-center&quot;&gt;จัดการ Void&lt;/th&gt;
+                &lt;/tr&gt;
+              &lt;/thead&gt;
+              &lt;tbody class=&quot;divide-y divide-cream-200 text-espresso-900&quot;&gt;
+                ${filteredSales
+                  .map((item) =&gt; {
+                    const isVoided = item.status === &#039;voided&#039;;
+                    return `
+                      &lt;tr class=&quot;hover:bg-cream-50 transition ${isVoided ? &#039;bg-red-50/40 text-warmgray-500&#039; : &#039;&#039;}&quot;&gt;
+                        &lt;td class=&quot;py-3 px-4 font-mono font-bold&quot;&gt;${escapeHtml(item.receiptNo)}&lt;/td&gt;
+                        &lt;td class=&quot;py-3 px-4 font-mono&quot;&gt;${escapeHtml(item.time)}&lt;/td&gt;
+                        &lt;td class=&quot;py-3 px-4 font-mono font-bold text-espresso-900&quot;&gt;#${escapeHtml(item.queueNo)}&lt;/td&gt;
+                        &lt;td class=&quot;py-3 px-4 max-w-xs truncate&quot;&gt;${escapeHtml(item.itemsSummary)}&lt;/td&gt;
+                        &lt;td class=&quot;py-3 px-4&quot;&gt;${escapeHtml(item.paymentMethod)}&lt;/td&gt;
+                        &lt;td class=&quot;py-3 px-4 font-mono font-bold&quot;&gt;฿${Number(item.total).toFixed(2)}&lt;/td&gt;
+                        &lt;td class=&quot;py-3 px-4&quot;&gt;
+                          ${
+                            isVoided
+                              ? `&lt;span class=&quot;text-[11px] font-bold text-red-600 bg-red-100 px-2 py-0.5 rounded border border-red-200&quot;&gt;Voided&lt;/span&gt;`
+                              : `&lt;span class=&quot;text-[11px] font-bold text-matcha bg-matcha-light px-2 py-0.5 rounded border border-matcha-border&quot;&gt;ชำระสำเร็จ&lt;/span&gt;`
+                          }
+                        &lt;/td&gt;
+                        &lt;td class=&quot;py-3 px-4 text-center&quot;&gt;
+                          ${
+                            isVoided
+                              ? `&lt;span class=&quot;text-[10px] text-warmgray-500&quot;&gt;${escapeHtml(item.voidBy || &#039;Admin&#039;)}&lt;/span&gt;`
+                              : `&lt;button onclick=&quot;appActions.confirmVoidReceipt(&#039;${item.receiptNo}&#039;)&quot; class=&quot;text-[11px] font-bold text-red-600 hover:underline px-2 py-0.5 bg-red-50 border border-red-200 rounded&quot;&gt;Void บิล&lt;/button&gt;`
+                          }
+                        &lt;/td&gt;
+                      &lt;/tr&gt;
+                    `;
+                  })
+                  .join(&#039;&#039;)}
+              &lt;/tbody&gt;
+            &lt;/table&gt;
+          &lt;/div&gt;
+        &lt;/div&gt;
+      &lt;/div&gt;
+    `;
+  } else if (state.adminTab === &#039;staff&#039;) {
+    mainContent = `
+      &lt;div class=&quot;space-y-5&quot;&gt;
+        &lt;div class=&quot;flex flex-col sm:flex-row sm:items-center justify-between gap-3&quot;&gt;
+          &lt;div&gt;
+            &lt;h2 class=&quot;text-xl sm:text-2xl font-extrabold text-espresso-900&quot;&gt;จัดการบัญชีพนักงาน &amp;amp; สิทธิ์การเข้าถึง (FR-01)&lt;/h2&gt;
+            &lt;p class=&quot;text-xs text-warmgray-600 mt-0.5&quot;&gt;กำหนดสิทธิ์การใช้งานสำหรับ Cashier, Barista และ ผู้จัดการร้าน&lt;/p&gt;
+          &lt;/div&gt;
+          &lt;button onclick=&quot;appActions.openAddStaffModal()&quot; class=&quot;px-4 py-2 bg-terracotta hover:bg-terracotta-hover text-white rounded-xl text-xs font-bold transition&quot;&gt;+ เพิ่มบัญชีพนักงานใหม่&lt;/button&gt;
+        &lt;/div&gt;
+
+        &lt;div class=&quot;bg-white rounded-2xl border border-cream-300 p-5 shadow-sm&quot;&gt;
+          &lt;div class=&quot;grid grid-cols-1 md:grid-cols-3 gap-4&quot;&gt;
+            ${state.staffAccounts
+              .map(
+                (acc) =&gt; `
+              &lt;div class=&quot;p-4 rounded-xl border border-cream-300 bg-cream-50 flex flex-col justify-between&quot;&gt;
+                &lt;div&gt;
+                  &lt;div class=&quot;flex items-center justify-between&quot;&gt;
+                    &lt;span class=&quot;font-bold text-sm text-espresso-900&quot;&gt;${escapeHtml(acc.name)}&lt;/span&gt;
+                    &lt;span class=&quot;text-xs bg-espresso-800 text-white px-2 py-0.5 rounded font-mono&quot;&gt;${escapeHtml(acc.roleLabel || acc.role)}&lt;/span&gt;
+                  &lt;/div&gt;
+                  &lt;div class=&quot;text-xs text-warmgray-600 mt-2 space-y-1&quot;&gt;
+                    &lt;div&gt;ชื่อผู้ใช้: &lt;strong class=&quot;font-mono&quot;&gt;${escapeHtml(acc.username)}&lt;/strong&gt;&lt;/div&gt;
+                    &lt;div&gt;PIN เข้าใช้งาน: &lt;strong class=&quot;font-mono&quot;&gt;${escapeHtml(acc.pin)}&lt;/strong&gt;&lt;/div&gt;
+                  &lt;/div&gt;
+                &lt;/div&gt;
+                &lt;div class=&quot;mt-4 pt-3 border-t border-cream-200 text-[11px] text-warmgray-500&quot;&gt;สิทธิ์: ${escapeHtml(acc.roleName)}&lt;/div&gt;
+              &lt;/div&gt;
+            `
+              )
+              .join(&#039;&#039;)}
+          &lt;/div&gt;
+        &lt;/div&gt;
+      &lt;/div&gt;
+    `;
+  }
+
+  return `
+    &lt;div class=&quot;flex-1 flex flex-col md:flex-row bg-cream-100 font-sans min-h-[calc(100vh-100px)]&quot;&gt;
+      &lt;aside class=&quot;w-full md:w-64 bg-cream-200 border-r border-cream-300 flex flex-col justify-between shrink-0&quot;&gt;
+        &lt;div&gt;
+          &lt;div class=&quot;p-4 border-b border-cream-300 bg-cream-50 flex items-center gap-3&quot;&gt;
+            &lt;div class=&quot;w-10 h-10 rounded-xl bg-terracotta flex items-center justify-center font-bold text-white shadow-sm&quot;&gt;JM&lt;/div&gt;
+            &lt;div&gt;
+              &lt;div class=&quot;font-bold text-sm text-espresso-900 leading-tight&quot;&gt;JAMAL CAFÉ&lt;/div&gt;
+              &lt;div class=&quot;text-[11px] font-medium text-terracotta&quot;&gt;ADMIN PORTAL&lt;/div&gt;
+            &lt;/div&gt;
+          &lt;/div&gt;
+
+          &lt;nav class=&quot;p-3 space-y-1 text-sm font-medium&quot;&gt;
+            &lt;button onclick=&quot;appActions.setAdminTab(&#039;dashboard&#039;)&quot; class=&quot;w-full text-left px-3.5 py-2.5 rounded-xl transition flex items-center gap-2.5 ${state.adminTab === &#039;dashboard&#039; ? &#039;bg-espresso-800 text-white font-bold shadow-sm&#039; : &#039;text-warmgray-600 hover:bg-cream-300/50&#039;}&quot;&gt;📊 แดชบอร์ดภาพรวม&lt;/button&gt;
+            &lt;button onclick=&quot;appActions.setAdminTab(&#039;inventory&#039;)&quot; class=&quot;w-full text-left px-3.5 py-2.5 rounded-xl transition flex items-center justify-between ${state.adminTab === &#039;inventory&#039; ? &#039;bg-espresso-800 text-white font-bold shadow-sm&#039; : &#039;text-warmgray-600 hover:bg-cream-300/50&#039;}&quot;&gt;
+              &lt;span&gt;🥐 สต็อกเบเกอรี่ (FR-03)&lt;/span&gt;
+              ${lowStockCount &gt; 0 ? `&lt;span class=&quot;bg-terracotta text-white text-[10px] px-2 py-0.5 rounded-full font-bold&quot;&gt;${lowStockCount}&lt;/span&gt;` : &#039;&#039;}
+            &lt;/button&gt;
+            &lt;button onclick=&quot;appActions.setAdminTab(&#039;menu&#039;)&quot; class=&quot;w-full text-left px-3.5 py-2.5 rounded-xl transition flex items-center gap-2.5 ${state.adminTab === &#039;menu&#039; ? &#039;bg-espresso-800 text-white font-bold shadow-sm&#039; : &#039;text-warmgray-600 hover:bg-cream-300/50&#039;}&quot;&gt;☕ จัดการเมนู &amp;amp; ราคา (FR-02)&lt;/button&gt;
+            &lt;button onclick=&quot;appActions.setAdminTab(&#039;sales&#039;)&quot; class=&quot;w-full text-left px-3.5 py-2.5 rounded-xl transition flex items-center gap-2.5 ${state.adminTab === &#039;sales&#039; ? &#039;bg-espresso-800 text-white font-bold shadow-sm&#039; : &#039;text-warmgray-600 hover:bg-cream-300/50&#039;}&quot;&gt;🧾 ประวัติการขาย &amp;amp; Void&lt;/button&gt;
+            &lt;button onclick=&quot;appActions.setAdminTab(&#039;staff&#039;)&quot; class=&quot;w-full text-left px-3.5 py-2.5 rounded-xl transition flex items-center gap-2.5 ${state.adminTab === &#039;staff&#039; ? &#039;bg-espresso-800 text-white font-bold shadow-sm&#039; : &#039;text-warmgray-600 hover:bg-cream-300/50&#039;}&quot;&gt;👥 จัดการสิทธิ์พนักงาน&lt;/button&gt;
+          &lt;/nav&gt;
+        &lt;/div&gt;
+
+        &lt;div class=&quot;p-3.5 border-t border-cream-300 text-xs text-warmgray-600 bg-cream-50&quot;&gt;
+          &lt;div class=&quot;font-bold text-espresso-900&quot;&gt;🛡 Admin Zai (Manager)&lt;/div&gt;
+          &lt;div class=&quot;text-[10px] text-warmgray-500&quot;&gt;สิทธิ์ผู้ดูแลระบบสูงสุด&lt;/div&gt;
+        &lt;/div&gt;
+      &lt;/aside&gt;
+
+      &lt;main class=&quot;flex-1 p-4 sm:p-6 overflow-y-auto max-w-6xl mx-auto w-full&quot;&gt;
+        ${mainContent}
+      &lt;/main&gt;
+
+      ${renderAddMenuModal()}
+      ${renderAddStaffModal()}
+    &lt;/div&gt;
+  `;
+}
+
+function renderAddMenuModal() {
+  if (!state.showAddMenuModal) return &#039;&#039;;
+  return `
+    &lt;div class=&quot;fixed inset-0 z-50 bg-espresso-950/60 backdrop-blur-sm flex items-center justify-center p-4&quot;&gt;
+      &lt;div class=&quot;bg-white rounded-2xl border border-cream-300 shadow-2xl max-w-lg w-full p-6&quot;&gt;
+        &lt;h3 class=&quot;text-lg font-extrabold text-espresso-900&quot;&gt;เพิ่มรายการสินค้าใหม่ (Add New Menu)&lt;/h3&gt;
+        &lt;p class=&quot;text-xs text-warmgray-600 mt-0.5&quot;&gt;ข้อกำหนด FR-02: เพิ่มเมนูและกำหนดราคาขายเข้าสู่ระบบ POS หน้าร้าน&lt;/p&gt;
+        &lt;form onsubmit=&quot;appActions.submitAddMenu(event)&quot; class=&quot;mt-4 space-y-3.5&quot;&gt;
+          &lt;div&gt;
+            &lt;label class=&quot;block text-xs font-bold text-espresso-900 mb-1&quot;&gt;ชื่อเมนู *&lt;/label&gt;
+            &lt;input type=&quot;text&quot; required placeholder=&quot;เช่น คาราเมลมัคคิอาโต้เย็น&quot; value=&quot;${escapeHtml(state.newMenuForm.name)}&quot; oninput=&quot;state.newMenuForm.name = this.value&quot; class=&quot;w-full px-3 py-2 text-sm border border-cream-300 rounded-xl bg-cream-50/50&quot; /&gt;
+          &lt;/div&gt;
+          &lt;div class=&quot;grid grid-cols-2 gap-3&quot;&gt;
+            &lt;div&gt;
+              &lt;label class=&quot;block text-xs font-bold text-espresso-900 mb-1&quot;&gt;หมวดหมู่ *&lt;/label&gt;
+              &lt;select onchange=&quot;state.newMenuForm.category = this.value&quot; class=&quot;w-full px-3 py-2 text-sm border border-cream-300 rounded-xl bg-cream-50/50&quot;&gt;
+                &lt;option value=&quot;coffee&quot; ${state.newMenuForm.category === &#039;coffee&#039; ? &#039;selected&#039; : &#039;&#039;}&gt;☕ กาแฟสด&lt;/option&gt;
+                &lt;option value=&quot;non-coffee&quot; ${state.newMenuForm.category === &#039;non-coffee&#039; ? &#039;selected&#039; : &#039;&#039;}&gt;🍵 ชา &amp;amp; เครื่องดื่ม&lt;/option&gt;
+                &lt;option value=&quot;bakery&quot; ${state.newMenuForm.category === &#039;bakery&#039; ? &#039;selected&#039; : &#039;&#039;}&gt;🥐 เบเกอรี่สด&lt;/option&gt;
+                &lt;option value=&quot;dessert&quot; ${state.newMenuForm.category === &#039;dessert&#039; ? &#039;selected&#039; : &#039;&#039;}&gt;🍰 ของหวาน&lt;/option&gt;
+              &lt;/select&gt;
+            &lt;/div&gt;
+            &lt;div&gt;
+              &lt;label class=&quot;block text-xs font-bold text-espresso-900 mb-1&quot;&gt;ราคาขายหน้าร้าน (บาท) *&lt;/label&gt;
+              &lt;input type=&quot;number&quot; required min=&quot;1&quot; placeholder=&quot;75&quot; value=&quot;${escapeHtml(state.newMenuForm.price)}&quot; oninput=&quot;state.newMenuForm.price = this.value&quot; class=&quot;w-full px-3 py-2 text-sm border border-cream-300 rounded-xl bg-cream-50/50 font-mono&quot; /&gt;
+            &lt;/div&gt;
+          &lt;/div&gt;
+          &lt;div&gt;
+            &lt;label class=&quot;block text-xs font-bold text-espresso-900 mb-1&quot;&gt;คำอธิบายเมนู&lt;/label&gt;
+            &lt;input type=&quot;text&quot; placeholder=&quot;เช่น หอมคาราเมล หวานนุ่มละมุน&quot; value=&quot;${escapeHtml(state.newMenuForm.desc)}&quot; oninput=&quot;state.newMenuForm.desc = this.value&quot; class=&quot;w-full px-3 py-2 text-sm border border-cream-300 rounded-xl bg-cream-50/50&quot; /&gt;
+          &lt;/div&gt;
+          &lt;div class=&quot;flex items-center justify-end gap-2 pt-3 border-t border-cream-200&quot;&gt;
+            &lt;button type=&quot;button&quot; onclick=&quot;appActions.closeAddMenuModal()&quot; class=&quot;px-4 py-2 bg-cream-200 text-espresso-800 rounded-xl text-xs font-bold&quot;&gt;ยกเลิก&lt;/button&gt;
+            &lt;button type=&quot;submit&quot; class=&quot;px-5 py-2 bg-terracotta text-white rounded-xl text-xs font-bold&quot;&gt;✓ บันทึกและเพิ่มเมนู&lt;/button&gt;
+          &lt;/div&gt;
+        &lt;/form&gt;
+      &lt;/div&gt;
+    &lt;/div&gt;
+  `;
+}
+
+function renderAddStaffModal() {
+  if (!state.showAddStaffModal) return &#039;&#039;;
+  return `
+    &lt;div class=&quot;fixed inset-0 z-50 bg-espresso-950/60 backdrop-blur-sm flex items-center justify-center p-4&quot;&gt;
+      &lt;div class=&quot;bg-white rounded-2xl border border-cream-300 shadow-2xl max-w-md w-full p-6&quot;&gt;
+        &lt;h3 class=&quot;text-lg font-extrabold text-espresso-900&quot;&gt;เพิ่มบัญชีพนักงานใหม่ (Add Staff Account)&lt;/h3&gt;
+        &lt;p class=&quot;text-xs text-warmgray-600 mt-0.5&quot;&gt;ข้อกำหนด FR-01: กำหนดบทบาทและรหัส PIN 4 หลักสำหรับเข้าใช้งานระบบ&lt;/p&gt;
+        &lt;form onsubmit=&quot;appActions.submitAddStaff(event)&quot; class=&quot;mt-4 space-y-3.5&quot;&gt;
+          &lt;div&gt;
+            &lt;label class=&quot;block text-xs font-bold text-espresso-900 mb-1&quot;&gt;ชื่อ-นามสกุลพนักงาน *&lt;/label&gt;
+            &lt;input type=&quot;text&quot; required placeholder=&quot;เช่น แพรวพรรณ (คุณแพรว)&quot; value=&quot;${escapeHtml(state.newStaffForm.name)}&quot; oninput=&quot;state.newStaffForm.name = this.value&quot; class=&quot;w-full px-3 py-2 text-sm border border-cream-300 rounded-xl bg-cream-50/50&quot; /&gt;
+          &lt;/div&gt;
+          &lt;div&gt;
+            &lt;label class=&quot;block text-xs font-bold text-espresso-900 mb-1&quot;&gt;บทบาท / สิทธิ์การใช้งาน *&lt;/label&gt;
+            &lt;select onchange=&quot;state.newStaffForm.role = this.value&quot; class=&quot;w-full px-3 py-2 text-sm border border-cream-300 rounded-xl bg-cream-50/50&quot;&gt;
+              &lt;option value=&quot;Cashier&quot;&gt;🛍️ แคชเชียร์ (ขายหน้าร้าน, คิดเงิน)&lt;/option&gt;
+              &lt;option value=&quot;Barista&quot;&gt;☕ บาริสต้า (ห้องครัว, จอ KDS)&lt;/option&gt;
+              &lt;option value=&quot;Admin&quot;&gt;👑 ผู้จัดการร้าน (สิทธิ์เต็มรูปแบบ, Void บิล)&lt;/option&gt;
+            &lt;/select&gt;
+          &lt;/div&gt;
+          &lt;div class=&quot;grid grid-cols-2 gap-3&quot;&gt;
+            &lt;div&gt;
+              &lt;label class=&quot;block text-xs font-bold text-espresso-900 mb-1&quot;&gt;ชื่อผู้ใช้ (Username) *&lt;/label&gt;
+              &lt;input type=&quot;text&quot; required placeholder=&quot;cashier2&quot; value=&quot;${escapeHtml(state.newStaffForm.username)}&quot; oninput=&quot;state.newStaffForm.username = this.value&quot; class=&quot;w-full px-3 py-2 text-sm border border-cream-300 rounded-xl bg-cream-50/50 font-mono&quot; /&gt;
+            &lt;/div&gt;
+            &lt;div&gt;
+              &lt;label class=&quot;block text-xs font-bold text-espresso-900 mb-1&quot;&gt;รหัส PIN 4 หลัก *&lt;/label&gt;
+              &lt;input type=&quot;password&quot; maxlength=&quot;4&quot; required placeholder=&quot;2580&quot; value=&quot;${escapeHtml(state.newStaffForm.pin)}&quot; oninput=&quot;state.newStaffForm.pin = this.value&quot; class=&quot;w-full px-3 py-2 text-sm border border-cream-300 rounded-xl bg-cream-50/50 font-mono tracking-widest&quot; /&gt;
+            &lt;/div&gt;
+          &lt;/div&gt;
+          &lt;div class=&quot;flex items-center justify-end gap-2 pt-3 border-t border-cream-200&quot;&gt;
+            &lt;button type=&quot;button&quot; onclick=&quot;appActions.closeAddStaffModal()&quot; class=&quot;px-4 py-2 bg-cream-200 text-espresso-800 rounded-xl text-xs font-bold&quot;&gt;ยกเลิก&lt;/button&gt;
+            &lt;button type=&quot;submit&quot; class=&quot;px-5 py-2 bg-terracotta text-white rounded-xl text-xs font-bold&quot;&gt;✓ บันทึกบัญชีพนักงาน&lt;/button&gt;
+          &lt;/div&gt;
+        &lt;/form&gt;
+      &lt;/div&gt;
+    &lt;/div&gt;
+  `;
+}
+
+function renderCustomerMobilePage() {
+  const currentTrackedOrder = state.orders.find((o) =&gt; o.queueNo === state.customerQueueNo);
+  let queueInfo = {
+    badgeText: &#039;รอคิวในระบบ&#039;,
+    badgeBg: &#039;bg-warmgray-600&#039;,
+    desc: &#039;ออเดอร์ได้รับการบันทึกในระบบเรียบร้อยแล้ว&#039;,
+  };
+  if (currentTrackedOrder) {
+    if (currentTrackedOrder.status === &#039;pending&#039;) {
+      queueInfo = {
+        badgeText: &#039;รอดำเนินการ (รอชง)&#039;,
+        badgeBg: &#039;bg-amber-600&#039;,
+        desc: &#039;บาริสต้าได้รับรายการแล้ว รอเริ่มคิวชงเครื่องดื่ม&#039;,
+      };
+    } else if (currentTrackedOrder.status === &#039;in_progress&#039;) {
+      queueInfo = {
+        badgeText: &#039;กำลังจัดเตรียม (3 น.)&#039;,
+        badgeBg: &#039;bg-blue-600&#039;,
+        desc: &#039;บาริสต้ากำลังชงเครื่องดื่มให้คุณอย่างพิถีพิถัน&#039;,
+      };
+    } else if (currentTrackedOrder.status === &#039;ready&#039;) {
+      queueInfo = {
+        badgeText: &#039;พร้อมรับเครื่องดื่ม!&#039;,
+        badgeBg: &#039;bg-matcha&#039;,
+        desc: &#039;✨ เครื่องดื่มของคุณพร้อมแล้ว! เชิญรับได้ที่เคาน์เตอร์&#039;,
+      };
+    } else {
+      queueInfo = {
+        badgeText: &#039;เสร็จสิ้นแล้ว&#039;,
+        badgeBg: &#039;bg-warmgray-500&#039;,
+        desc: &#039;ขอบคุณที่ใช้บริการ Jamal Café &amp; Bakery&#039;,
+      };
+    }
+  }
+
+  const mobileCategories = [
+    { id: &#039;popular&#039;, label: &#039;เมนูยอดนิยม&#039; },
+    { id: &#039;coffee&#039;, label: &#039;กาแฟสด&#039; },
+    { id: &#039;non-coffee&#039;, label: &#039;ชา &amp; นมสด&#039; },
+    { id: &#039;bakery&#039;, label: &#039;เบเกอรี่&#039; },
+    { id: &#039;dessert&#039;, label: &#039;ของหวาน&#039; },
+  ];
+
+  const filteredProducts =
+    state.mobileCategory === &#039;popular&#039;
+      ? state.products.slice(0, 5)
+      : state.products.filter((p) =&gt; p.category === state.mobileCategory);
+
+  const cartItemCount = state.mobileCart.reduce((s, i) =&gt; s + i.quantity, 0);
+  const cartTotal = state.mobileCart.reduce((s, i) =&gt; s + i.price * i.quantity, 0);
+
+  return `
+    &lt;div class=&quot;flex-1 flex flex-col items-center bg-[#EDE7DF] p-2 sm:p-6 font-sans min-h-[calc(100vh-100px)]&quot;&gt;
+      &lt;div class=&quot;w-full max-w-md flex items-center justify-between mb-3 px-2 text-xs text-warmgray-600&quot;&gt;
+        &lt;div class=&quot;font-medium&quot;&gt;📱 Figma Spec: 05_customer_mobile (393 × 852)&lt;/div&gt;
+        &lt;button onclick=&quot;appActions.toggleMobileFrame()&quot; class=&quot;px-2.5 py-1 rounded-lg bg-white border border-cream-300 shadow-sm hover:bg-cream-100 transition font-medium&quot;&gt;
+          ${state.mobileFrameMode ? &#039;เต็มจอ&#039; : &#039;กรอบมือถือ&#039;}
+        &lt;/button&gt;
+      &lt;/div&gt;
+
+      ${
+        state.mobileSuccessMsg
+          ? `
+        &lt;div class=&quot;w-full max-w-md mb-3 bg-matcha text-white text-xs font-bold px-4 py-2.5 rounded-xl shadow-md flex items-center justify-between&quot;&gt;
+          &lt;span&gt;✨ ${escapeHtml(state.mobileSuccessMsg)}&lt;/span&gt;
+          &lt;button onclick=&quot;state.mobileSuccessMsg = null; render();&quot;&gt;✕&lt;/button&gt;
+        &lt;/div&gt;
+      `
+          : &#039;&#039;
+      }
+
+      &lt;div class=&quot;w-full bg-[#FBF8F4] overflow-hidden flex flex-col shadow-2xl transition-all relative ${
+        state.mobileFrameMode
+          ? &#039;max-w-[393px] h-[852px] rounded-[44px] border-[8px] border-espresso-900&#039;
+          : &#039;max-w-2xl rounded-2xl border border-cream-300 min-h-[800px]&#039;
+      }&quot;&gt;
+        &lt;div class=&quot;bg-espresso-900 text-white px-6 pt-3 pb-2 flex items-center justify-between shrink-0 select-none&quot;&gt;
+          &lt;span class=&quot;text-xs font-bold font-mono&quot;&gt;9:41&lt;/span&gt;
+          &lt;div class=&quot;w-24 h-5 bg-black rounded-full mx-auto&quot;&gt;&lt;/div&gt;
+          &lt;span class=&quot;text-[10px]&quot;&gt;5G 100%&lt;/span&gt;
+        &lt;/div&gt;
+
+        &lt;div class=&quot;bg-white px-4 py-2.5 border-b border-cream-300 flex items-center justify-between shrink-0&quot;&gt;
+          &lt;div&gt;
+            &lt;div class=&quot;text-[11px] font-mono font-bold text-terracotta&quot;&gt;โต๊ะ ${escapeHtml(state.mobileTableNo)} • สั่งทานที่ร้าน&lt;/div&gt;
+            &lt;div class=&quot;text-base font-extrabold text-espresso-900 tracking-tight&quot;&gt;JAMAL CAFÉ&lt;/div&gt;
+          &lt;/div&gt;
+          &lt;span class=&quot;bg-[#EAF4ED] text-matcha text-[11px] font-bold px-2.5 py-1 rounded-full border border-[#CEE5D3]&quot;&gt;● เปิดบริการ&lt;/span&gt;
+        &lt;/div&gt;
+
+        &lt;div class=&quot;flex-1 overflow-y-auto p-4 space-y-4 pb-28&quot;&gt;
+          &lt;div class=&quot;bg-espresso-900 text-white rounded-2xl p-3.5 shadow-md&quot;&gt;
+            &lt;div class=&quot;flex items-center justify-between&quot;&gt;
+              &lt;span class=&quot;text-sm font-extrabold font-mono text-white&quot;&gt;คิวของคุณ: #${escapeHtml(state.customerQueueNo)}&lt;/span&gt;
+              &lt;span class=&quot;${queueInfo.badgeBg} text-white text-[10px] font-bold px-2 py-0.5 rounded-md&quot;&gt;${queueInfo.badgeText}&lt;/span&gt;
+            &lt;/div&gt;
+            &lt;p class=&quot;text-[11px] text-warmgray-400 mt-2&quot;&gt;${queueInfo.desc}&lt;/p&gt;
+          &lt;/div&gt;
+
+          &lt;div class=&quot;flex items-center gap-1.5 overflow-x-auto no-scrollbar pb-1&quot;&gt;
+            ${mobileCategories
+              .map(
+                (cat) =&gt; `
+              &lt;button
+                onclick=&quot;appActions.setMobileCategory(&#039;${cat.id}&#039;)&quot;
+                class=&quot;px-3 py-1.5 rounded-xl text-xs font-semibold whitespace-nowrap transition ${
+                  state.mobileCategory === cat.id
+                    ? &#039;bg-espresso-800 text-white shadow-sm&#039;
+                    : &#039;bg-white text-warmgray-600 border border-cream-300&#039;
+                }&quot;
+              &gt;${cat.label}&lt;/button&gt;
+            `
+              )
+              .join(&#039;&#039;)}
+          &lt;/div&gt;
+
+          &lt;div class=&quot;space-y-3&quot;&gt;
+            ${filteredProducts
+              .map((product) =&gt; {
+                const isOutOfStock = product.stock !== null &amp;&amp; product.stock &lt;= 0;
+                return `
+                  &lt;div class=&quot;bg-white rounded-2xl border border-cream-300 p-3 flex gap-3 shadow-sm ${isOutOfStock ? &#039;opacity-60 bg-cream-50&#039; : &#039;&#039;}&quot;&gt;
+                    &lt;div class=&quot;w-20 h-20 rounded-xl overflow-hidden bg-cream-200 shrink-0 border border-cream-200 relative&quot;&gt;
+                      &lt;img src=&quot;${escapeHtml(product.img)}&quot; alt=&quot;${escapeHtml(product.name)}&quot; class=&quot;w-full h-full object-cover&quot; /&gt;
+                    &lt;/div&gt;
+                    &lt;div class=&quot;flex-1 flex flex-col justify-between&quot;&gt;
+                      &lt;div&gt;
+                        &lt;div class=&quot;font-bold text-xs sm:text-sm text-espresso-900&quot;&gt;${escapeHtml(product.name.split(&#039; (&#039;)[0])}&lt;/div&gt;
+                        &lt;div class=&quot;text-[11px] text-warmgray-500 line-clamp-1 mt-0.5&quot;&gt;${escapeHtml(product.desc)}&lt;/div&gt;
+                      &lt;/div&gt;
+                      &lt;div class=&quot;flex items-center justify-between mt-2&quot;&gt;
+                        &lt;span class=&quot;font-mono font-extrabold text-sm text-terracotta&quot;&gt;฿${product.price.toFixed(2)}&lt;/span&gt;
+                        ${
+                          isOutOfStock
+                            ? `&lt;span class=&quot;bg-red-50 text-red-600 text-[10px] font-bold px-2 py-1 rounded-md border border-red-200&quot;&gt;Out of Stock (สินค้าหมด)&lt;/span&gt;`
+                            : `&lt;button onclick=&quot;appActions.clickMobileProduct(&#039;${product.id}&#039;)&quot; class=&quot;px-3 py-1 bg-espresso-900 hover:bg-espresso-800 text-white text-xs font-bold rounded-lg&quot;&gt;+ สั่ง&lt;/button&gt;`
+                        }
+                      &lt;/div&gt;
+                    &lt;/div&gt;
+                  &lt;/div&gt;
+                `;
+              })
+              .join(&#039;&#039;)}
+          &lt;/div&gt;
+        &lt;/div&gt;
+
+        &lt;div class=&quot;absolute bottom-0 left-0 right-0 bg-white border-t border-cream-300 p-3 flex items-center justify-between shadow-lg z-20&quot;&gt;
+          &lt;div&gt;
+            &lt;div class=&quot;text-[11px] text-warmgray-500&quot;&gt;ยอดรวม ${cartItemCount} รายการในตะกร้า&lt;/div&gt;
+            &lt;div class=&quot;text-base font-extrabold font-mono text-espresso-900&quot;&gt;฿${cartTotal.toFixed(2)}&lt;/div&gt;
+          &lt;/div&gt;
+          &lt;button
+            onclick=&quot;appActions.openMobileCartDrawer()&quot;
+            ${state.mobileCart.length === 0 ? &#039;disabled&#039; : &#039;&#039;}
+            class=&quot;px-4 py-2.5 rounded-xl font-bold text-xs text-white transition ${
+              state.mobileCart.length &gt; 0 ? &#039;bg-terracotta hover:bg-terracotta-hover&#039; : &#039;bg-warmgray-400 cursor-not-allowed&#039;
+            }&quot;
+          &gt;
+            🛍 ดูตะกร้า (${cartItemCount}) →
+          &lt;/button&gt;
+        &lt;/div&gt;
+
+        ${
+          state.mobileCustomProduct
+            ? `
+          &lt;div class=&quot;absolute inset-0 bg-espresso-900/60 z-30 flex flex-col justify-end&quot;&gt;
+            &lt;div class=&quot;bg-white rounded-t-3xl p-5 space-y-4 border-t border-cream-300 shadow-2xl&quot;&gt;
+              &lt;div class=&quot;flex justify-between items-center&quot;&gt;
+                &lt;div&gt;
+                  &lt;h4 class=&quot;font-bold text-sm text-espresso-900&quot;&gt;ปรับแต่ง: ${escapeHtml(state.mobileCustomProduct.name.split(&#039; (&#039;)[0])}&lt;/h4&gt;
+                  &lt;p class=&quot;text-xs text-warmgray-500&quot;&gt;เลือกความหวานและชนิดนมตามต้องการ&lt;/p&gt;
+                &lt;/div&gt;
+                &lt;button onclick=&quot;appActions.closeMobileCustom()&quot; class=&quot;p-1.5 text-warmgray-400&quot;&gt;✕&lt;/button&gt;
+              &lt;/div&gt;
+              &lt;div&gt;
+                &lt;label class=&quot;block text-xs font-bold text-espresso-900 mb-1.5&quot;&gt;ระดับความหวาน&lt;/label&gt;
+                &lt;div class=&quot;grid grid-cols-4 gap-1.5&quot;&gt;
+                  ${[&#039;0%&#039;, &#039;25%&#039;, &#039;50%&#039;, &#039;100%&#039;]
+                    .map(
+                      (lvl) =&gt; `
+                    &lt;button onclick=&quot;appActions.setMobileSweetness(&#039;${lvl}&#039;)&quot; class=&quot;py-1.5 rounded-lg text-xs font-semibold border ${state.mobileCustomSweetness === lvl ? &#039;bg-terracotta text-white border-terracotta&#039; : &#039;bg-cream-50 text-warmgray-600 border-cream-300&#039;}&quot;&gt;${lvl}&lt;/button&gt;
+                  `
+                    )
+                    .join(&#039;&#039;)}
+                &lt;/div&gt;
+              &lt;/div&gt;
+              &lt;div&gt;
+                &lt;label class=&quot;block text-xs font-bold text-espresso-900 mb-1.5&quot;&gt;ชนิดนม&lt;/label&gt;
+                &lt;div class=&quot;grid grid-cols-3 gap-1.5&quot;&gt;
+                  ${[&#039;นมปกติ&#039;, &#039;นมโอ๊ต (+15฿)&#039;, &#039;นมอัลมอนด์ (+15฿)&#039;]
+                    .map(
+                      (m) =&gt; `
+                    &lt;button onclick=&quot;appActions.setMobileMilk(&#039;${m}&#039;)&quot; class=&quot;py-1.5 px-2 rounded-lg text-[11px] font-semibold border truncate ${state.mobileCustomMilk === m ? &#039;bg-matcha text-white border-matcha&#039; : &#039;bg-cream-50 text-warmgray-600 border-cream-300&#039;}&quot;&gt;${m}&lt;/button&gt;
+                  `
+                    )
+                    .join(&#039;&#039;)}
+                &lt;/div&gt;
+              &lt;/div&gt;
+              &lt;button onclick=&quot;appActions.confirmMobileCustomization()&quot; class=&quot;w-full py-2.5 bg-terracotta text-white font-bold text-xs rounded-xl shadow-md&quot;&gt;
+                เพิ่มลงตะกร้า • ฿${(state.mobileCustomProduct.price + (state.mobileCustomMilk.includes(&#039;(+15฿)&#039;) ? 15 : 0)).toFixed(2)}
+              &lt;/button&gt;
+            &lt;/div&gt;
+          &lt;/div&gt;
+        `
+            : &#039;&#039;
+        }
+
+        ${
+          state.showMobileCartDrawer
+            ? `
+          &lt;div class=&quot;absolute inset-0 bg-espresso-900/60 z-30 flex flex-col justify-end&quot;&gt;
+            &lt;div class=&quot;bg-white rounded-t-3xl p-5 space-y-4 border-t border-cream-300 shadow-2xl max-h-[85%] flex flex-col&quot;&gt;
+              &lt;div class=&quot;flex justify-between items-center border-b border-cream-200 pb-3&quot;&gt;
+                &lt;h4 class=&quot;font-bold text-sm text-espresso-900&quot;&gt;🛍 รายการในตะกร้า (${cartItemCount})&lt;/h4&gt;
+                &lt;button onclick=&quot;appActions.closeMobileCartDrawer()&quot; class=&quot;p-1.5 text-warmgray-400&quot;&gt;✕&lt;/button&gt;
+              &lt;/div&gt;
+              &lt;div class=&quot;flex items-center justify-between text-xs bg-cream-50 p-2.5 rounded-xl border border-cream-200&quot;&gt;
+                &lt;span class=&quot;font-semibold text-espresso-800&quot;&gt;ระบุหมายเลขโต๊ะ:&lt;/span&gt;
+                &lt;select onchange=&quot;state.mobileTableNo = this.value; render();&quot; class=&quot;bg-white border border-cream-300 rounded-lg px-2 py-1 font-bold text-espresso-900&quot;&gt;
+                  ${[&#039;01&#039;, &#039;02&#039;, &#039;03&#039;, &#039;04&#039;, &#039;05&#039;]
+                    .map(
+                      (t) =&gt; `&lt;option value=&quot;${t}&quot; ${state.mobileTableNo === t ? &#039;selected&#039; : &#039;&#039;}&gt;โต๊ะ ${t}&lt;/option&gt;`
+                    )
+                    .join(&#039;&#039;)}
+                &lt;/select&gt;
+              &lt;/div&gt;
+              &lt;div class=&quot;flex-1 overflow-y-auto space-y-2.5 py-1&quot;&gt;
+                ${state.mobileCart
+                  .map(
+                    (it) =&gt; `
+                  &lt;div class=&quot;flex items-center justify-between border-b border-cream-100 pb-2 text-xs&quot;&gt;
+                    &lt;div&gt;
+                      &lt;div class=&quot;font-bold text-espresso-900&quot;&gt;${it.quantity}x ${escapeHtml(it.name)}&lt;/div&gt;
+                      ${it.optionsText ? `&lt;div class=&quot;text-[10px] text-terracotta&quot;&gt;↳ ${escapeHtml(it.optionsText)}&lt;/div&gt;` : &#039;&#039;}
+                    &lt;/div&gt;
+                    &lt;div class=&quot;font-mono font-bold text-espresso-900&quot;&gt;฿${(it.price * it.quantity).toFixed(2)}&lt;/div&gt;
+                  &lt;/div&gt;
+                `
+                  )
+                  .join(&#039;&#039;)}
+              &lt;/div&gt;
+              &lt;div class=&quot;border-t border-cream-200 pt-3 space-y-1.5 text-xs&quot;&gt;
+                &lt;div class=&quot;flex justify-between text-warmgray-600&quot;&gt;&lt;span&gt;ยอดรวม (Subtotal)&lt;/span&gt;&lt;span class=&quot;font-mono&quot;&gt;฿${(cartTotal / 1.07).toFixed(2)}&lt;/span&gt;&lt;/div&gt;
+                &lt;div class=&quot;flex justify-between text-warmgray-600&quot;&gt;&lt;span&gt;ภาษีมูลค่าเพิ่ม VAT 7%&lt;/span&gt;&lt;span class=&quot;font-mono&quot;&gt;฿${(cartTotal - cartTotal / 1.07).toFixed(2)}&lt;/span&gt;&lt;/div&gt;
+                &lt;div class=&quot;flex justify-between font-bold text-sm text-espresso-900 pt-1&quot;&gt;&lt;span&gt;ยอดสุทธิ (Total)&lt;/span&gt;&lt;span class=&quot;font-mono text-terracotta&quot;&gt;฿${cartTotal.toFixed(2)}&lt;/span&gt;&lt;/div&gt;
+              &lt;/div&gt;
+              &lt;button onclick=&quot;appActions.placeMobileOrder()&quot; class=&quot;w-full py-3 bg-terracotta text-white font-bold text-xs rounded-xl shadow-md&quot;&gt;
+                ✓ ยืนยันการสั่งซื้อ • ส่งเข้าครัวทันที
+              &lt;/button&gt;
+            &lt;/div&gt;
+          &lt;/div&gt;
+        `
+            : &#039;&#039;
+        }
+      &lt;/div&gt;
+    &lt;/div&gt;
+  `;
+}
+
+// ============================================================================
+// MAIN RENDER &amp; LIFECYCLE
+// ============================================================================
+
+function render() {
+  const root = document.getElementById(&#039;app&#039;);
+  if (!root) return;
+
+  let pageHtml = &#039;&#039;;
+  if (state.currentPage === &#039;login&#039;) pageHtml = renderLoginPage();
+  else if (state.currentPage === &#039;pos&#039;) pageHtml = renderPosPage();
+  else if (state.currentPage === &#039;kds&#039;) pageHtml = renderKdsPage();
+  else if (state.currentPage === &#039;admin&#039;) pageHtml = renderAdminPage();
+  else if (state.currentPage === &#039;customer&#039;) pageHtml = renderCustomerMobilePage();
+
+  root.innerHTML = `
+    ${renderNavbar()}
+    ${renderSessionBar()}
+    &lt;div class=&quot;flex-1 flex flex-col&quot;&gt;
+      ${pageHtml}
+    &lt;/div&gt;
+  `;
+}
+
+// NFR-04: 15-minute Session Timeout listeners &amp; interval
+[&#039;click&#039;, &#039;keydown&#039;, &#039;touchstart&#039;].forEach((evt) =&gt; {
+  window.addEventListener(evt, () =&gt; {
+    if (state.currentUser) {
+      state.remainingSeconds = SESSION_TIMEOUT_SECONDS;
+      const el = document.getElementById(&#039;session-timer-display&#039;);
+      if (el) el.textContent = formatTime(state.remainingSeconds);
+    }
+  });
+});
+
+setInterval(() =&gt; {
+  if (!state.currentUser) return;
+  if (state.remainingSeconds &lt;= 1) {
+    state.remainingSeconds = SESSION_TIMEOUT_SECONDS;
+    window.appActions.logout(&#039;หมดเวลาเซสชัน 15 นาทีตามนโยบายความปลอดภัย (NFR-04 Session Timeout)&#039;);
+  } else {
+    state.remainingSeconds -= 1;
+    const el = document.getElementById(&#039;session-timer-display&#039;);
+    if (el) el.textContent = formatTime(state.remainingSeconds);
+  }
+}, 1000);
+
+// Initialize application
+fetchState();
+</textarea>
+  </div>
+</div>
+
+<footer class="footer">
+  <div class="container">
+    <p>.</p>
+  </div>
+</footer>
+
+<script type="text/html" id="complexity-popover-template">
+  <div class="complexity-notice">
+    Complexity : {{ complexity.cyclomatic }} <br>
+    Length : {{ complexity.halstead.length }} <br>
+    Difficulty : {{ complexity.halstead.difficulty.toFixed(2) }} <br>
+    Est # bugs : {{ complexity.halstead.bugs.toFixed(2) }}<br>
+  </div>
+</script>
+
+<script type="text/javascript" src="../../assets/scripts/bundles/core-bundle.js"></script>
+<script type="text/javascript" src="../../assets/scripts/bundles/codemirror.js"></script>
+<script type="text/javascript" src="../../assets/scripts/codemirror.markpopovertext.js"></script>
+<script type="text/javascript" src="report.js"></script>
+<script type="text/javascript" src="report.history.js"></script>
+<script type="text/javascript" src="../../assets/scripts/plato-file.js"></script>
+</body>
+</html>

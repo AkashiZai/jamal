@@ -1,0 +1,17 @@
+{
+  "name": "jamal-pos-workspace",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Jamal Café & Bakery POS System Workspace",
+  "scripts": {
+    "start": "npm --prefix frontend start",
+    "dev": "npm --prefix frontend run dev",
+    "test": "npm --prefix frontend test",
+    "test:coverage": "npm --prefix frontend run test:coverage",
+    "test:ui": "npm --prefix frontend run test:ui",
+    "plato": "npm --prefix frontend run plato",
+    "test:plato": "npm --prefix frontend run test:plato",
+    "lint": "npm --prefix frontend run lint",
+    "install:all": "npm --prefix frontend install"
+  }
+}

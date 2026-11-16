@@ -11,7 +11,9 @@
     "test:coverage": "jest --runInBand --coverage",
     "test:ui": "playwright test tests/ui",
     "lint": "eslint models server.js public/app.js",
-    "profile:dynamic": "node scripts/profile_dynamic.js"
+    "profile:dynamic": "node scripts/profile_dynamic.js",
+    "plato": "es6-plato -r -d ../reports/plato -t \"Jamal POS - Plato Code Analysis & Complexity Report\" models tests server.js public/app.js",
+    "test:plato": "npm run test:coverage && npm run plato"
   },
   "jest": {
     "testEnvironment": "node",
@@ -32,6 +34,7 @@
   },
   "devDependencies": {
     "@playwright/test": "^1.49.0",
+    "es6-plato": "^1.2.3",
     "eslint": "^9.15.0",
     "jest": "^29.7.0",
     "jest-junit": "^16.0.0",

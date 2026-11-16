@@ -104,7 +104,7 @@ describe('StaffModel Unit Tests', () => {
     expect(addedDefault.ok).toBe(true);
     expect(model.countStaffByRole()).toEqual({ admin: 2, cashier: 2, operator: 1, total: 5 });
 
-    const now = 1_000_000;
+    const now = 1000000;
     expect(model.isSessionExpired(0, now)).toBe(false);
     expect(model.isSessionExpired(now + 1000, now)).toBe(false);
     expect(model.isSessionExpired(now - 10 * 60 * 1000, now)).toBe(false);

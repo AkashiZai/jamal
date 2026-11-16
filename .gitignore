@@ -10,6 +10,11 @@ lerna-debug.log*
 # Node dependencies
 node_modules/
 frontend/node_modules/
+coverage/
+frontend/coverage/
+frontend/report/
+test-results/
+frontend/test-results/
 dist/
 frontend/dist/
 dist-ssr/

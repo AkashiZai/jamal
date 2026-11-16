@@ -127,7 +127,7 @@ function playChime(type = 'notification') {
 }
 
 function escapeHtml(str) {
-  return String(str ?? '')
+  return String(str !== undefined && str !== null ? str : '')
     .replace(/&/g, '&amp;')
     .replace(/</g, '&lt;')
     .replace(/>/g, '&gt;')
@@ -541,7 +541,7 @@ window.appActions = {
   },
 
   quickCash(val) {
-    const total = state.checkoutSummary?.totalAmount || 0;
+    const total = (state.checkoutSummary && state.checkoutSummary.totalAmount) || 0;
     state.cashEntered = val === 'exact' ? Math.ceil(total) : Number(val);
     render();
   },
@@ -554,7 +554,7 @@ window.appActions = {
   },
 
   async confirmPayment() {
-    const total = state.checkoutSummary?.totalAmount || 0;
+    const total = (state.checkoutSummary && state.checkoutSummary.totalAmount) || 0;
     if (state.paymentMethod === 'cash' && state.cashEntered < total) {
       alert('ยอดเงินสดที่รับมาน้อยกว่ายอดที่ต้องชำระ!');
       return;

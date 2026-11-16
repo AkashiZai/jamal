@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Plato - tests/inventory.test.js</title>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="">
+  <meta name="author" content="">
+
+  <!--[if lt IE 9]>
+  <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+  <![endif]-->
+
+  <link href="../../assets/css/vendor/morris.css" rel="stylesheet" type="text/css">
+  <link href="../../assets/css/vendor/bootstrap.css" rel="stylesheet" type="text/css">
+  <link href="../../assets/css/vendor/font-awesome.css" rel="stylesheet" type="text/css">
+  <link href="../../assets/css/vendor/codemirror.css" rel="stylesheet" type="text/css">
+  <link href="../../assets/css/plato.css" rel="stylesheet" type="text/css">
+  <link href="../../assets/css/plato-file.css" rel="stylesheet" type="text/css">
+
+</head>
+
+<body>
+
+<div class="navbar navbar-fixed-top">
+  <div class="container">
+    <a class="navbar-brand" href="https://github.com/the-simian/es6-plato">ES6 Plato on Github</a>
+    <ul class="nav navbar-nav">
+      <li>
+        <a href="../../index.html">Report Home</a>
+      </li>
+      <li class="active">
+        <a href="display.html">Summary Display</a>
+      </li>
+    </ul>
+  </div>
+</div>
+
+<div class="jumbotron">
+  <div class="container">
+    <h1>tests/inventory.test.js</h1>
+  </div>
+</div>
+
+<div class="container aggregate-stats">
+  <div class="row">
+    <div class="col-md-6">
+      <h2 class="header">Maintainability <a href="http://blogs.msdn.com/b/codeanalysis/archive/2007/11/20/maintainability-index-range-and-meaning.aspx"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="A value between 0 and 100 that represents the relative ease of maintaining the code. A high value means better maintainability." data-original-title="Maintainability Index"  data-container="body"></i></a></h2>
+      <p class="stat">60.55</p>
+    </div>
+    <div class="col-md-6">
+      <h2 class="header">Lines of code <i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="Source Lines of Code / Logical Lines of Code" data-original-title="SLOC/LSLOC" data-container="body"></i></h2>
+      <p class="stat">193</p>
+    </div>
+  </div>
+  <div class="row historical">
+    <div class="col-md-6">
+      <p id="chart_historical_maint" class="chart"></p>
+    </div>
+    <div class="col-md-6">
+      <p id="chart_historical_sloc" class="chart"></p>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-6">
+      <h2 class="header">Difficulty  <a href="http://en.wikipedia.org/wiki/Halstead_complexity_measures"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="The difficulty measure is related to the difficulty of the program to write or understand." data-original-title="Difficulty" data-container="body"></i></a></h2>
+      <p class="stat">33.31</p>
+    </div>
+    <div class="col-md-6">
+      <h2 class="header">Estimated Errors  <a href="http://en.wikipedia.org/wiki/Halstead_complexity_measures"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="Halstead's delivered bugs is an estimate for the number of errors in the implementation." data-original-title="Delivered Bugs" data-container="body"></i></a></h2>
+      <p class="stat">4.28</p>
+    </div>
+  </div>
+</div>
+
+<div class="container charts">
+  <div class="row">
+    <h2 class="header">Function weight</h2>
+  </div>
+  <div class="row">
+    <div class="col-md-6">
+      <h3 class="chart-header">By Complexity <a href="http://en.wikipedia.org/wiki/Cyclomatic_complexity"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="This metric counts the number of distinct paths through a block of code. Lower values are better." data-original-title="Cyclomatic Complexity" data-container="body"></i></a></h3>
+      <div id="fn-by-complexity" class="stat"></div>
+    </div>
+    <div class="col-md-6">
+      <h3 class="chart-header">By SLOC  <i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="Source Lines of Code / Logical Lines of Code" data-original-title="SLOC/LSLOC" data-container="body"></i></h3>
+      <div id="fn-by-sloc" class="stat"></div>
+    </div>
+  </div>
+</div>
+
+<div class="container">
+  <div class="row">
+    <textarea id="file-source" class="col-md-12">const InventoryModel = require(&#039;../models/InventoryModel&#039;);
+
+describe(&#039;InventoryModel Unit Tests&#039;, () =&gt; {
+  // ข้อมูลตั้งต้น: เครื่องดื่ม 1 รายการ, เค้ก/เบเกอรี่ 1 รายการ, ท็อปปิ้ง 1 รายการ และบิลขาย 2 ใบ
+  const seedProducts = [
+    { id: &#039;c1&#039;, name: &#039;Espresso&#039;, category: &#039;coffee&#039;, price: 65, stock: 20, isBakery: false },
+    { id: &#039;b1&#039;, name: &#039;Croissant&#039;, category: &#039;bakery&#039;, price: 85, stock: 2, isBakery: true },
+  ];
+  const seedToppings = [{ id: &#039;t1&#039;, name: &#039;Oat Milk&#039;, price: 15, stock: 5 }];
+  const seedSales = [
+    { receiptNo: &#039;INV-1&#039;, total: 150, status: &#039;paid&#039; },
+    { receiptNo: &#039;INV-2&#039;, total: 65, status: &#039;paid&#039; },
+  ];
+
+  const stockOf = (list, id) =&gt; list.find((x) =&gt; x.id === id).stock;
+
+  test(&#039;deductStock updates drink, cake, and topping stock and blocks out-of-stock&#039;, () =&gt; {
+    const model = new InventoryModel(seedProducts, seedToppings, seedSales);
+    const ok = model.deductStock([
+      { id: &#039;c1&#039;, quantity: 2, toppings: [{ id: &#039;t1&#039; }] },
+      { id: &#039;b1&#039;, quantity: 1 },
+    ]);
+    expect(ok.ok).toBe(true);
+    expect(stockOf(ok.products, &#039;c1&#039;)).toBe(18);
+    expect(stockOf(ok.products, &#039;b1&#039;)).toBe(1);
+    expect(stockOf(ok.toppings, &#039;t1&#039;)).toBe(3);
+
+    const fail = model.deductStock([{ id: &#039;b1&#039;, quantity: 5 }]);
+    expect(fail.ok).toBe(false);
+    expect(fail.status).toBe(400);
+    expect(fail.error).toContain(&#039;Croissant&#039;);
+    expect(stockOf(model.getState().products, &#039;b1&#039;)).toBe(1);
+  });
+
+  test(&#039;deductStock blocks the whole order when a topping runs out and keeps stock unchanged&#039;, () =&gt; {
+    const model = new InventoryModel(seedProducts, seedToppings);
+    const fail = model.deductStock([
+      { id: &#039;c1&#039;, quantity: 6, toppings: [{ id: &#039;t1&#039; }] },
+      { id: &#039;b1&#039;, quantity: 1 },
+    ]);
+    expect(fail.ok).toBe(false);
+    expect(fail.error).toContain(&#039;Oat Milk&#039;);
+    expect(stockOf(model.getState().products, &#039;c1&#039;)).toBe(20);
+    expect(stockOf(model.getState().products, &#039;b1&#039;)).toBe(2);
+    expect(stockOf(model.getState().toppings, &#039;t1&#039;)).toBe(5);
+  });
+
+  test(&#039;deductStock adds up the same item across several cart lines before checking&#039;, () =&gt; {
+    const model = new InventoryModel(seedProducts, seedToppings);
+    const fail = model.deductStock([
+      { id: &#039;b1&#039;, quantity: 1, toppings: [] },
+      { id: &#039;b1&#039;, quantity: 2, toppings: [] },
+    ]);
+    expect(fail.ok).toBe(false); // 1 + 2 = 3 มากกว่าสต็อก 2
+
+    const ok = model.deductStock([
+      { id: &#039;b1&#039;, quantity: 1 },
+      { id: &#039;b1&#039;, quantity: 1 },
+    ]);
+    expect(ok.ok).toBe(true);
+    expect(stockOf(ok.products, &#039;b1&#039;)).toBe(0);
+  });
+
+  test(&#039;deductStock ignores untracked and unknown items and treats a bad quantity as 1&#039;, () =&gt; {
+    const products = [...seedProducts, { id: &#039;u1&#039;, name: &#039;Free Water&#039;, category: &#039;non-coffee&#039;, price: 0, stock: null }];
+    const model = new InventoryModel(products, seedToppings);
+    const result = model.deductStock([
+      { id: &#039;u1&#039;, quantity: 99 },
+      { id: &#039;unknown&#039;, quantity: 1, toppings: [{ id: &#039;no-such-topping&#039; }] },
+      { id: &#039;c1&#039;, quantity: -3 },
+      { id: &#039;c1&#039; },
+    ]);
+    expect(result.ok).toBe(true);
+    expect(stockOf(result.products, &#039;u1&#039;)).toBeNull();
+    expect(stockOf(result.products, &#039;c1&#039;)).toBe(18);
+    expect(model.deductStock().ok).toBe(true);
+  });
+
+  test(&#039;sortInventorySmallToLarge sorts base drinks, cakes, and toppings ascending&#039;, () =&gt; {
+    const model = new InventoryModel(seedProducts, seedToppings);
+    const sorted = model.sortInventorySmallToLarge();
+    expect(sorted.map((x) =&gt; x.id)).toEqual([&#039;b1&#039;, &#039;t1&#039;, &#039;c1&#039;]); // stocks: 2, 5, 20
+    expect(sorted.map((x) =&gt; x.stock)).toEqual([2, 5, 20]);
+    expect(sorted.map((x) =&gt; x.group)).toEqual([&#039;cake/bakery&#039;, &#039;topping&#039;, &#039;base-drink&#039;]);
+  });
+
+  test(&#039;sortInventorySmallToLarge skips untracked items and follows stock changes&#039;, () =&gt; {
+    const products = [...seedProducts, { id: &#039;u1&#039;, name: &#039;Free Water&#039;, category: &#039;non-coffee&#039;, price: 0, stock: null }];
+    const model = new InventoryModel(products, seedToppings);
+    expect(model.sortInventorySmallToLarge().map((x) =&gt; x.id)).toEqual([&#039;b1&#039;, &#039;t1&#039;, &#039;c1&#039;]);
+
+    model.restockItem(&#039;b1&#039;, 30); // เค้กเหลือ 32 ต้องไปอยู่ท้ายสุด
+    model.deductStock([{ id: &#039;c1&#039;, quantity: 19 }]); // เครื่องดื่มเหลือ 1 ต้องขึ้นมาอยู่หัวแถว
+    expect(model.sortInventorySmallToLarge().map((x) =&gt; x.id)).toEqual([&#039;c1&#039;, &#039;t1&#039;, &#039;b1&#039;]);
+  });
+
+  test(&#039;restockItem adds stock to products and toppings and rejects bad input&#039;, () =&gt; {
+    const model = new InventoryModel(seedProducts, seedToppings);
+    expect(model.restockItem(&#039;t1&#039;, 10).item.stock).toBe(15);
+    expect(model.restockItem(&#039;c1&#039;).item.stock).toBe(25); // ค่าเริ่มต้นเติมครั้งละ 5
+    expect(model.restockItem(&#039;missing&#039;, 5).status).toBe(404);
+    expect(model.restockItem(&#039;c1&#039;, 0).status).toBe(400);
+    expect(model.restockItem(&#039;c1&#039;, &#039;abc&#039;).status).toBe(400);
+    expect(stockOf(model.getState().products, &#039;c1&#039;)).toBe(25);
+  });
+
+  test(&#039;createProduct validates input and applies defaults&#039;, () =&gt; {
+    const model = new InventoryModel(seedProducts, seedToppings);
+    expect(model.createProduct().status).toBe(400);
+    expect(model.createProduct({ name: &#039;  &#039;, price: 50 }).status).toBe(400);
+    expect(model.createProduct({ name: &#039;Free&#039;, price: 0 }).status).toBe(400);
+    expect(model.createProduct({ name: &#039;Bad&#039;, price: 50, stock: -1 }).status).toBe(400);
+
+    const drink = model.createProduct({ name: &#039;Matcha&#039;, category: &#039;non-coffee&#039;, price: 85, stock: 10 });
+    expect(drink.ok).toBe(true);
+    expect(drink.status).toBe(201);
+    expect(drink.product).toMatchObject({ name: &#039;Matcha&#039;, price: 85, stock: 10, isBakery: false, customizable: true });
+
+    const cake = model.createProduct({ name: &#039; Tiramisu &#039;, category: &#039;dessert&#039;, price: &#039;120&#039; });
+    expect(cake.product).toMatchObject({ name: &#039;Tiramisu&#039;, price: 120, stock: 15, isBakery: true, customizable: false });
+    expect(cake.product.id).not.toBe(drink.product.id);
+    expect(model.getState().products).toHaveLength(4);
+  });
+
+  test(&#039;updateProduct edits price and category, keeps the id, and validates input&#039;, () =&gt; {
+    const model = new InventoryModel(seedProducts, seedToppings);
+    const updated = model.updateProduct(&#039;c1&#039;, { id: &#039;hacked&#039;, price: 95, category: &#039;bakery&#039;, name: &#039;Espresso Plus&#039; });
+    expect(updated.ok).toBe(true);
+    expect(updated.product).toMatchObject({ id: &#039;c1&#039;, price: 95, name: &#039;Espresso Plus&#039;, isBakery: true });
+    expect(model.getState().products.find((p) =&gt; p.id === &#039;hacked&#039;)).toBeUndefined();
+
+    expect(model.updateProduct(&#039;missing&#039;, { price: 10 }).status).toBe(404);
+    expect(model.updateProduct(&#039;c1&#039;, { price: -5 }).status).toBe(400);
+    expect(model.updateProduct(&#039;c1&#039;, { name: &#039;   &#039; }).status).toBe(400);
+    expect(model.updateProduct(&#039;c1&#039;, { stock: -2 }).status).toBe(400);
+    expect(model.updateProduct(&#039;c1&#039;, { stock: 7, customizable: false }).product).toMatchObject({ stock: 7, customizable: false });
+    expect(model.updateProduct(&#039;c1&#039;).product.price).toBe(95);
+  });
+
+  test(&#039;deleteProduct removes the product and returns 404 for an unknown id&#039;, () =&gt; {
+    const model = new InventoryModel(seedProducts, seedToppings);
+    const created = model.createProduct({ name: &#039;Matcha&#039;, category: &#039;non-coffee&#039;, price: 85, stock: 10 });
+    expect(model.deleteProduct(created.product.id).ok).toBe(true);
+    expect(model.getState().products.map((p) =&gt; p.id)).toEqual([&#039;c1&#039;, &#039;b1&#039;]);
+    expect(model.deleteProduct(&#039;missing&#039;).status).toBe(404);
+  });
+
+  test(&#039;recordSale adds a paid bill and updates the sales stats&#039;, () =&gt; {
+    const model = new InventoryModel(seedProducts, seedToppings, [], { totalSales: 100, totalBills: 4 });
+    const record = model.recordSale({
+      totalAmount: 150,
+      items: [{ name: &#039;Espresso&#039;, quantity: 2 }, { name: &#039;Croissant&#039; }],
+      paymentMethod: &#039;เงินสด&#039;,
+      queueNo: &#039;A05&#039;,
+      cashierName: &#039;Zai&#039;,
+      time: &#039;09:30&#039;,
+    });
+    expect(record).toMatchObject({ status: &#039;paid&#039;, total: 150, queueNo: &#039;A05&#039;, time: &#039;09:30&#039;, cashier: &#039;Zai&#039; });
+    expect(record.itemsSummary).toBe(&#039;Espresso (x2), Croissant (x1)&#039;);
+    expect(record.receiptNo).toMatch(/^INV-\d{8}-0005$/);
+    expect(model.getState().salesStats).toMatchObject({ totalSales: 250, totalBills: 5 });
+    expect(model.getState().salesHistory[0]).toBe(record);
+
+    const defaults = model.recordSale();
+    expect(defaults).toMatchObject({ total: 0, paymentMethod: &#039;PromptPay&#039;, queueNo: &#039;A01&#039;, cashier: &#039;Cashier&#039; });
+    expect(defaults.time).toMatch(/^\d{2}:\d{2}$/);
+  });
+
+  test(&#039;voidSale and getSalesAnalytics calculate min, max, and average bill&#039;, () =&gt; {
+    const model = new InventoryModel(seedProducts, seedToppings, seedSales);
+    const analytics = model.getSalesAnalytics();
+    expect(analytics.averageBill).toBe(107.5);
+    expect(analytics.minBill).toBe(65);
+    expect(analytics.maxBill).toBe(150);
+    expect(analytics.paidCount).toBe(2);
+    expect(analytics.totalPaidRevenue).toBe(215);
+
+    const voided = model.voidSale(&#039;INV-1&#039;, &#039;Admin Zai&#039;, &#039;ลูกค้ายกเลิก&#039;);
+    expect(voided.ok).toBe(true);
+    expect(voided.salesHistory.find((s) =&gt; s.receiptNo === &#039;INV-1&#039;)).toMatchObject({
+      status: &#039;voided&#039;,
+      voidBy: &#039;Admin Zai&#039;,
+      voidReason: &#039;ลูกค้ายกเลิก&#039;,
+    });
+    expect(model.getSalesAnalytics()).toMatchObject({ paidCount: 1, averageBill: 65, minBill: 65, maxBill: 65 });
+
+    expect(model.voidSale(&#039;INV-1&#039;).status).toBe(409);
+    expect(model.voidSale(&#039;INV-404&#039;).status).toBe(404);
+    model.voidSale(&#039;INV-2&#039;);
+    expect(model.getSalesAnalytics()).toEqual({ totalPaidRevenue: 0, paidCount: 0, averageBill: 0, minBill: 0, maxBill: 0 });
+  });
+});
+</textarea>
+  </div>
+</div>
+
+<footer class="footer">
+  <div class="container">
+    <p>.</p>
+  </div>
+</footer>
+
+<script type="text/html" id="complexity-popover-template">
+  <div class="complexity-notice">
+    Complexity : {{ complexity.cyclomatic }} <br>
+    Length : {{ complexity.halstead.length }} <br>
+    Difficulty : {{ complexity.halstead.difficulty.toFixed(2) }} <br>
+    Est # bugs : {{ complexity.halstead.bugs.toFixed(2) }}<br>
+  </div>
+</script>
+
+<script type="text/javascript" src="../../assets/scripts/bundles/core-bundle.js"></script>
+<script type="text/javascript" src="../../assets/scripts/bundles/codemirror.js"></script>
+<script type="text/javascript" src="../../assets/scripts/codemirror.markpopovertext.js"></script>
+<script type="text/javascript" src="report.js"></script>
+<script type="text/javascript" src="report.history.js"></script>
+<script type="text/javascript" src="../../assets/scripts/plato-file.js"></script>
+</body>
+</html>

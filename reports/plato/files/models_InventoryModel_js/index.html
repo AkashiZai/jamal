@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Plato - models/InventoryModel.js</title>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="">
+  <meta name="author" content="">
+
+  <!--[if lt IE 9]>
+  <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+  <![endif]-->
+
+  <link href="../../assets/css/vendor/morris.css" rel="stylesheet" type="text/css">
+  <link href="../../assets/css/vendor/bootstrap.css" rel="stylesheet" type="text/css">
+  <link href="../../assets/css/vendor/font-awesome.css" rel="stylesheet" type="text/css">
+  <link href="../../assets/css/vendor/codemirror.css" rel="stylesheet" type="text/css">
+  <link href="../../assets/css/plato.css" rel="stylesheet" type="text/css">
+  <link href="../../assets/css/plato-file.css" rel="stylesheet" type="text/css">
+
+</head>
+
+<body>
+
+<div class="navbar navbar-fixed-top">
+  <div class="container">
+    <a class="navbar-brand" href="https://github.com/the-simian/es6-plato">ES6 Plato on Github</a>
+    <ul class="nav navbar-nav">
+      <li>
+        <a href="../../index.html">Report Home</a>
+      </li>
+      <li class="active">
+        <a href="display.html">Summary Display</a>
+      </li>
+    </ul>
+  </div>
+</div>
+
+<div class="jumbotron">
+  <div class="container">
+    <h1>models/InventoryModel.js</h1>
+  </div>
+</div>
+
+<div class="container aggregate-stats">
+  <div class="row">
+    <div class="col-md-6">
+      <h2 class="header">Maintainability <a href="http://blogs.msdn.com/b/codeanalysis/archive/2007/11/20/maintainability-index-range-and-meaning.aspx"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="A value between 0 and 100 that represents the relative ease of maintaining the code. A high value means better maintainability." data-original-title="Maintainability Index"  data-container="body"></i></a></h2>
+      <p class="stat">68.46</p>
+    </div>
+    <div class="col-md-6">
+      <h2 class="header">Lines of code <i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="Source Lines of Code / Logical Lines of Code" data-original-title="SLOC/LSLOC" data-container="body"></i></h2>
+      <p class="stat">278</p>
+    </div>
+  </div>
+  <div class="row historical">
+    <div class="col-md-6">
+      <p id="chart_historical_maint" class="chart"></p>
+    </div>
+    <div class="col-md-6">
+      <p id="chart_historical_sloc" class="chart"></p>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-6">
+      <h2 class="header">Difficulty  <a href="http://en.wikipedia.org/wiki/Halstead_complexity_measures"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="The difficulty measure is related to the difficulty of the program to write or understand." data-original-title="Difficulty" data-container="body"></i></a></h2>
+      <p class="stat">65.44</p>
+    </div>
+    <div class="col-md-6">
+      <h2 class="header">Estimated Errors  <a href="http://en.wikipedia.org/wiki/Halstead_complexity_measures"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="Halstead's delivered bugs is an estimate for the number of errors in the implementation." data-original-title="Delivered Bugs" data-container="body"></i></a></h2>
+      <p class="stat">4.36</p>
+    </div>
+  </div>
+</div>
+
+<div class="container charts">
+  <div class="row">
+    <h2 class="header">Function weight</h2>
+  </div>
+  <div class="row">
+    <div class="col-md-6">
+      <h3 class="chart-header">By Complexity <a href="http://en.wikipedia.org/wiki/Cyclomatic_complexity"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="This metric counts the number of distinct paths through a block of code. Lower values are better." data-original-title="Cyclomatic Complexity" data-container="body"></i></a></h3>
+      <div id="fn-by-complexity" class="stat"></div>
+    </div>
+    <div class="col-md-6">
+      <h3 class="chart-header">By SLOC  <i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="Source Lines of Code / Logical Lines of Code" data-original-title="SLOC/LSLOC" data-container="body"></i></h3>
+      <div id="fn-by-sloc" class="stat"></div>
+    </div>
+  </div>
+</div>
+
+<div class="container">
+  <div class="row">
+    <textarea id="file-source" class="col-md-12">// ============================================================================
+// InventoryModel — Data Structure ของส่วนที่ 4 (Admin Portal, สต็อก &amp; ตรวจสอบ Void)
+// ผู้รับผิดชอบ: @Kizizi123123 | ตาม Change Request #12 และ User Story #10
+// ดูแลสต็อก Base Drink / Cake / Toppings, เรียงสต็อกน้อยไปมาก, Admin CRUD และยอดขาย/Void
+// ============================================================================
+
+const BAKERY_CATEGORIES = [&#039;bakery&#039;, &#039;dessert&#039;];
+const DEFAULT_RESTOCK_AMOUNT = 5;
+const DEFAULT_NEW_PRODUCT_STOCK = 15;
+
+// จำนวนต่อรายการต้องเป็นเลขบวก ถ้าไม่ใช่ให้นับเป็น 1 (กันค่าติดลบไปเพิ่มสต็อกโดยไม่ตั้งใจ)
+function toQuantity(value) {
+  const qty = Number(value);
+  return Number.isFinite(qty) &amp;&amp; qty &gt; 0 ? qty : 1;
+}
+
+// สต็อกที่เป็นตัวเลขเท่านั้นที่ถูกนับ/ตัดสต็อก (ค่า null = ไม่จำกัดจำนวน)
+function isTracked(item) {
+  return typeof item.stock === &#039;number&#039;;
+}
+
+function isBakeryItem(product) {
+  return Boolean(product.isBakery) || BAKERY_CATEGORIES.includes(product.category);
+}
+
+class InventoryModel {
+  constructor(
+    initialProducts = [],
+    initialToppings = [],
+    initialSalesHistory = [],
+    initialSalesStats = { totalSales: 0, totalBills: 0, promptPayShare: 64, cashShare: 36 }
+  ) {
+    this.products = initialProducts.map((p) =&gt; ({ ...p }));
+    this.toppings = initialToppings.map((t) =&gt; ({ ...t }));
+    this.salesHistory = initialSalesHistory.map((s) =&gt; ({ ...s }));
+    this.salesStats = { ...initialSalesStats };
+    this.productSequence = 0;
+  }
+
+  getState() {
+    return {
+      products: this.products,
+      toppings: this.toppings,
+      salesHistory: this.salesHistory,
+      salesStats: this.salesStats,
+    };
+  }
+
+  // Data Structure Method 1: ตัดสต็อก Base Drink, Cake และ Toppings พร้อมเช็ก Out of Stock
+  // รวมจำนวนที่ต้องใช้ของทุกบรรทัดในออเดอร์ก่อน แล้วค่อยตรวจ เพื่อกันกรณีสินค้าเดียวกันอยู่หลายบรรทัด
+  deductStock(orderItems = []) {
+    const demand = this.collectDemand(orderItems);
+    const shortage = this.findShortage(demand);
+    if (shortage) return { ok: false, status: 400, error: shortage };
+
+    this.products = this.products.map((p) =&gt; this.withDeductedStock(p, demand.products));
+    this.toppings = this.toppings.map((t) =&gt; this.withDeductedStock(t, demand.toppings));
+    return { ok: true, products: this.products, toppings: this.toppings };
+  }
+
+  // รวมจำนวนที่ใช้ต่อสินค้า (products) และต่อท็อปปิ้ง (toppings) จากทุกบรรทัดของออเดอร์
+  collectDemand(orderItems) {
+    const demand = { products: new Map(), toppings: new Map() };
+    const add = (map, id, qty) =&gt; map.set(id, (map.get(id) || 0) + qty);
+    for (const item of orderItems) {
+      const qty = toQuantity(item.quantity);
+      add(demand.products, item.id, qty);
+      const toppingIds = new Set((item.toppings || []).map((t) =&gt; t.id));
+      toppingIds.forEach((id) =&gt; add(demand.toppings, id, qty));
+    }
+    return demand;
+  }
+
+  // คืนข้อความ error ของรายการแรกที่สต็อกไม่พอ (หรือ null ถ้าสต็อกพอทุกรายการ)
+  findShortage(demand) {
+    for (const [id, qty] of demand.products) {
+      const prod = this.products.find((p) =&gt; p.id === id);
+      if (prod &amp;&amp; isTracked(prod) &amp;&amp; prod.stock &lt; qty) {
+        return `สินค้า &quot;${prod.name}&quot; หมดหรือสต็อกไม่พอ (คงเหลือ ${prod.stock})`;
+      }
+    }
+    for (const [id, qty] of demand.toppings) {
+      const top = this.toppings.find((t) =&gt; t.id === id);
+      if (top &amp;&amp; isTracked(top) &amp;&amp; top.stock &lt; qty) {
+        return `ท็อปปิ้ง &quot;${top.name}&quot; หมดหรือสต็อกไม่พอ (คงเหลือ ${top.stock})`;
+      }
+    }
+    return null;
+  }
+
+  withDeductedStock(item, demandMap) {
+    const qty = demandMap.get(item.id);
+    if (!qty || !isTracked(item)) return item;
+    return { ...item, stock: Math.max(0, item.stock - qty) };
+  }
+
+  // Data Structure Method 2: เติมสต็อกได้ทั้ง Product และ Topping
+  restockItem(id, amount = DEFAULT_RESTOCK_AMOUNT) {
+    const qty = Number(amount);
+    if (!Number.isFinite(qty) || qty &lt;= 0) {
+      return { ok: false, status: 400, error: &#039;จำนวนที่เติมต้องมากกว่า 0&#039; };
+    }
+    let updatedItem = null;
+    const addStock = (list) =&gt;
+      list.map((item) =&gt; {
+        if (item.id !== id) return item;
+        updatedItem = { ...item, stock: (item.stock !== undefined &amp;&amp; item.stock !== null ? item.stock : 0) + qty };
+        return updatedItem;
+      });
+
+    this.products = addStock(this.products);
+    if (!updatedItem) this.toppings = addStock(this.toppings);
+    if (!updatedItem) return { ok: false, status: 404, error: &#039;ไม่พบรายการสินค้า/ท็อปปิ้ง&#039; };
+    return { ok: true, item: updatedItem, products: this.products, toppings: this.toppings };
+  }
+
+  // Data Structure Method 3: Admin CRUD (เพิ่ม / แก้ไข / ลบ สินค้า หมวดหมู่ ราคา ตัวเลือก)
+  createProduct(input = {}) {
+    const invalid = this.validateNewProduct(input);
+    if (invalid) return { ok: false, status: 400, error: invalid };
+
+    const category = input.category || &#039;coffee&#039;;
+    const isBakery = BAKERY_CATEGORIES.includes(category);
+    this.productSequence += 1;
+    const newProduct = {
+      id: `p-${Date.now()}-${this.productSequence}`,
+      name: String(input.name).trim(),
+      category,
+      price: Number(input.price),
+      cost: Number(input.cost) || 0,
+      desc: input.desc || &#039;เมนูใหม่ประจำร้าน&#039;,
+      img: &#039;https://images.unsplash.com/photo-1517256064527-09c73fc73e38?w=500&amp;q=80&#039;,
+      customizable: input.customizable !== undefined ? Boolean(input.customizable) : !isBakery,
+      isBakery,
+      stock: input.stock !== undefined ? Number(input.stock) : DEFAULT_NEW_PRODUCT_STOCK,
+    };
+    this.products = [...this.products, newProduct];
+    return { ok: true, status: 201, product: newProduct, products: this.products };
+  }
+
+  validateNewProduct({ name, price, stock }) {
+    if (!String(name !== undefined &amp;&amp; name !== null ? name : &#039;&#039;).trim() || !(Number(price) &gt; 0)) return &#039;กรุณากรอกชื่อเมนูและราคา&#039;;
+    if (stock !== undefined &amp;&amp; !(Number(stock) &gt;= 0)) return &#039;จำนวนสต็อกต้องไม่ติดลบ&#039;;
+    return null;
+  }
+
+  updateProduct(id, updates = {}) {
+    const prev = this.products.find((p) =&gt; p.id === id);
+    if (!prev) return { ok: false, status: 404, error: &#039;ไม่พบสินค้าที่ต้องการแก้ไข&#039; };
+
+    // รับเฉพาะฟิลด์ที่แก้ไขได้ (กัน id หรือฟิลด์ภายในถูกเขียนทับจาก request)
+    const patch = {};
+    for (const key of [&#039;name&#039;, &#039;category&#039;, &#039;price&#039;, &#039;cost&#039;, &#039;desc&#039;, &#039;img&#039;, &#039;customizable&#039;, &#039;stock&#039;]) {
+      if (updates[key] !== undefined) patch[key] = updates[key];
+    }
+    const invalid = this.validateProductPatch(patch);
+    if (invalid) return { ok: false, status: 400, error: invalid };
+
+    const category = patch.category !== undefined &amp;&amp; patch.category !== null ? patch.category : prev.category;
+    const updated = {
+      ...prev,
+      ...patch,
+      category,
+      isBakery: BAKERY_CATEGORIES.includes(category),
+      price: patch.price !== undefined ? Number(patch.price) : prev.price,
+      stock: patch.stock !== undefined ? Number(patch.stock) : prev.stock,
+      customizable: patch.customizable !== undefined ? Boolean(patch.customizable) : prev.customizable,
+    };
+    this.products = this.products.map((p) =&gt; (p.id === id ? updated : p));
+    return { ok: true, status: 200, product: updated, products: this.products };
+  }
+
+  validateProductPatch(patch) {
+    if (patch.name !== undefined &amp;&amp; !String(patch.name).trim()) return &#039;ชื่อเมนูต้องไม่ว่าง&#039;;
+    if (patch.price !== undefined &amp;&amp; !(Number(patch.price) &gt; 0)) return &#039;ราคาต้องมากกว่า 0&#039;;
+    if (patch.stock !== undefined &amp;&amp; !(Number(patch.stock) &gt;= 0)) return &#039;จำนวนสต็อกต้องไม่ติดลบ&#039;;
+    return null;
+  }
+
+  deleteProduct(id) {
+    const before = this.products.length;
+    this.products = this.products.filter((p) =&gt; p.id !== id);
+    if (this.products.length === before) {
+      return { ok: false, status: 404, error: &#039;ไม่พบสินค้าที่ต้องการลบ&#039; };
+    }
+    return { ok: true, status: 200, products: this.products };
+  }
+
+  // Search/Sort Method (ตาม Google Doc &amp; Issue #12): เรียง Inventory จากน้อยไปมาก
+  // รวม Base Drink + Cake + Toppings ที่มีการนับสต็อก แล้วเรียงตามจำนวนคงเหลือ (Stable Sort)
+  sortInventorySmallToLarge() {
+    const combined = [
+      ...this.products.filter(isTracked).map((p) =&gt; ({
+        id: p.id,
+        name: p.name,
+        group: isBakeryItem(p) ? &#039;cake/bakery&#039; : &#039;base-drink&#039;,
+        stock: p.stock,
+        price: p.price,
+      })),
+      ...this.toppings.filter(isTracked).map((t) =&gt; ({
+        id: t.id,
+        name: t.name,
+        group: &#039;topping&#039;,
+        stock: t.stock,
+        price: t.price,
+      })),
+    ];
+    return combined.sort((a, b) =&gt; a.stock - b.stock);
+  }
+
+  // บันทึกบิลขายใหม่เข้าประวัติ (FR-08) พร้อมอัปเดตยอดขายรวมและจำนวนบิล
+  recordSale({
+    totalAmount = 0,
+    items = [],
+    paymentMethod = &#039;PromptPay&#039;,
+    queueNo = &#039;A01&#039;,
+    cashierName = &#039;Cashier&#039;,
+    time,
+  } = {}) {
+    const amt = Number(totalAmount) || 0;
+    this.salesStats = {
+      ...this.salesStats,
+      totalSales: this.salesStats.totalSales + amt,
+      totalBills: this.salesStats.totalBills + 1,
+    };
+    const now = new Date();
+    const pad = (n) =&gt; String(n).padStart(2, &#039;0&#039;);
+    const receiptNo = `INV-${now.getFullYear()}${pad(now.getMonth() + 1)}${pad(now.getDate())}-${String(
+      this.salesStats.totalBills
+    ).padStart(4, &#039;0&#039;)}`;
+
+    const record = {
+      receiptNo,
+      time: time || `${pad(now.getHours())}:${pad(now.getMinutes())}`,
+      queueNo,
+      itemsSummary: items.map((i) =&gt; `${i.name} (x${i.quantity || 1})`).join(&#039;, &#039;),
+      paymentMethod,
+      total: amt,
+      status: &#039;paid&#039;,
+      cashier: cashierName,
+    };
+    this.salesHistory = [record, ...this.salesHistory];
+    return record;
+  }
+
+  // Manager Override: Void บิลพร้อมบันทึกผู้อนุมัติและเหตุผล (Audit Trail)
+  voidSale(receiptNo, adminName = &#039;Admin Zai&#039;, reason = &#039;ยกเลิกโดยผู้จัดการ&#039;) {
+    const target = this.salesHistory.find((s) =&gt; s.receiptNo === receiptNo);
+    if (!target) return { ok: false, status: 404, error: &#039;ไม่พบเลขที่ใบเสร็จ&#039; };
+    if (target.status === &#039;voided&#039;) {
+      return { ok: false, status: 409, error: &#039;บิลนี้ถูก Void ไปแล้ว&#039; };
+    }
+    this.salesHistory = this.salesHistory.map((item) =&gt;
+      item.receiptNo === receiptNo ? { ...item, status: &#039;voided&#039;, voidBy: adminName, voidReason: reason } : item
+    );
+    return { ok: true, status: 200, salesHistory: this.salesHistory };
+  }
+
+  // Calculation Method (ตาม Google Doc): วิเคราะห์ยอดขาย Avg / Min / Max จากบิลที่ยังไม่ถูก Void
+  getSalesAnalytics() {
+    const paidBills = this.salesHistory.filter((s) =&gt; s.status === &#039;paid&#039;);
+    if (paidBills.length === 0) {
+      return { totalPaidRevenue: 0, paidCount: 0, averageBill: 0, minBill: 0, maxBill: 0 };
+    }
+    const totals = paidBills.map((bill) =&gt; Number(bill.total) || 0);
+    const sum = totals.reduce((acc, val) =&gt; acc + val, 0);
+    return {
+      totalPaidRevenue: Number(sum.toFixed(2)),
+      paidCount: paidBills.length,
+      averageBill: Number((sum / paidBills.length).toFixed(2)),
+      minBill: Math.min(...totals),
+      maxBill: Math.max(...totals),
+    };
+  }
+}
+
+module.exports = InventoryModel;
+</textarea>
+  </div>
+</div>
+
+<footer class="footer">
+  <div class="container">
+    <p>.</p>
+  </div>
+</footer>
+
+<script type="text/html" id="complexity-popover-template">
+  <div class="complexity-notice">
+    Complexity : {{ complexity.cyclomatic }} <br>
+    Length : {{ complexity.halstead.length }} <br>
+    Difficulty : {{ complexity.halstead.difficulty.toFixed(2) }} <br>
+    Est # bugs : {{ complexity.halstead.bugs.toFixed(2) }}<br>
+  </div>
+</script>
+
+<script type="text/javascript" src="../../assets/scripts/bundles/core-bundle.js"></script>
+<script type="text/javascript" src="../../assets/scripts/bundles/codemirror.js"></script>
+<script type="text/javascript" src="../../assets/scripts/codemirror.markpopovertext.js"></script>
+<script type="text/javascript" src="report.js"></script>
+<script type="text/javascript" src="report.history.js"></script>
+<script type="text/javascript" src="../../assets/scripts/plato-file.js"></script>
+</body>
+</html>

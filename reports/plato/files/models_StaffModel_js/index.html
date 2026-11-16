@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Plato - models/StaffModel.js</title>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="">
+  <meta name="author" content="">
+
+  <!--[if lt IE 9]>
+  <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+  <![endif]-->
+
+  <link href="../../assets/css/vendor/morris.css" rel="stylesheet" type="text/css">
+  <link href="../../assets/css/vendor/bootstrap.css" rel="stylesheet" type="text/css">
+  <link href="../../assets/css/vendor/font-awesome.css" rel="stylesheet" type="text/css">
+  <link href="../../assets/css/vendor/codemirror.css" rel="stylesheet" type="text/css">
+  <link href="../../assets/css/plato.css" rel="stylesheet" type="text/css">
+  <link href="../../assets/css/plato-file.css" rel="stylesheet" type="text/css">
+
+</head>
+
+<body>
+
+<div class="navbar navbar-fixed-top">
+  <div class="container">
+    <a class="navbar-brand" href="https://github.com/the-simian/es6-plato">ES6 Plato on Github</a>
+    <ul class="nav navbar-nav">
+      <li>
+        <a href="../../index.html">Report Home</a>
+      </li>
+      <li class="active">
+        <a href="display.html">Summary Display</a>
+      </li>
+    </ul>
+  </div>
+</div>
+
+<div class="jumbotron">
+  <div class="container">
+    <h1>models/StaffModel.js</h1>
+  </div>
+</div>
+
+<div class="container aggregate-stats">
+  <div class="row">
+    <div class="col-md-6">
+      <h2 class="header">Maintainability <a href="http://blogs.msdn.com/b/codeanalysis/archive/2007/11/20/maintainability-index-range-and-meaning.aspx"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="A value between 0 and 100 that represents the relative ease of maintaining the code. A high value means better maintainability." data-original-title="Maintainability Index"  data-container="body"></i></a></h2>
+      <p class="stat">63.05</p>
+    </div>
+    <div class="col-md-6">
+      <h2 class="header">Lines of code <i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="Source Lines of Code / Logical Lines of Code" data-original-title="SLOC/LSLOC" data-container="body"></i></h2>
+      <p class="stat">122</p>
+    </div>
+  </div>
+  <div class="row historical">
+    <div class="col-md-6">
+      <p id="chart_historical_maint" class="chart"></p>
+    </div>
+    <div class="col-md-6">
+      <p id="chart_historical_sloc" class="chart"></p>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-6">
+      <h2 class="header">Difficulty  <a href="http://en.wikipedia.org/wiki/Halstead_complexity_measures"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="The difficulty measure is related to the difficulty of the program to write or understand." data-original-title="Difficulty" data-container="body"></i></a></h2>
+      <p class="stat">42.20</p>
+    </div>
+    <div class="col-md-6">
+      <h2 class="header">Estimated Errors  <a href="http://en.wikipedia.org/wiki/Halstead_complexity_measures"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="Halstead's delivered bugs is an estimate for the number of errors in the implementation." data-original-title="Delivered Bugs" data-container="body"></i></a></h2>
+      <p class="stat">1.49</p>
+    </div>
+  </div>
+</div>
+
+<div class="container charts">
+  <div class="row">
+    <h2 class="header">Function weight</h2>
+  </div>
+  <div class="row">
+    <div class="col-md-6">
+      <h3 class="chart-header">By Complexity <a href="http://en.wikipedia.org/wiki/Cyclomatic_complexity"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="This metric counts the number of distinct paths through a block of code. Lower values are better." data-original-title="Cyclomatic Complexity" data-container="body"></i></a></h3>
+      <div id="fn-by-complexity" class="stat"></div>
+    </div>
+    <div class="col-md-6">
+      <h3 class="chart-header">By SLOC  <i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="Source Lines of Code / Logical Lines of Code" data-original-title="SLOC/LSLOC" data-container="body"></i></h3>
+      <div id="fn-by-sloc" class="stat"></div>
+    </div>
+  </div>
+</div>
+
+<div class="container">
+  <div class="row">
+    <textarea id="file-source" class="col-md-12">class StaffModel {
+  constructor(initialStaff = []) {
+    this.staffList = initialStaff.map((item) =&gt; ({ ...item }));
+  }
+
+  getAll() {
+    return this.staffList;
+  }
+
+  _normalizeStaffRole(role) {
+    const roleMap = { admin: &#039;admin&#039;, barista: &#039;operator&#039;, operator: &#039;operator&#039; };
+    const key = String(role || &#039;&#039;).trim().toLowerCase();
+    return roleMap[key] || &#039;cashier&#039;;
+  }
+
+  _buildLocalStaffRecord({ name, role = &#039;Cashier&#039;, username, pin, shift = &#039;กะเช้า (07:00 - 15:30)&#039; }) {
+    const roleNameMap = {
+      Admin: &#039;ผู้ดูแลระบบ (เข้าถึงได้ทุกส่วนงาน)&#039;,
+      Cashier: &#039;แคชเชียร์ (ขายหน้าร้าน, คิดเงิน, ปิดกะ)&#039;,
+      Barista: &#039;บาริสต้า (จอคิวครัว KDS, ทำเครื่องดื่ม)&#039;,
+    };
+    return {
+      id: `staff-${Date.now()}-${Math.floor(Math.random() * 1000)}`,
+      name: String(name).trim(),
+      role: this._normalizeStaffRole(role),
+      roleLabel: role,
+      roleName: roleNameMap[role] || role,
+      username: String(username).trim(),
+      pin: String(pin),
+      shift,
+      authProvider: &#039;local&#039;,
+    };
+  }
+
+  // Data Structure Method 1: เพิ่มบัญชีพนักงานพร้อมตรวจสอบข้อมูลซ้ำ
+  addStaff(staffInput = {}) {
+    const { name, username, pin } = staffInput;
+    if (!name || !username || !pin) {
+      return { ok: false, status: 400, error: &#039;กรุณากรอกข้อมูลให้ครบถ้วน&#039; };
+    }
+    const cleanUsername = String(username).trim().toLowerCase();
+    if (this.findByUsername(cleanUsername)) {
+      return { ok: false, status: 409, error: &#039;ชื่อผู้ใช้งานนี้มีอยู่ในระบบแล้ว&#039; };
+    }
+
+    const newAcc = this._buildLocalStaffRecord(staffInput);
+    this.staffList.push(newAcc);
+    return { ok: true, status: 201, staff: newAcc, staffAccounts: this.staffList };
+  }
+
+  // Data Structure Method 2: ตรวจสอบสิทธิ์ด้วย Username + PIN
+  authenticatePin(username, pin) {
+    const matched = this.findByUsername(username);
+    if (!matched) {
+      return { ok: false, status: 404, error: &#039;ไม่พบชื่อผู้ใช้งานนี้ในระบบ&#039; };
+    }
+    if (matched.pin !== String(pin || &#039;&#039;)) {
+      return {
+        ok: false,
+        status: 401,
+        error: &#039;รหัสผ่าน PIN ไม่ถูกต้อง (ลองใช้: &#039; + matched.pin + &#039;)&#039;,
+      };
+    }
+    return { ok: true, status: 200, user: matched };
+  }
+
+  _buildSocialStaffRecord({ cleanProvider, cleanEmail, displayName, role = &#039;cashier&#039; }) {
+    const normalizedRole = String(role).toLowerCase() === &#039;admin&#039; ? &#039;admin&#039; : &#039;cashier&#039;;
+    return {
+      id: `social-${Date.now()}`,
+      username: cleanEmail,
+      pin: &#039;0000&#039;,
+      name: displayName || cleanEmail.split(&#039;@&#039;)[0],
+      role: normalizedRole,
+      roleName: normalizedRole === &#039;admin&#039; ? &#039;เจ้าของร้าน (Social)&#039; : &#039;แคชเชียร์ (Social)&#039;,
+      authProvider: cleanProvider === &#039;google&#039; ? &#039;gmail&#039; : cleanProvider,
+    };
+  }
+
+  // Data Structure Method 3: เข้าสู่ระบบด้วย Social Media (Gmail / Facebook) ตาม Issue #12
+  authenticateSocial({ provider, email, displayName, role }) {
+    const cleanProvider = String(provider || &#039;&#039;).trim().toLowerCase();
+    const cleanEmail = String(email || &#039;&#039;).trim().toLowerCase();
+    if (![&#039;gmail&#039;, &#039;google&#039;, &#039;facebook&#039;].includes(cleanProvider) || !cleanEmail) {
+      return { ok: false, status: 400, error: &#039;ข้อมูลบัญชี Social Login ไม่ถูกต้อง&#039; };
+    }
+
+    let user = this.findByUsername(cleanEmail);
+    if (!user) {
+      user = this._buildSocialStaffRecord({ cleanProvider, cleanEmail, displayName, role });
+      this.staffList.push(user);
+    }
+    return { ok: true, status: 200, user };
+  }
+
+  // Search Method (ตาม Google Doc): ค้นหาพนักงานด้วย Username หรือ Email
+  findByUsername(username) {
+    const key = String(username || &#039;&#039;).trim().toLowerCase();
+    if (!key) return null;
+    return this.staffList.find((acc) =&gt; acc.username.trim().toLowerCase() === key) || null;
+  }
+
+  // Calculation Method (ตาม Google Doc): นับจำนวนพนักงานแยกตาม Role
+  countStaffByRole() {
+    const summary = { admin: 0, cashier: 0, operator: 0, total: this.staffList.length };
+    for (const acc of this.staffList) {
+      if (acc.role === &#039;admin&#039;) summary.admin += 1;
+      else if (acc.role === &#039;operator&#039;) summary.operator += 1;
+      else summary.cashier += 1;
+    }
+    return summary;
+  }
+
+  // NFR-04: ตรวจสอบ Session Timeout 15 นาที
+  isSessionExpired(lastActiveMs, nowMs = Date.now(), timeoutMs = 15 * 60 * 1000) {
+    if (!lastActiveMs || nowMs &lt; lastActiveMs) return false;
+    return nowMs - lastActiveMs &gt;= timeoutMs;
+  }
+}
+
+module.exports = StaffModel;
+</textarea>
+  </div>
+</div>
+
+<footer class="footer">
+  <div class="container">
+    <p>.</p>
+  </div>
+</footer>
+
+<script type="text/html" id="complexity-popover-template">
+  <div class="complexity-notice">
+    Complexity : {{ complexity.cyclomatic }} <br>
+    Length : {{ complexity.halstead.length }} <br>
+    Difficulty : {{ complexity.halstead.difficulty.toFixed(2) }} <br>
+    Est # bugs : {{ complexity.halstead.bugs.toFixed(2) }}<br>
+  </div>
+</script>
+
+<script type="text/javascript" src="../../assets/scripts/bundles/core-bundle.js"></script>
+<script type="text/javascript" src="../../assets/scripts/bundles/codemirror.js"></script>
+<script type="text/javascript" src="../../assets/scripts/codemirror.markpopovertext.js"></script>
+<script type="text/javascript" src="report.js"></script>
+<script type="text/javascript" src="report.history.js"></script>
+<script type="text/javascript" src="../../assets/scripts/plato-file.js"></script>
+</body>
+</html>
