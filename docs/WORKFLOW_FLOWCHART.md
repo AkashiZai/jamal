@@ -5,7 +5,7 @@
 
 ---
 
-## 📋 1. ตารางการแบ่งส่วนงานและความรับผิดชอบ (Work Breakdown Structure)
+## 1. ตารางการแบ่งส่วนงานและความรับผิดชอบ (Work Breakdown Structure)
 
 | ส่วนที่ | ชื่อส่วนงาน (Module) | ผู้รับผิดชอบ (สมาชิก) | ข้อกำหนดที่รับผิดชอบ | หน้าจอที่ส่งมอบ (Screens & Assets) |
 | :---: | :--- | :--- | :--- | :--- |
@@ -16,7 +16,7 @@
 
 ---
 
-## 🔐 2. ส่วนที่ 1: ระบบยืนยันตัวตน & โครงสร้างส่วนกลาง (Authentication & Foundations)
+## 2. ส่วนที่ 1: ระบบยืนยันตัวตน & โครงสร้างส่วนกลาง (Authentication & Foundations)
 - **ผู้รับผิดชอบ:** นาย พิสิษฐ์ เสณีวงศ์ ณ อยุธยา (`@AkashiZai`)
 - **ข้อกำหนด:** FR-01 (Authentication), NFR-04 (15-min Session Timeout), NFR-05 (Responsive), TOR General 1-4
 - **สิ่งที่ส่งมอบ:** `01_login.html`, `tokens.json`, `FIGMA_SPEC.md`
@@ -52,7 +52,7 @@ flowchart TD
 
 ---
 
-## ☕ 3. ส่วนที่ 2: ระบบขายหน้าร้านแคชเชียร์ & คิดเงิน (Cashier POS & Checkout / Receipt)
+## 3. ส่วนที่ 2: ระบบขายหน้าร้านแคชเชียร์ & คิดเงิน (Cashier POS & Checkout / Receipt)
 - **ผู้รับผิดชอบ:** นาย ธราเทพ ศรีมานนท์ (`@203Tharathep`)
 - **ข้อกำหนด:** FR-04 (Order Processing), FR-05 (Payment Calculation), FR-06 (80mm Slip), NFR-01 (Speed <1s), NFR-02 (Touchscreen UI)
 - **สิ่งที่ส่งมอบ:** `02_pos_cashier.html`, `03_customization_modal.html`, `04_payment_receipt.html`
@@ -99,7 +99,7 @@ flowchart TD
 
 ---
 
-## 🍳 4. ส่วนที่ 3: ระบบคิวครัว/บาริสต้า & จอลูกค้า (Kitchen KDS & Customer Mobile)
+## 4. ส่วนที่ 3: ระบบคิวครัว/บาริสต้า & จอลูกค้า (Kitchen KDS & Customer Mobile)
 - **ผู้รับผิดชอบ:** นาย พิชยุตม์ เจียวพงษ์พิพัฒน์ (`@Ctrl-Pichayut`)
 - **ข้อกำหนด:** TOR Operator 1-5 (Real-time KDS, สถานะงาน, เสียงเตือน), TOR User 1-5 (จอลูกค้ามือถือ), NFR-03 (ความเสถียร)
 - **สิ่งที่ส่งมอบ:** `05_kitchen_kds.html`, `07_customer_mobile.html`, แผนภาพ Order Lifecycle
@@ -133,7 +133,7 @@ flowchart TD
 
 ---
 
-## 📊 5. ส่วนที่ 4: ระบบแผงควบคุม, สต็อก & ตรวจสอบ Void (Admin Portal, Stock & Audit)
+## 5. ส่วนที่ 4: ระบบแผงควบคุม, สต็อก & ตรวจสอบ Void (Admin Portal, Stock & Audit)
 - **ผู้รับผิดชอบ:** นาย ก้องเกียรติ อมรธรรมคุณ (`@Kizizi123123`)
 - **ข้อกำหนด:** FR-02 (จัดการเมนู), FR-03 (ตัดสต็อกอัตโนมัติ), FR-07 (ระบบอนุมัติ Void), FR-08 (รายงานยอดขาย), TOR Admin 1-5
 - **สิ่งที่ส่งมอบ:** `06_admin_dashboard.html`, `08_admin_menu_management.html`, `09_admin_sales_history_void.html`
@@ -167,7 +167,7 @@ flowchart TD
 
 ---
 
-## 🌐 6. แผนผังภาพรวมทั้งระบบ (All-in-One Integrated Flowchart)
+## 6. แผนผังภาพรวมทั้งระบบ (All-in-One Integrated Flowchart)
 แผนผังนี้แสดงการเชื่อมต่อข้ามระหว่างทั้ง 4 ส่วนงานเมื่อทำงานร่วมกันในระบบจริง:
 
 ```mermaid
@@ -242,6 +242,6 @@ flowchart TD
 
 ---
 
-## 🚀 7. คำแนะนำในการใช้งาน
+## 7. คำแนะนำในการใช้งาน
 1. **ดูบน GitHub:** ไฟล์ Markdown นี้รองรับการ Render Mermaid Diagram เป็นภาพกราฟิกบน GitHub โดยอัตโนมัติ
 2. **แก้ไขบน Mermaid Live:** คัดลอกบล็อกโค้ดในหัวข้อที่ต้องการ แล้วนำไปวางที่ [https://mermaid.live](https://mermaid.live) เพื่อดาวน์โหลดเป็นไฟล์ SVG หรือ PNG คมชัดสูงได้ทันที

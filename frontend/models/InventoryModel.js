@@ -144,20 +144,18 @@ class InventoryModel {
     return null;
   }
 
-  updateProduct(id, updates = {}) {
-    const prev = this.products.find((p) => p.id === id);
-    if (!prev) return { ok: false, status: 404, error: 'ไม่พบสินค้าที่ต้องการแก้ไข' };
-
-    // รับเฉพาะฟิลด์ที่แก้ไขได้ (กัน id หรือฟิลด์ภายในถูกเขียนทับจาก request)
+  // รับเฉพาะฟิลด์ที่แก้ไขได้ (กัน id หรือฟิลด์ภายในถูกเขียนทับจาก request)
+  _extractEditablePatch(updates) {
     const patch = {};
     for (const key of ['name', 'category', 'price', 'cost', 'desc', 'img', 'customizable', 'stock']) {
       if (updates[key] !== undefined) patch[key] = updates[key];
     }
-    const invalid = this.validateProductPatch(patch);
-    if (invalid) return { ok: false, status: 400, error: invalid };
+    return patch;
+  }
 
-    const category = patch.category !== undefined && patch.category !== null ? patch.category : prev.category;
-    const updated = {
+  _mergeProductUpdate(prev, patch) {
+    const category = patch.category ? patch.category : prev.category;
+    return {
       ...prev,
       ...patch,
       category,
@@ -166,6 +164,17 @@ class InventoryModel {
       stock: patch.stock !== undefined ? Number(patch.stock) : prev.stock,
       customizable: patch.customizable !== undefined ? Boolean(patch.customizable) : prev.customizable,
     };
+  }
+
+  updateProduct(id, updates = {}) {
+    const prev = this.products.find((p) => p.id === id);
+    if (!prev) return { ok: false, status: 404, error: 'ไม่พบสินค้าที่ต้องการแก้ไข' };
+
+    const patch = this._extractEditablePatch(updates);
+    const invalid = this.validateProductPatch(patch);
+    if (invalid) return { ok: false, status: 400, error: invalid };
+
+    const updated = this._mergeProductUpdate(prev, patch);
     this.products = this.products.map((p) => (p.id === id ? updated : p));
     return { ok: true, status: 200, product: updated, products: this.products };
   }

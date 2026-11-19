@@ -1,4 +1,4 @@
-# 🎨 Figma Architecture & Design System Specification
+# Figma Architecture & Design System Specification
 **Project**: Café & Bakery POS (Jamal)  
 **Figma Prototype**: [https://www.figma.com/design/DSn2mfMqepHiauo2lbwBFV/jamal?node-id=0-1&t=TBf61dXn3PTERRvu-1](https://www.figma.com/design/DSn2mfMqepHiauo2lbwBFV/jamal?node-id=0-1&t=TBf61dXn3PTERRvu-1)  
 **Target Devices**: iPad / Tablet Landscape (1194 × 834), Desktop (1440 × 900), Mobile (393 × 852)  
@@ -11,15 +11,15 @@
 ตั้งชื่อ Page ในไฟล์ Figma ตามโครงสร้างโมดูลาร์ ดังนี้:
 
 ```
-📁 Jamal_POS_Figma
-├── 📄 00_Cover & Overview          (หน้าปก, ข้อมูลกลุ่ม, Versioning, ลิงก์ GitHub)
-├── 📄 01_Design Tokens & Styles    (Color, Typography, Spacing, Shadows, Radii)
-├── 📄 02_Component Library (Atoms) (Buttons, Inputs, Badges, Numpad, Status Pills)
-├── 📄 03_Component Library (Molecules & Organisms) (Product Card, Cart Item, Slip, Modals)
-├── 📄 04_Screens: Cashier POS (iPad) (หน้าจอขายหน้าร้าน, ปรับแต่ง Option, ชำระเงิน, สลิป)
-├── 📄 05_Screens: Operator KDS (หน้าจอคิวบาริสต้า/ห้องครัว Real-time)
-├── 📄 06_Screens: Admin Portal (Dashboard, สต็อกเบเกอรี่, รายการสินค้า, ประวัติการขาย)
-└── 📄 07_Screens: Customer Mobile (สั่งผ่านมือถือ, ตรวจสอบสถานะคิว)
+Jamal_POS_Figma
+├── 00_Cover & Overview          (หน้าปก, ข้อมูลกลุ่ม, Versioning, ลิงก์ GitHub)
+├── 01_Design Tokens & Styles    (Color, Typography, Spacing, Shadows, Radii)
+├── 02_Component Library (Atoms) (Buttons, Inputs, Badges, Numpad, Status Pills)
+├── 03_Component Library (Molecules & Organisms) (Product Card, Cart Item, Slip, Modals)
+├── 04_Screens: Cashier POS (iPad) (หน้าจอขายหน้าร้าน, ปรับแต่ง Option, ชำระเงิน, สลิป)
+├── 05_Screens: Operator KDS (หน้าจอคิวบาริสต้า/ห้องครัว Real-time)
+├── 06_Screens: Admin Portal (Dashboard, สต็อกเบเกอรี่, รายการสินค้า, ประวัติการขาย)
+└── 07_Screens: Customer Mobile (สั่งผ่านมือถือ, ตรวจสอบสถานะคิว)
 ```
 
 ---

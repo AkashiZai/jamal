@@ -1,10 +1,10 @@
-# 📚 Documentation & Specifications — Jamal POS
+# Documentation & Specifications — Jamal POS
 
 โฟลเดอร์นี้รวบรวมเอกสารข้อกำหนดทางเทคนิค ผังกระบวนการทำงาน และภาพถ่ายหน้าจอของระบบ Jamal Café & Bakery POS
 
 ---
 
-## 📑 สารบัญเอกสาร (Quick Navigation)
+## สารบัญเอกสาร (Quick Navigation)
 
 | เอกสาร | รายละเอียด | ลิงก์ตรง |
 | :--- | :--- | :--- |
@@ -15,7 +15,7 @@
 
 ---
 
-## 🖼️ ภาพถ่ายหน้าจอหลัก (Screenshots)
+## ภาพถ่ายหน้าจอหลัก (Screenshots)
 1. **Login Screen**: [`screenshots/01_login.png`](./screenshots/01_login.png)
 2. **Cashier POS**: [`screenshots/02_cashier_pos.png`](./screenshots/02_cashier_pos.png)
 3. **Payment Receipt Slip (80mm Thermal)**: [`screenshots/03_payment_slip.png`](./screenshots/03_payment_slip.png)

@@ -12,31 +12,31 @@
  
 ---
 
-## 📁 แผนผังโครงสร้างโฟลเดอร์และทางลัดเข้าดู (Project Structure & Quick Navigation)
+## แผนผังโครงสร้างโฟลเดอร์และทางลัดเข้าดู (Project Structure & Quick Navigation)
 
 เพื่อให้การเปิดดูไฟล์ โค้ด เอกสาร รายงานผลการทดสอบ และงานออกแบบบน GitHub ทำได้สะดวกรวดเร็ว โครงสร้างโปรเจกต์ได้ถูกจัดระเบียบให้กดเข้าดูง่ายดังนี้:
 
 | โฟลเดอร์ / ไฟล์ | รายละเอียด | ลิงก์ตรงบน GitHub |
 | :--- | :--- | :--- |
-| 📂 **`frontend/`** | ซอร์สโค้ดหลักของระบบ POS (Node.js & Express), Models และชุดทดสอบ | [เปิดดู frontend/](./frontend) |
-| ├── 📁 **`models/`** | คลาสโครงสร้างข้อมูล 4 โมดูล (`StaffModel`, `CartModel`, `OrderQueueModel`, `InventoryModel`) | [เปิดดู models/](./frontend/models) |
-| ├── 📁 **`tests/`** | ชุดทดสอบ Jest Unit Tests 4 Suites / 24 Tests (Statement Coverage 100%) | [เปิดดู tests/](./frontend/tests) |
-| ├── 📁 **`tests/ui/`** | ชุดทดสอบ Playwright E2E UI Tests 5 เคส (Login, POS, KDS, Admin) | [เปิดดู tests/ui/](./frontend/tests/ui) |
-| └── 📄 **`server.js`** | Express REST API รวม 16 Endpoints สำหรับจัดการระบบหน้าร้านและคลัง | [เปิดดู server.js](./frontend/server.js) |
-| 📂 **`reports/`** | รายงานการวัดคุณภาพโค้ดและการทดสอบระบบ | [เปิดดู reports/](./reports) |
-| └── 📁 **`plato/`** | รายงาน **Plato Static Complexity & Maintainability Index (HTML Dashboard)** | [เปิดดู reports/plato/](./reports/plato) |
-| 📂 **`docs/`** | ศูนย์รวมเอกสารข้อกำหนดทางเทคนิค ผังกระบวนการทำงาน และภาพถ่ายหน้าจอ | [เปิดดู docs/](./docs) |
-| ├── 📄 **`REQUIREMENT.md`** | ข้อกำหนดการทำงาน FR-01 ถึง FR-08 และ Non-Functional NFR-01 ถึง NFR-05 | [เปิดดู REQUIREMENT.md](./docs/REQUIREMENT.md) |
-| ├── 📄 **`TOR.md`** | ขอบเขตงาน (Terms of Reference) สำหรับ Admin, User, Operator และ Authentication | [เปิดดู TOR.md](./docs/TOR.md) |
-| ├── 📄 **`WORKFLOW_FLOWCHART.md`** | แผนผังระบบแบบละเอียด (Mermaid Flowchart) ครบ 4 ส่วนงาน | [เปิดดู WORKFLOW_FLOWCHART.md](./docs/WORKFLOW_FLOWCHART.md) |
-| └── 📁 **`screenshots/`** | ภาพถ่ายหน้าจอระบบจริงทั้ง 5 หน้าจอหลัก | [เปิดดู screenshots/](./docs/screenshots) |
-| 📂 **`design/`** | ทรัพยากรงานออกแบบ, Design Tokens และหน้าจอจำลอง Prototypes | [เปิดดู design/](./design) |
-| ├── 📁 **`figma_pages/`** | หน้าจอจำลอง Prototype HTML (6 หน้า) และ Diagram ข้อกำหนด UI | [เปิดดู figma_pages/](./design/figma_pages) |
-| ├── 📁 **`figma_import/`** | ไฟล์เวกเตอร์ SVG แท้จำนวน 39 หน้าจอ พร้อมนำเข้าสู่ Figma Canvas | [เปิดดู figma_import/](./design/figma_import) |
-| └── 📄 **`tokens.json`** | Design Tokens สำหรับโทนสี, Typography และ Spacing | [เปิดดู tokens.json](./design/tokens.json) |
-| 📂 **`scripts/`** | สคริปต์ Python สำหรับแปลง SVG และประมวลผลรูปภาพ | [เปิดดู scripts/](./scripts) |
-| 📂 **`.github/workflows/`** | CI/CD Pipeline อัตโนมัติ (Unit Test, Coverage, Plato Report, UI Test, CD Deploy) | [เปิดดู ci.yml](./.github/workflows/ci.yml) |
-| 📄 **`package.json`** | สคริปต์ Root สำหรับรัน `npm test`, `npm run plato`, `npm start` ได้ทันทีจากโฟลเดอร์หลัก | [เปิดดู package.json](./package.json) |
+| **`frontend/`** | ซอร์สโค้ดหลักของระบบ POS (Node.js & Express), Models และชุดทดสอบ | [เปิดดู frontend/](./frontend) |
+| ├── **`models/`** | คลาสโครงสร้างข้อมูล 4 โมดูล (`StaffModel`, `CartModel`, `OrderQueueModel`, `InventoryModel`) | [เปิดดู models/](./frontend/models) |
+| ├── **`tests/`** | ชุดทดสอบ Jest Unit Tests 4 Suites / 24 Tests (Statement Coverage 100%) | [เปิดดู tests/](./frontend/tests) |
+| ├── **`tests/ui/`** | ชุดทดสอบ Playwright E2E UI Tests 5 เคส (Login, POS, KDS, Admin) | [เปิดดู tests/ui/](./frontend/tests/ui) |
+| └── **`server.js`** | Express REST API รวม 16 Endpoints สำหรับจัดการระบบหน้าร้านและคลัง | [เปิดดู server.js](./frontend/server.js) |
+| **`reports/`** | รายงานการวัดคุณภาพโค้ดและการทดสอบระบบ | [เปิดดู reports/](./reports) |
+| └── **`plato/`** | รายงาน **Plato Static Complexity & Maintainability Index (HTML Dashboard)** | [เปิดดู reports/plato/](./reports/plato) |
+| **`docs/`** | ศูนย์รวมเอกสารข้อกำหนดทางเทคนิค ผังกระบวนการทำงาน และภาพถ่ายหน้าจอ | [เปิดดู docs/](./docs) |
+| ├── **`REQUIREMENT.md`** | ข้อกำหนดการทำงาน FR-01 ถึง FR-08 และ Non-Functional NFR-01 ถึง NFR-05 | [เปิดดู REQUIREMENT.md](./docs/REQUIREMENT.md) |
+| ├── **`TOR.md`** | ขอบเขตงาน (Terms of Reference) สำหรับ Admin, User, Operator และ Authentication | [เปิดดู TOR.md](./docs/TOR.md) |
+| ├── **`WORKFLOW_FLOWCHART.md`** | แผนผังระบบแบบละเอียด (Mermaid Flowchart) ครบ 4 ส่วนงาน | [เปิดดู WORKFLOW_FLOWCHART.md](./docs/WORKFLOW_FLOWCHART.md) |
+| └── **`screenshots/`** | ภาพถ่ายหน้าจอระบบจริงทั้ง 5 หน้าจอหลัก | [เปิดดู screenshots/](./docs/screenshots) |
+| **`design/`** | ทรัพยากรงานออกแบบ, Design Tokens และหน้าจอจำลอง Prototypes | [เปิดดู design/](./design) |
+| ├── **`figma_pages/`** | หน้าจอจำลอง Prototype HTML (6 หน้า) และ Diagram ข้อกำหนด UI | [เปิดดู figma_pages/](./design/figma_pages) |
+| ├── **`figma_import/`** | ไฟล์เวกเตอร์ SVG แท้จำนวน 39 หน้าจอ พร้อมนำเข้าสู่ Figma Canvas | [เปิดดู figma_import/](./design/figma_import) |
+| └── **`tokens.json`** | Design Tokens สำหรับโทนสี, Typography และ Spacing | [เปิดดู tokens.json](./design/tokens.json) |
+| **`scripts/`** | สคริปต์ Python สำหรับแปลง SVG และประมวลผลรูปภาพ | [เปิดดู scripts/](./scripts) |
+| **`.github/workflows/`** | CI/CD Pipeline อัตโนมัติ (Unit Test, Coverage, Plato Report, ESLint, UI Test, CD Deploy) | [เปิดดู ci.yml](./.github/workflows/ci.yml) |
+| **`package.json`** | สคริปต์ Root สำหรับรัน `npm test`, `npm run plato`, `npm start` ได้ทันทีจากโฟลเดอร์หลัก | [เปิดดู package.json](./package.json) |
 
 ---  
 ## 1. ที่มาของปัญหาและความสำคัญ (Problem Statement & Significance)
@@ -139,13 +139,12 @@
 ### 6.1 การติดตามสถานะของโปรเจกต์ (Project Tracking & Management)
 * **เครื่องมือที่ใช้**: **GitHub Projects (Kanban Board)** และ **GitHub Issues / Milestones**
 * **วิธีการดำเนินงาน**:
-  * แปลง Requirement และข้อกำหนด TOR ออกเป็น User Stories และ Work Items ทั้งหมด 10 Issues ผูกกับ Milestone ของแต่ละ Sprint (Sprint 1 ถึง Sprint 4) ไว้อย่างชัดเจน
-  * ใช้ Kanban Board ติดตามสถานะของงานผ่าน 4 คอลัมน์หลัก:
-    * `Todo`: งานที่วางแผนไว้ใน Sprint Backlog แต่ยังไม่ได้เริ่มลงมือทำ
-    * `In Progress`: งานที่กำลังดำเนินการพัฒนาโค้ดหรือออกแบบ UI ใน Figma
-    * `Review / In PR`: งานที่พัฒนาเสร็จแล้ว รอการตรวจสอบโค้ด (Code Review) และการทดสอบ UI ผ่าน Pull Request
-    * `Done`: งานที่ผ่านการทดสอบและ Merge รวมเข้ากิ่งหลัก (`main`) เรียบร้อยแล้ว
-  * มีการติดป้ายกำกับ (Labels) ชัดเจน เช่น `Feature`, `documentation`, `Priority High`, `Priority Low` พร้อมระบุ Assignee ผู้รับผิดชอบครบทุกคน
+  * แปลง Requirement และข้อกำหนด TOR ออกเป็น User Stories และ Work Items (รวม 45 Issues: ปิดแล้ว 42 Issues ใน Sprint 1–4 และเปิดงานพัฒนาต่อยอดในอนาคต 3 Issues `#54–#56`) ผูกกับ Milestone ของแต่ละ Sprint (`Sprint1` ถึง `Sprint4`) ไว้อย่างชัดเจน
+  * ใช้ Kanban Board (Project #3 View 2) ติดตามสถานะของงานผ่านคอลัมน์หลัก:
+    * `Todo`: งานที่วางแผนไว้ใน Backlog หรือ Future Work (`#54–#56`) ที่ยังไม่ได้เริ่มลงมือทำ
+    * `In Progress`: งานที่กำลังดำเนินการพัฒนาโค้ด ทดสอบ หรือออกแบบ UI
+    * `Done`: งานที่ผ่านการทดสอบ Code Review และ Merge รวมเข้ากิ่งหลัก (`main`) เรียบร้อยแล้ว
+  * มีการติดป้ายกำกับ (Labels) ชัดเจน เช่น `Feature`, `documentation`, `enhancement`, `Priority High`, `Priority Low` พร้อมระบุ Assignee ผู้รับผิดชอบครบทุกคน
 
 ### 6.2 ความถี่และพิธีกรรมของการทำ Scrum (Scrum Cadence & Ceremonies)
 ทีมงานมีการจัดประชุม Scrum อย่างสม่ำเสมอตลอด Sprint 2 เพื่อให้งานส่งมอบได้ตรงเวลาและมีคุณภาพ:
@@ -157,14 +156,12 @@
 3. **Sprint Review & Demo (สิ้นสุด Sprint)**: นำชิ้นงาน Figma Prototype และ Web Application มาทดสอบการคลิกและจำลองเหตุการณ์ร่วมกัน
 4. **Sprint Retrospective (สิ้นสุด Sprint ละ 1 ครั้ง)**: ประชุมทบทวนผลการทำงาน (What went well, What could be improved, Action items) พร้อมบันทึกวิดีโอสรุป
 
-### 6.3 มาตรฐานการตั้งชื่อ Branch (Git Branching Strategy)
-ทีมใช้กลยุทธ์ **Feature Branch Workflow** โดยแตกกิ่งย่อยออกจาก `main` ตามประเภทงานและหมายเลขโมดูล:
-* **รูปแบบการตั้งชื่อ (Naming Format)**: `<type>/<scope>-<short-description>` หรือ `feat/<part-number>-<feature>`
-* **Prefix ที่ใช้**:
-  * `feat/`: สำหรับการพัฒนาฟีเจอร์ใหม่ เช่น `feat/part1-auth-login`, `feat/part2-cashier-pos`, `feat/figma-page`
-  * `fix/`: สำหรับการแก้บั๊ก เช่น `fix/navbar-styling`, `fix/receipt-calculation`
-  * `docs/`: สำหรับงานเขียนเอกสาร เช่น `docs/update-readme-phase2`, `docs/system-workflow`
-* **ข้อกำหนด**: สมาชิกจะไม่ Push โค้ดตรงเข้ากิ่ง `main` หากยังไม่ผ่านการทดสอบเบื้องต้น (Self-Test) และเมื่อฟีเจอร์เสร็จสมบูรณ์จะต้องเปิด Pull Request เพื่อตรวจสอบก่อนทำการ Merge
+### 6.3 มาตรฐานการตั้งชื่อ Branch และ Commit (Git Branching & Commit Convention)
+ทีมใช้กลยุทธ์ **Feature Branch Workflow** โดยแตกกิ่งย่อยออกจาก `main` ตามรหัสสมาชิกและหมายเลข Ticket (ตามข้อกำหนด Naming Convention):
+* **รูปแบบการตั้งชื่อ Branch (Branch Format)**: `<nameid>_<ticketid>`
+  * ตัวอย่าง Branch จริงในโปรเจกต์: `akashizai_12`, `203tharathep_33`, `ctrlpichayut_8`, `kizizi123123_10`, `kizizi123123_57` (รวม 13 Feature Branches ตลอด 4 Sprints)
+* **รูปแบบข้อความ Commit (Commit Format)**: `<ticketid>: <msg>` (ความยาว > 8 ตัวอักษร) เช่น `12: add social login flow`, `48: sync README coverage metrics`
+* **ข้อกำหนด**: สมาชิกจะไม่ Push โค้ดตรงเข้ากิ่ง `main` หากยังไม่ผ่านการทดสอบเบื้องต้น และเมื่อฟีเจอร์เสร็จสมบูรณ์จะต้องเปิด Pull Request เพื่อทำ Code Review ก่อนทำการ Merge
 
 ### 6.4 ช่องทางและแนวทางการสื่อสารในช่วงการทำโปรเจกต์ (Team Communication Channels)
 ทีมงานผสมผสานการสื่อสารทั้งแบบ Synchronous (แบบเรียลไทม์) และ Asynchronous (แบบต่างเวลา) ดังนี้:
@@ -275,10 +272,10 @@
 flowchart LR
     %% Actors Definition
     subgraph Actors ["กลุ่มผู้ใช้งาน (Actors)"]
-        Cashier["👨‍💼 แคชเชียร์ (Cashier)"]
-        Barista["👨‍🍳 บาริสต้า/ครัว (Operator)"]
-        Admin["👑 ผู้จัดการ/เจ้าของร้าน (Admin)"]
-        Customer["📱 ลูกค้า (Customer)"]
+        Cashier["แคชเชียร์ (Cashier)"]
+        Barista["บาริสต้า/ครัว (Operator)"]
+        Admin["ผู้จัดการ/เจ้าของร้าน (Admin)"]
+        Customer["ลูกค้า (Customer)"]
     end
 
     %% System Boundary
@@ -351,10 +348,10 @@ flowchart LR
 flowchart TD
     %% Presentation Layer
     subgraph PresentationLayer ["1. Presentation Layer (อุปกรณ์ที่รองรับ / Devices)"]
-        Dev_iPad["📱 iPad 11' Landscape (1194×834)<br/>- แคชเชียร์ขายหน้าร้าน (Cashier POS)"]
-        Dev_KDS["📺 Kitchen Tablet / Monitor<br/>- กระดานคิวห้องครัว & บาริสต้า (KDS)"]
-        Dev_Admin["💻 Desktop / Laptop (1440×900)<br/>- แผงควบคุมเจ้าของร้าน (Admin Portal)"]
-        Dev_Mobile["📱 Mobile Smartphone (393×852)<br/>- ลูกค้าสั่งอาหาร & ติดตามคิว (Customer Mobile)"]
+        Dev_iPad["iPad 11' Landscape (1194x834)<br/>- แคชเชียร์ขายหน้าร้าน (Cashier POS)"]
+        Dev_KDS["Kitchen Tablet / Monitor<br/>- กระดานคิวห้องครัว & บาริสต้า (KDS)"]
+        Dev_Admin["Desktop / Laptop (1440x900)<br/>- แผงควบคุมเจ้าของร้าน (Admin Portal)"]
+        Dev_Mobile["Mobile Smartphone (393x852)<br/>- ลูกค้าสั่งอาหาร & ติดตามคิว (Customer Mobile)"]
     end
 
     %% Frontend Application Layer
@@ -381,7 +378,7 @@ flowchart TD
         AppContext["Express REST API Server (frontend/server.js)"]
         SessionSecurity["Session & Security Controller<br/>- 15-Minute Inactivity Auto Logout (NFR-04)"]
         CalculationEngine["Order & Payment Calculation Engine<br/>- Subtotal / VAT 7% / Change Due"]
-        QueueStateMachine["Order Lifecycle State Machine<br/>- Pending ➔ Processing ➔ Completed"]
+        QueueStateMachine["Order Lifecycle State Machine<br/>- Pending -> Processing -> Completed"]
         InventoryController["Real-time Stock Controller<br/>- Auto-deduct on purchase / Out-of-Stock lock"]
     end
 
@@ -417,8 +414,8 @@ flowchart TD
 ## 12. ภาพหน้าจอระบบและลิงก์งานออกแบบ (Website Screenshots & Figma Prototype)
 
 ### 12.1 ลิงก์งานออกแบบบน Figma (Figma Project Link)
-* 🎨 **Figma Prototype Link**: [คลิกที่นี่เพื่อเปิดดูชิ้นงาน Jamal POS บน Figma](https://www.figma.com/design/DSn2mfMqepHiauo2lbwBFV/jamal?node-id=0-1&t=TBf61dXn3PTERRvu-1)
-* 📁 **Figma Assets ใน Repository**: ไฟล์สำหรับนำเข้า Figma และ Interactive Prototypes จัดเก็บไว้ในโฟลเดอร์ [`design/figma_pages/`](./design/figma_pages) และไฟล์เวกเตอร์ SVG จำนวน 39 หน้าจอในโฟลเดอร์ [`design/figma_import/`](./design/figma_import)
+* **Figma Prototype Link**: [คลิกที่นี่เพื่อเปิดดูชิ้นงาน Jamal POS บน Figma](https://www.figma.com/design/DSn2mfMqepHiauo2lbwBFV/jamal?node-id=0-1&t=TBf61dXn3PTERRvu-1)
+* **Figma Assets ใน Repository**: ไฟล์สำหรับนำเข้า Figma และ Interactive Prototypes จัดเก็บไว้ในโฟลเดอร์ [`design/figma_pages/`](./design/figma_pages) และไฟล์เวกเตอร์ SVG จำนวน 39 หน้าจอในโฟลเดอร์ [`design/figma_import/`](./design/figma_import)
 
 ---
 
@@ -450,7 +447,7 @@ flowchart TD
 
 #### 4) หน้าจอกระดานคิวห้องครัวและบาริสต้า (Kitchen KDS Kanban Board)
 * **เส้นทางไฟล์**: [`frontend/server.js`](./frontend/server.js), [`frontend/public/app.js`](./frontend/public/app.js)
-* **คำอธิบาย**: กระดานคิวออเดอร์แบบ 3 คอลัมน์ (รอดำเนินการ ➔ กำลังชง/อบ ➔ พร้อมเสิร์ฟ) มีเสียงเตือนออเดอร์ใหม่ และปุ่มกดเปลี่ยนสถานะงานผ่าน Express API (`/api/orders/:id/status`) (TOR Operator 1-5)
+* **คำอธิบาย**: กระดานคิวออเดอร์แบบ 3 คอลัมน์ (รอดำเนินการ -> กำลังชง/อบ -> พร้อมเสิร์ฟ) มีเสียงเตือนออเดอร์ใหม่ และปุ่มกดเปลี่ยนสถานะงานผ่าน Express API (`/api/orders/:id/status`) (TOR Operator 1-5)
 
 <img width="100%" alt="Screen_04_Kitchen_KDS" src="./docs/screenshots/04_kitchen_kds.png" />
 
@@ -499,7 +496,17 @@ flowchart TD
 ---
 
 ### การทำงานของโปรแกรมและสรุปจำนวน HTTP Methods / API (Phase 3 & Phase 4)
-ระบบพัฒนาด้วย **Node.js + Express** (`frontend/server.js`) โดยให้บริการ Static Template (`public/index.html`, `public/app.js`, `public/style.css`) และเชื่อมต่อผ่าน REST API แบบ JSON รวม **16 Endpoints**:
+ระบบพัฒนาด้วย **Node.js + Express** (`frontend/server.js`) มีสถาปัตยกรรมการทำงานดังนี้:
+
+* **การใช้ Template:** `server.js` ใช้ Express Static Serving (`express.static(path.join(__dirname, 'public'))`) เสิร์ฟ SPA Template จาก [`frontend/public/index.html`](./frontend/public/index.html) ร่วมกับ [`public/style.css`](./frontend/public/style.css) และ [`public/app.js`](./frontend/public/app.js) เพื่อเรนเดอร์ UI ทั้ง 5 หน้าจอ (`renderLoginPage()`, `renderPosPage()`, `renderKdsPage()`, `renderAdminPage()`, `renderCustomerMobilePage()`) แบบ Dynamic ฝั่ง Client
+* **การเรียกใช้งาน API:** ฝั่ง Client (`app.js`) ติดต่อกับ Express Server ผ่าน `fetch('/api/...')` แบบ JSON (เช่น `fetchState()`, `apiCreateOrder()`, `apiAdvanceOrderStatus()`, `apiRestockProduct()`, `apiVoidReceipt()`, `apiAddStaff()`) แล้วส่งต่อไปประมวลผลใน Data Structure 4 คลาส (`StaffModel`, `CartModel`, `OrderQueueModel`, `InventoryModel`) ภายใน [`frontend/models/`](./frontend/models)
+* **การคำนวณหลัก (`Calculations`):**
+  1. `CartModel.calculateBill()` คำนวณยอดรวมท็อปปิ้ง, ราคาก่อน VAT (`totalAmount / 1.07`), ภาษีมูลค่าเพิ่ม 7% (`vatAmount`) และเงินทอน (`changeDue`)
+  2. `OrderQueueModel.getQueueStats()` คำนวณจำนวนออเดอร์แยกตามสถานะ และค่ายอดสั่งซื้อเฉลี่ย ต่ำสุด สูงสุด (`averageAmount`, `minAmount`, `maxAmount`)
+  3. `InventoryModel.getSalesAnalytics()` คำนวณรายได้สุทธิ จำนวนบิล และ `averageBill` / `minBill` / `maxBill` โดยคัดบิลที่ถูก Void ออก
+* **กราฟและแผนภาพในระบบ (`Graphs & Visualizations`):** หน้า Admin Dashboard แสดงกราฟแท่งเปรียบเทียบสัดส่วนการชำระเงิน (`PromptPay` vs `Cash`) และอันดับสินค้าขายดี Top 5, โฟลเดอร์ [`reports/plato/`](./reports/plato) แสดงกราฟวิเคราะห์ความซับซ้อนและ Maintainability Index และเอกสาร Markdown แสดง Mermaid Diagrams (Use Case, System Architecture, Workflow Flowchart)
+
+#### สรุปรายการ REST API Endpoints รวม 16 เส้นทาง (`frontend/server.js`)
 - **GET (5 methods):**
   1. `GET /api/state` — ดึงข้อมูลเริ่มต้นทั้งหมด (Categories, Products, Toppings, Staff, Orders, Sales, Sorted Inventory)
   2. `GET /api/inventory/sorted` — ดึงรายงานสต็อกสินค้า (Base Drink, Cake, Toppings) เรียงจากน้อยไปมาก
@@ -521,17 +528,17 @@ flowchart TD
   4. `DELETE /api/products/:id` — ลบรายการสินค้าออกจากระบบ
 
 ### การทำ CI/CD Pipeline (Free-tier Parallel Jobs) และการ Deploy (Phase 4)
-- **Continuous Integration (CI):** ใช้ GitHub Actions (`.github/workflows/ci.yml`) โดยแยกเป็น **2 Parallel Jobs บน Free Tier** ที่รันพร้อมกันเมื่อมีการ Push หรือเปิด Pull Request:
-  1. `unit-test-and-coverage`: รัน Jest Unit Tests ทั้ง 4 Models และตรวจสอบ Statement Coverage (`>= 80%`)
-  2. `ui-test-and-static-check`: รัน Playwright UI Tests ครบทั้ง 5 เคสเพื่อตรวจค่า Expected Results บนหน้าเว็บจริง
-- **Continuous Deployment (CD):** เมื่อทั้ง 2 Parallel Jobs ผ่านครบ (`needs: [unit-test-and-coverage, ui-test-and-static-check]`) ระบบจะทริกเกอร์ Deploy ขึ้นเซิร์ฟเวอร์ Production อัตโนมัติ
+- **Continuous Integration (CI):** กำหนดไว้ใน [`.github/workflows/ci.yml`](./.github/workflows/ci.yml) (Ubuntu `ubuntu-latest`, Node.js `20`, `working-directory: ./frontend`) โดยรัน **2 Parallel Jobs บน Free Tier** พร้อมกันทุกครั้งที่มี `push` หรือ `pull_request` เข้า `main`:
+  1. `unit-test-and-coverage`: ติดตั้งแพ็กเกจด้วย `npm ci` แล้วรัน `npm run test:coverage` (ตรวจสอบ Statement Coverage `>= 80%` บน `models/`), รัน `npm run plato` สร้างรายงาน Complexity และอัปโหลด Artifact `plato-complexity-report`
+  2. `ui-test-and-static-check`: ทำงานขนานกับ Job ที่ 1 โดยรัน `npm run lint` (ESLint Static Check), ติดตั้ง Chromium แล้วรัน `npm run test:ui` (Playwright UI Tests ครบทั้ง 5 เคส)
+- **Continuous Deployment (CD):** Job ที่ 3 (`cd-deploy-hook`) ตั้งเงื่อนไข `needs: [unit-test-and-coverage, ui-test-and-static-check]` และ `if: github.ref == 'refs/heads/main' && github.event_name == 'push'` เพื่อยิง Deploy Webhook (`secrets.DEPLOY_HOOK_URL`) เมื่อ Parallel Jobs ทั้งสองผ่านสมบูรณ์
 
 ### ตารางเปรียบเทียบผล Dynamic Profiling (Structural Method — Phase 3 vs Phase 4)
 | เป้าหมายการวัด (Target Operation) | Phase 3 (ก่อนแยก Model / Baseline) | Phase 4 (หลังแยก `CartModel` & Route) | ผลการเปลี่ยนแปลง |
 | :--- | :---: | :---: | :--- |
-| การคำนวณตะกร้า `1,000` รอบ (`addItem` + `calculateBill`) | `2.99 ms` *(Baseline Array)* | `14.40 ms` *(`~0.014 ms/call`)* | รวม logic ท็อปปิ้ง ตรวจซ้ำ คำนวณ VAT 7% และเงินทอน แยกขาดจาก DOM rendering |
-| `GET /api/state` (`50` requests ต่อเนื่อง) | `114.11 ms` | `119.03 ms` *(`~2.38 ms/req`)* | รองรับ 11 เมนู + `toppings` เพิ่มใน payload โดยใช้เวลาใกล้เคียงเดิม |
-| Memory Heap Used (`MB`) | `13.51 MB` | `14.15 MB` | การใช้หน่วยความจำเสถียร (~14 MB) หลังเพิ่มโครงสร้าง `CartModel` |
+| การคำนวณตะกร้า `1,000` รอบ (`addItem` + `calculateBill`) | `2.99 ms` *(Baseline Array)* | `14.38 ms` *(`~0.014 ms/call`)* | รวม logic ท็อปปิ้ง ตรวจซ้ำ คำนวณ VAT 7% และเงินทอน แยกขาดจาก DOM rendering |
+| `GET /api/state` (`50` requests ต่อเนื่อง) | `114.11 ms` | `103.10 ms` *(`~2.06 ms/req`)* | รองรับ 11 เมนู + `toppings` เพิ่มใน payload โดยเวลาตอบสนองเร็วกว่าค่า Baseline |
+| Memory Heap Used (`MB`) | `13.51 MB` | `14.70 MB` | การใช้หน่วยความจำเสถียร (~14–15 MB) หลังเพิ่มโครงสร้าง `CartModel` |
 
 ### ตาราง Unit Test Cases สำหรับ Data Structure (`models/` — รวม 15 Test Cases)
 | ลำดับ | รหัส Test | Class / Model | Method ที่ทดสอบ | Input / เงื่อนไข | Expected Result | สถานะ |
@@ -551,6 +558,44 @@ flowchart TD
 | 13 | UT-13 | `InventoryModel` | `sortInventorySmallToLarge()` | สินค้าสต็อก `2`, `5`, `20` | เรียงลำดับจากน้อยไปมาก `[2, 5, 20]` ถูกต้อง | Pass |
 | 14 | UT-14 | `InventoryModel` | `createProduct()`, `updateProduct()`, `deleteProduct()`, `restockItem()` | เพิ่ม/แก้ไขราคา/เติมสต็อก/ลบสินค้า | CRUD ทำงานครบและอัปเดตจำนวนสต็อกถูกต้อง | Pass |
 | 15 | UT-15 | `InventoryModel` | `voidSale()`, `getSalesAnalytics()` | บิล ฿150 และ ฿65, จากนั้นกด Void บิลแรก | คำนวณ `avg: 107.5`, `min: 65`, `max: 150` และตัดบิลที่ Void ออก | Pass |
+
+#### ตัวอย่าง Test Case Code (Unit Test & UI Test)
+
+1. **ตัวอย่าง Unit Test Code (`frontend/tests/cart.test.js`):**
+```javascript
+test('calculateBill computes drink+toppings, VAT 7%, and change due correctly', () => {
+  const cart = new CartModel();
+  cart.addItem(sampleProducts[0], 'หวาน 25% • เพิ่มช็อต', null, [sampleToppings[1]]);
+  cart.addItem(sampleProducts[1], '', 85, []);
+
+  const bill = cart.calculateBill(200);
+  expect(bill.totalAmount).toBe(170); // (65+20) + 85
+  expect(bill.toppingsTotal).toBe(20);
+  expect(bill.changeDue).toBe(30);
+  expect(bill.isEnoughCash).toBe(true);
+  expect(bill.vatAmount).toBeGreaterThan(0);
+});
+```
+
+2. **ตัวอย่าง Automated UI Test Code พร้อมตรวจ Expected Result (`frontend/tests/ui/pos.ui.test.js`):**
+```javascript
+test('UI Case 3: POS searches menu and topping, customizes drink, and verifies cash change', async ({ page }) => {
+  await page.goto(baseUrl);
+  const searchBox = page.getByPlaceholder('ค้นหาชื่อเมนู หรือรหัส...');
+  await searchBox.fill('โอ๊ต');
+  await expect(page.getByText('ท็อปปิ้งที่ตรงกับคำค้นหา:')).toBeVisible();
+
+  await searchBox.fill('เอสเพรสโซ่เย็น');
+  await page.getByText('เอสเพรสโซ่เย็น (Iced Espresso)').first().click();
+  await page.getByText('เพิ่มช็อตกาแฟ (Extra Espresso Shot)').click();
+  await page.getByRole('button', { name: /เพิ่มลงในบิล/ }).click();
+
+  await expect(page.getByText('฿85.00').first()).toBeVisible();
+  await page.getByRole('button', { name: /คิดเงิน/ }).click();
+  await page.getByRole('button', { name: '฿100', exact: true }).click();
+  await expect(page.getByTestId('pos-change-due')).toHaveText('฿15.00');
+});
+```
 
 #### ตัวอย่างคำสั่งทดสอบและ Dynamic Profiling (รันได้จาก Root หรือ `frontend/`)
 ```bash
@@ -579,21 +624,21 @@ npm run test:plato      # รันทั้ง Unit Test Coverage และ Pla
 
 | ไฟล์โมดูล / ชุดทดสอบ | Maintainability Index (0-100) | Physical SLOC | Cyclomatic Complexity | Halstead Effort | ผลการประเมิน |
 | :--- | :---: | :---: | :---: | :---: | :--- |
-| **`models/CartModel.js`** | **72.7** | 111 | 26 | 234,860 | 🟢 โครงสร้างสะอาด ความซับซ้อนต่ำ |
-| **`models/InventoryModel.js`** | **68.5** | 278 | 59 | 856,535 | 🟢 ตรรกะคลังสินค้าและบิลขายเป็นระบบ |
-| **`models/OrderQueueModel.js`** | **64.5** | 119 | 22 | 147,367 | 🟢 คิวออเดอร์และการเปลี่ยนสถานะอ่านง่าย |
-| **`models/StaffModel.js`** | **63.0** | 122 | 27 | 188,631 | 🟢 ผ่านเกณฑ์ความซับซ้อนตามมาตรฐาน |
-| **`tests/cart.test.js`** | **57.5** | 82 | 1 | 60,229 | 🟢 Unit Test ครอบคลุม 100% Statements |
-| **`tests/inventory.test.js`** | **60.5** | 193 | 1 | 428,007 | 🟢 Unit Test 12 เคสครอบคลุมการตัดสต็อก & Void |
-| **`tests/orderQueue.test.js`** | **55.2** | 85 | 1 | 53,729 | 🟢 Unit Test คิวออเดอร์และสถิติ |
-| **`tests/staff.test.js`** | **54.7** | 130 | 1 | 113,862 | 🟢 Unit Test ระบบสิทธิ์และ Session Expire |
-| **`tests/ui/admin.ui.test.js`** | **76.0** | 50 | 2 | 27,031 | 🟢 Playwright UI Test สต็อกเรียงน้อยไปมาก |
-| **`tests/ui/kds.ui.test.js`** | **78.0** | 31 | 2 | 9,397 | 🟢 Playwright UI Test คิวห้องครัว |
-| **`tests/ui/login.ui.test.js`** | **77.4** | 40 | 2 | 11,463 | 🟢 Playwright UI Test การตรวจสอบสิทธิ์ |
-| **`tests/ui/pos.ui.test.js`** | **72.9** | 39 | 2 | 13,646 | 🟢 Playwright UI Test การคิดเงินและทอนเงิน |
-| **`server.js`** | **65.4** | 501 | 41 | 577,361 | 🟢 REST API 16 Endpoints เชื่อมโยงโมเดล |
-| **`public/app.js`** | **71.2** | 2,639 | 267 | 5,131,771 | 🟢 SPA Client logic จัดการหน้าจอและเสียงเตือน |
-| **ค่าเฉลี่ยทั้งโปรเจกต์** | **66.97** | **316** | **-** | **-** | 🟢 **ผ่านเกณฑ์มาตรฐาน Maintainability (> 65)** |
+| **`models/CartModel.js`** | **72.7** | 111 | 26 | 234,860 | ผ่านเกณฑ์: โครงสร้างสะอาด ความซับซ้อนต่ำ |
+| **`models/InventoryModel.js`** | **69.1** | 287 | 58 | 866,194 | ผ่านเกณฑ์: ตรรกะคลังสินค้าและบิลขายเป็นระบบ |
+| **`models/OrderQueueModel.js`** | **64.5** | 119 | 22 | 147,367 | ผ่านเกณฑ์: คิวออเดอร์และการเปลี่ยนสถานะอ่านง่าย |
+| **`models/StaffModel.js`** | **63.0** | 122 | 27 | 188,631 | ผ่านเกณฑ์ความซับซ้อนตามมาตรฐาน |
+| **`tests/cart.test.js`** | **57.5** | 82 | 1 | 60,229 | ผ่านเกณฑ์: Unit Test ครอบคลุม 100% Statements |
+| **`tests/inventory.test.js`** | **60.5** | 193 | 1 | 428,007 | ผ่านเกณฑ์: Unit Test 12 เคสครอบคลุมการตัดสต็อก & Void |
+| **`tests/orderQueue.test.js`** | **55.2** | 85 | 1 | 53,729 | ผ่านเกณฑ์: Unit Test คิวออเดอร์และสถิติ |
+| **`tests/staff.test.js`** | **54.7** | 130 | 1 | 113,862 | ผ่านเกณฑ์: Unit Test ระบบสิทธิ์และ Session Expire |
+| **`tests/ui/admin.ui.test.js`** | **76.0** | 50 | 2 | 27,031 | ผ่านเกณฑ์: Playwright UI Test สต็อกเรียงน้อยไปมาก |
+| **`tests/ui/kds.ui.test.js`** | **78.0** | 31 | 2 | 9,397 | ผ่านเกณฑ์: Playwright UI Test คิวห้องครัว |
+| **`tests/ui/login.ui.test.js`** | **77.4** | 40 | 2 | 11,463 | ผ่านเกณฑ์: Playwright UI Test การตรวจสอบสิทธิ์ |
+| **`tests/ui/pos.ui.test.js`** | **72.9** | 39 | 2 | 13,646 | ผ่านเกณฑ์: Playwright UI Test การคิดเงินและทอนเงิน |
+| **`server.js`** | **65.4** | 501 | 41 | 577,361 | ผ่านเกณฑ์: REST API 16 Endpoints เชื่อมโยงโมเดล |
+| **`public/app.js`** | **71.2** | 2,639 | 267 | 5,131,771 | ผ่านเกณฑ์: SPA Client logic จัดการหน้าจอและเสียงเตือน |
+| **ค่าเฉลี่ยทั้งโปรเจกต์** | **67.02** | **316** | **-** | **-** | **ผ่านเกณฑ์มาตรฐาน Maintainability (> 65)** |
 
 
 ### สิ่งที่ยังไม่เสร็จสมบูรณ์ / Bug ที่พบใน Phase 3 (และแก้ไขครบใน Phase 4)
@@ -614,8 +659,8 @@ npm run test:plato      # รันทั้ง Unit Test Coverage และ Pla
 | `StaffModel.js` | 100 | 84.48 | 100 | 100 | `staff.test.js` (5 tests) | `@AkashiZai` |
 | `CartModel.js` | 100 | 78.94 | 100 | 100 | `cart.test.js` (4 tests) | `@203Tharathep` |
 | `OrderQueueModel.js` | 100 | 72.54 | 100 | 100 | `orderQueue.test.js` (3 tests) | `@Ctrl-Pichayut` |
-| `InventoryModel.js` | 100 | 95.16 | 100 | 100 | `inventory.test.js` (12 tests) | `@Kizizi123123` |
-| **All files** | **100** | **85.86** | **100** | **100** | 4 Test Suites / 24 Tests | ทั้งทีม |
+| `InventoryModel.js` | 100 | 95.31 | 100 | 100 | `inventory.test.js` (12 tests) | `@Kizizi123123` |
+| **All files** | **100** | **86.05** | **100** | **100** | 4 Test Suites / 24 Tests | ทั้งทีม |
 
 ### ตารางสรุป 5 UI Test Cases (Phase 4 — Playwright, `npm run test:ui`)
 | ลำดับ | ชื่อไฟล์ UI Test | รายละเอียดการทดสอบ (Steps) | การเช็กค่า Expected Result (`expect(...)`) | ผู้รับผิดชอบ |
@@ -623,12 +668,12 @@ npm run test:plato      # รันทั้ง Unit Test Coverage และ Pla
 | 1 | `login.ui.test.js` | กดออกจากระบบ -> กด Sign In ด้วย PIN แคชเชียร์ `1234` ที่ระบบกรอกไว้ให้ | `expect(page.getByText('เมนูสินค้าหน้าร้าน (Menu Catalog)')).toBeVisible()` | `@AkashiZai` |
 | 2 | `login.ui.test.js` | กดออกจากระบบ -> กรอกรหัส PIN ผิด `0000` -> กด Sign In | `expect(page.getByText(/รหัสผ่าน PIN ไม่ถูกต้อง/)).toBeVisible()` | `@AkashiZai` |
 | 3 | `pos.ui.test.js` | ค้นหา `"โอ๊ต"` และ `"เอสเพรสโซ่เย็น"` -> เลือกเพิ่มช็อตกาแฟ (+฿20) -> คิดเงินสดรับ ฿100 | `expect(page.getByText('฿85.00').first()).toBeVisible()` และเงินทอน `expect(page.getByTestId('pos-change-due')).toHaveText('฿15.00')` | `@203Tharathep` |
-| 4 | `kds.ui.test.js` | เปิดหน้า Kitchen KDS -> กด `+ จำลองคิวใหม่` -> กด `รับทำออเดอร์นี้ →` | `expect(page.getByText('#คิว A05')).toBeVisible()` และปุ่มเปลี่ยนเป็น `✓ ทำเสร็จแล้ว (พร้อมเสิร์ฟ)` | `@Ctrl-Pichayut` |
+| 4 | `kds.ui.test.js` | เปิดหน้า Kitchen KDS -> กด `+ จำลองคิวใหม่` -> กด `รับทำออเดอร์นี้ ->` | `expect(page.getByText('#คิว A05')).toBeVisible()` และปุ่มเปลี่ยนเป็นสถานะพร้อมเสิร์ฟ | `@Ctrl-Pichayut` |
 | 5 | `admin.ui.test.js` | เปิด Admin Portal -> จัดการสต็อกทั้งหมด -> ตรวจว่ารายการเรียงสต็อกน้อยไปมาก -> กด `+ เติม 5 ชิ้น` ที่ครัวซองต์ | สต็อกครัวซองต์เพิ่มขึ้น 5 ชิ้น (ค่าตั้งต้น 4 -> `9 ชิ้น`) ด้วย `expect(croissantStock).toHaveText(...)` และรายการยังเรียงน้อยไปมากหลังเติม | `@Kizizi123123` |
 
 ### กระบวนการทำงาน (Process, Methods & Tools) ที่เพิ่มเติมใน Phase 3 และ Phase 4
-1. **การบริหารโปรเจกต์และ Change Management:** แตก Change Request (`#12`) และงานทดสอบออกเป็น Tickets ย่อยใน Milestone `Sprint3` และ `Sprint4` ตั้งชื่อ Branch ตามมาตรฐาน `<nameid>_<ticketid>` (เช่น `kizizi123123_10`) และ Commit ตามรูปแบบ `<ticketid>: <msg>` เพื่อให้ตรวจย้อนกลับจาก Commit ไปยัง Issue ได้
-2. **การควบคุมคุณภาพโค้ดและ Monitor Build:** ใช้ Jest + Supertest ตรวจ Statement Coverage บนโฟลเดอร์ `models/` และตั้งค่า GitHub Actions CI Pipeline แบบ Parallel Jobs เพื่อรัน Unit Test และ Playwright UI Test อัตโนมัติทุกครั้งที่ Push/Pull Request
+1. **การบริหารโปรเจกต์และ Change Management:** แตก Change Request (`#12`) และงานทดสอบออกเป็น Tickets ย่อยใน Milestone `Sprint3` และ `Sprint4` (รวม 45 Issues และเปิด Future Work `#54–#56` บน GitHub Projects Board) ตั้งชื่อ Branch ตามมาตรฐาน `<nameid>_<ticketid>` และ Commit ตามรูปแบบ `<ticketid>: <msg>` เพื่อให้ตรวจย้อนกลับจาก Commit ไปยัง Issue ได้
+2. **การควบคุมคุณภาพโค้ดและ Monitor Build:** ใช้ Jest + Supertest ตรวจ Statement Coverage บนโฟลเดอร์ `models/`, ใช้ Plato สร้างรายงาน Maintainability Index / Halstead / Cyclomatic Complexity ใน [`reports/plato/`](./reports/plato), และตั้งค่า GitHub Actions CI Pipeline แบบ Parallel Jobs (`npm run test:coverage` + `npm run plato` ขนานกับ `npm run lint` + `npm run test:ui`) อัตโนมัติทุกครั้งที่ Push/Pull Request
 3. **การจัดการ Bugs และ Profiling:** ใช้ ESLint (Static Profiling) และ `perf_hooks` (Dynamic Structural Profiling) วัดผลก่อนและหลังปรับโครงสร้างโค้ด โดยสรุปผลไว้ในตารางเปรียบเทียบด้านบน
 4. **การแยก Business Logic ออกจาก Route (ส่วนที่ 4):** ย้ายการตัดสต็อก การบันทึกบิลขาย การ Void บิล และ Admin CRUD ของเมนูจาก `server.js` ไปไว้ใน `InventoryModel` ทำให้ Route เหลือหน้าที่รับ-ตอบ HTTP และเขียน Unit Test ครอบคลุมได้โดยไม่ต้องเปิดเซิร์ฟเวอร์
 
@@ -695,7 +740,7 @@ npm run test:plato      # รันทั้ง Unit Test Coverage และ Pla
 * **คลิปวิดีโอสรุปการประชุม Final Retrospective (Sprint 4):** https://youtu.be/hfDTt5S0-oo
 
 ### 1. สิ่งที่ทำได้ดี (What went well)
-1. **คุณภาพโค้ดและการทดสอบผ่านตามเกณฑ์ทั้งหมด:** หลังจาก Refactor `StaffModel.js` แล้ว คำสั่ง `npm run lint` ได้ **0 errors, 0 warnings**, `npm run test:coverage` ผ่านครบ **24/24 Tests** (Statement Coverage **100%**, Branch **85.86%**, Functions **100%**, Lines **100%**), และ `npm run test:ui` (Playwright) ผ่านครบ **5/5 เคส**
+1. **คุณภาพโค้ดและการทดสอบผ่านตามเกณฑ์ทั้งหมด:** หลังจาก Refactor `StaffModel.js` และ `InventoryModel.js` แล้ว คำสั่ง `npm run lint` ได้ **0 errors, 0 warnings**, `npm run test:coverage` ผ่านครบ **24/24 Tests** (Statement Coverage **100%**, Branch **86.05%**, Functions **100%**, Lines **100%**), และ `npm run test:ui` (Playwright) ผ่านครบ **5/5 เคส**
 2. **ระบบ CI/CD และการ Deploy บน AWS สำเร็จ:** GitHub Actions CI (`unit-test-and-coverage` และ `ui-test-and-static-check`) ผ่านทุก Job และ Deploy ระบบจริงขึ้น **AWS Elastic Beanstalk (`us-east-1`)** ได้สำเร็จที่ http://jamal-pos-env.eba-ycvffjku.us-east-1.elasticbeanstalk.com/
 3. **การทำงานร่วมกันครบทั้ง 4 คน:** ทุกคนมี Commit ตรง Format `<ticketid>: <msg>` (`>= 20` commits), Branches (`>= 2`), Issues และ Peer Review Comments (`>= 20` comments) ครบถ้วน
 
