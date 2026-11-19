@@ -3,8 +3,13 @@
   "version": "1.0.0",
   "private": true,
   "description": "Jamal Café & Bakery POS System Workspace",
+  "engines": {
+    "node": ">=20.0.0 <25.0.0"
+  },
   "scripts": {
-    "start": "npm --prefix frontend start",
+    "build": "npm --prefix frontend ci --omit=dev",
+    "postinstall": "node -e \"const { execSync } = require('child_process'); const cmd = (process.env.RENDER || process.env.NODE_ENV === 'production') ? 'npm --prefix frontend ci --omit=dev' : 'npm --prefix frontend install'; execSync(cmd, { stdio: 'inherit' });\"",
+    "start": "node frontend/server.js",
     "dev": "npm --prefix frontend run dev",
     "test": "npm --prefix frontend test",
     "test:coverage": "npm --prefix frontend run test:coverage",

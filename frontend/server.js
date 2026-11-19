@@ -4,7 +4,9 @@ const StaffModel = require('./models/StaffModel');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
+const HOST = process.env.HOST || '0.0.0.0';
 
+app.set('trust proxy', 1);
 app.use(express.json());
 app.use(express.static(path.join(__dirname, 'public')));
 
@@ -510,15 +512,30 @@ app.get('/api/queue/stats', (req, res) => {
   });
 });
 
+// Health check endpoint for Render and load balancers
+app.get('/healthz', (_req, res) => {
+  res.status(200).json({ status: 'ok', service: 'jamal-pos', uptime: Math.round(process.uptime()) });
+});
+
 // Fallback to index.html for SPA navigation
 app.get('*', (_req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
 
 if (require.main === module) {
-  app.listen(PORT, () => {
-    console.log(`☕ Jamal Café & Bakery POS (Node.js + Express) running at http://localhost:${PORT}`);
+  const server = app.listen(PORT, HOST, () => {
+    console.log(`☕ Jamal Café & Bakery POS (Node.js + Express) running at http://${HOST}:${PORT}`);
   });
+  server.keepAliveTimeout = 120 * 1000;
+  server.headersTimeout = 125 * 1000;
+
+  const shutdown = () => {
+    server.close(() => {
+      process.exit(0);
+    });
+  };
+  process.on('SIGTERM', shutdown);
+  process.on('SIGINT', shutdown);
 }
 
 module.exports = app;
