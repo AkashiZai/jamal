@@ -681,34 +681,34 @@ npm run test:plato      # รันทั้ง Unit Test Coverage และ Pla
 ---
 
 ### การ Deploy ขึ้น Production บน AWS Elastic Beanstalk (Region: `us-east-1`)
-- **Live URL:** http://jamal-pos-env.eba-ycvffjku.us-east-1.elasticbeanstalk.com/
+- **Live URL (Port 3000):** http://jamal-pos-env.eba-ycvffjku.us-east-1.elasticbeanstalk.com:3000/ (รองรับพอร์ต 80 ผ่าน Nginx Proxy ที่ http://jamal-pos-env.eba-ycvffjku.us-east-1.elasticbeanstalk.com/ ด้วยเช่นกัน)
 - **GitHub Issues ที่เกี่ยวข้อง:** `#52` และ `#53`
 
 #### รายละเอียด Environment บน AWS Elastic Beanstalk
 | หัวข้อ (Configuration) | ค่าที่ตั้งใช้งานจริง |
 | :--- | :--- |
-| **Application Name / Environment Name** | `jamal-pos-app` / `jamal-pos-env` (ID: `e-tedpbmfw8w`) |
-| **Region / Platform** | `us-east-1` — `Node.js 22 running on 64bit Amazon Linux 2023/6.12.3` |
-| **Environment Tier / Preset** | Web server environment — Single instance (Public IP: `3.232.105.183`) |
-| **Service Access (AWS Academy)** | Service role: `LabRole`, EC2 instance profile: `LabInstanceProfile` |
-| **Environment Properties** | `PORT=8080`, `NODE_ENV=production` |
-| **Running Version / Health** | `jamal-pos-v1` / Health: `Ok` |
+| **Application Name / Environment Name** | `jamal-pos-app` / `jamal-pos-env` (ID: `e-h4hzffmxt2`) |
+| **Region / Platform** | `us-east-1` — `Node.js 24 running on 64bit Amazon Linux 2023/6.12.3` |
+| **Environment Tier / Preset** | Web server environment — Single instance (`t2.small`, `x86_64`, `10 GB` General Purpose SSD, Public IP: `3.222.55.235`) |
+| **Service Access (AWS Academy)** | Service role: `LabRole`, EC2 key pair: `vockey`, EC2 instance profile: `LabInstanceProfile` |
+| **Networking & Security Group** | Default VPC (`vpc-0699a12dd58facf3c`), Public IP `Enabled`, 6 Subnets, Security Group `allowall` (`sg-01fc8950cb14d51ad`) |
+| **Updates & Monitoring** | Basic Monitoring (`5 minute`), IMDSv1 `Disabled`, Managed platform updates `Disabled`, X-Ray / S3 Rotate / CloudWatch Log Streaming `Disabled` |
+| **Environment Properties** | `PORT=3000`, `NODE_ENV=production` |
+| **Running Version / Health** | `jamal-pos-node24-v1` / Health: `Ok` |
 
 #### โครงสร้างแพ็กเกจ Deployment Bundle (`jamal-pos-eb.zip`)
-แพ็กไฟล์จากโฟลเดอร์ `frontend/` (ไม่รวม `node_modules/` เพื่อให้ Elastic Beanstalk ติดตั้ง production dependencies อัตโนมัติด้วย `npm`) โดยให้ `package.json` อยู่ที่ root ของไฟล์ `.zip`:
-- `package.json`, `package-lock.json`, `server.js`
+แพ็กไฟล์ข้างในโฟลเดอร์ `frontend/` โดยตรง (ไม่สร้างโฟลเดอร์ครอบและไม่รวม `node_modules/` เพื่อให้ Elastic Beanstalk ติดตั้ง production dependencies อัตโนมัติด้วย `npm`) โดยให้ `package.json` อยู่ที่ root ของไฟล์ `.zip` รวม 10 ไฟล์:
+- `package.json` (`"start": "node server.js"`), `package-lock.json`, `server.js` (`const PORT = process.env.PORT || 3000`)
 - `models/` (`StaffModel.js`, `CartModel.js`, `OrderQueueModel.js`, `InventoryModel.js`)
 - `public/` (`index.html`, `app.js`, `style.css`)
-- `Procfile` (`web: npm start`)
-- `.ebextensions/01_env.config` (ตั้งค่า `PORT="8080"` และ `NODE_ENV="production"` ให้ตรงกับ Nginx reverse proxy บน Amazon Linux 2023)
 
 #### ขั้นตอนการ Deploy และผลการตรวจสอบระบบจริง
-1. ตรวจสอบความพร้อมของโค้ดฝั่ง `frontend/` (`npm test` ผ่าน 4 Test Suites / 24 Tests) แล้วสร้างไฟล์ `.zip` ด้วยพาธแบบ POSIX (`/`)
-2. เปิด AWS Elastic Beanstalk Console (`us-east-1`) เลือก **Web server environment**, แพลตฟอร์ม **Node.js 22 (Amazon Linux 2023)**, อัปโหลดไฟล์ Local `.zip` (`jamal-pos-v1`), ตั้งค่า **Single instance**, เลือก `LabRole` + `LabInstanceProfile` และเปิด Public IP ใน default VPC
-3. เมื่อสร้าง Environment เสร็จสิ้น สถานะเปลี่ยนเป็น `Ok` และทดสอบ Endpoint จริงได้ผลดังนี้:
-   - `GET /` → HTTP `200` (โหลดหน้าเว็บ JAMAL POS สำเร็จ)
-   - `GET /api/state` → คืนข้อมูล `11` products, `4` toppings, `3` orders และ `15` sortedInventory
-   - `GET /api/catalog/search?q=Oat` → คืนรายการท็อปปิ้งที่ตรงคำค้นหาถูกต้อง
+1. ตรวจสอบความพร้อมของโค้ดฝั่ง `frontend/` (`npm test` ผ่าน 4 Test Suites / 24 Tests) แล้วสร้างไฟล์ `.zip` จากไฟล์ข้างใน `frontend/` โดยตรงด้วยพาธแบบ POSIX (`/`)
+2. เปิด AWS Elastic Beanstalk Console (`us-east-1`) เลือก **Web server environment**, แพลตฟอร์ม **Node.js 24 running on 64bit Amazon Linux 2023**, อัปโหลดไฟล์ Local `.zip` (`jamal-pos-node24-v1`), ตั้งค่า **Single instance (`t2.small`, 10 GB SSD)**, เลือก `LabRole` + `vockey` + `LabInstanceProfile`, เปิด Public IP ใน default VPC พร้อมเลือก Security Group `allowall`, ปิด Managed updates และตั้งค่า Environment property `PORT=3000`
+3. เมื่อสร้าง Environment เสร็จสิ้น สถานะเปลี่ยนเป็น `Ok` และทดสอบ Endpoint จริงผ่านพอร์ต `3000` (และพอร์ต `80`) ได้ผลดังนี้:
+   - `GET http://jamal-pos-env.eba-ycvffjku.us-east-1.elasticbeanstalk.com:3000/` → HTTP `200` (โหลดหน้าเว็บ JAMAL POS และแสดงสถานะ `Express Server Online` สำเร็จ)
+   - `GET http://jamal-pos-env.eba-ycvffjku.us-east-1.elasticbeanstalk.com:3000/api/state` → HTTP `200` คืนข้อมูล `11` products, `4` toppings, `3` orders และ `15` sortedInventory
+   - `GET http://jamal-pos-env.eba-ycvffjku.us-east-1.elasticbeanstalk.com/` (Port 80) → HTTP `200`
 4. ตรวจรับการใช้งานจริง End-to-End บน Production (Issue `#53` โดย `@Ctrl-Pichayut`): ทดสอบเข้าสู่ระบบ Cashier, สั่งซื้อ `ครัวซองต์เนยสด AOP` (`POST /api/orders` HTTP `201` คิว `#A05` พร้อมตัดสต็อกอัตโนมัติ `4 -> 3`) และเปลี่ยนสถานะคิวบนหน้าจอ Kitchen KDS (`PATCH /api/orders/:id/status` HTTP `200`) ผ่านสมบูรณ์
 
 > **หมายเหตุ (AWS Academy Learner Lab):** สภาพแวดล้อมที่ Deploy บนบัญชี Learner Lab จะทำงานตามรอบเวลาของ Lab Session (หาก Session หมดเวลา EC2 จะหยุดชั่วคราว และกด `Start Lab` เพื่อเปิดใช้งานใหม่ได้)
@@ -742,7 +742,7 @@ npm run test:plato      # รันทั้ง Unit Test Coverage และ Pla
 
 ### 1. สิ่งที่ทำได้ดี (What went well)
 1. **คุณภาพโค้ดและการทดสอบผ่านตามเกณฑ์ทั้งหมด:** หลังจาก Refactor `StaffModel.js` และ `InventoryModel.js` แล้ว คำสั่ง `npm run lint` ได้ **0 errors, 0 warnings**, `npm run test:coverage` ผ่านครบ **24/24 Tests** (Statement Coverage **100%**, Branch **86.39%**, Functions **100%**, Lines **100%**), และ `npm run test:ui` (Playwright) ผ่านครบ **5/5 เคส**
-2. **ระบบ CI/CD และการ Deploy บน AWS สำเร็จ:** GitHub Actions CI (`unit-test-and-coverage` และ `ui-test-and-static-check`) ผ่านทุก Job และ Deploy ระบบจริงขึ้น **AWS Elastic Beanstalk (`us-east-1`)** ได้สำเร็จที่ http://jamal-pos-env.eba-ycvffjku.us-east-1.elasticbeanstalk.com/
+2. **ระบบ CI/CD และการ Deploy บน AWS สำเร็จ:** GitHub Actions CI (`unit-test-and-coverage` และ `ui-test-and-static-check`) ผ่านทุก Job และ Deploy ระบบจริงขึ้น **AWS Elastic Beanstalk (`us-east-1`)** บน `Node.js 24` ได้สำเร็จที่ http://jamal-pos-env.eba-ycvffjku.us-east-1.elasticbeanstalk.com:3000/
 3. **การทำงานร่วมกันครบทั้ง 4 คน:** ทุกคนมี Commit ตรง Format `<ticketid>: <msg>` (`>= 20` commits), Branches (`>= 2`), Issues และ Peer Review Comments (`>= 20` comments) ครบถ้วน
 
 ### 2. สิ่งที่ควรปรับปรุง (What could be improved)
