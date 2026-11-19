@@ -421,9 +421,9 @@ flowchart TD
 
 ### 12.2 ภาพหน้าจอระบบจริง (Browser Web Application Screenshots)
 
-#### 1) หน้าจอเข้าสู่ระบบ (Login & PIN Authentication Screen)
+#### 1) หน้าจอเข้าสู่ระบบ (Login & PIN + Social Authentication Screen)
 * **เส้นทางไฟล์**: [`frontend/server.js`](./frontend/server.js), [`frontend/public/app.js`](./frontend/public/app.js)
-* **คำอธิบาย**: หน้าต่างสำหรับเข้าสู่ระบบพร้อมตัวเลือกบทบาท (แคชเชียร์, บาริสต้า, ผู้ดูแลร้าน) และแป้นกรอกรหัส PIN 4 หลัก รองรับการตรวจสอบสิทธิ์ผ่าน Express API (`/api/auth/login`) และระบบความปลอดภัย Timeout 15 นาที (NFR-04)
+* **คำอธิบาย**: หน้าต่างเข้าสู่ระบบพร้อมตัวเลือกบทบาท (แคชเชียร์, บาริสต้า/ครัว, เจ้าของร้าน) แป้นกรอกรหัส PIN 4 หลัก และปุ่ม Social Login (Gmail / Facebook) ผ่าน REST API (`/api/auth/login` และ `/api/auth/social`) พร้อมระบบ Auto Timeout 15 นาที (NFR-04)
 
 <img width="100%" alt="Screen_01_Login" src="./docs/screenshots/01_login.png" />
 
@@ -431,7 +431,7 @@ flowchart TD
 
 #### 2) หน้าจอแคชเชียร์ขายหน้าร้าน (Cashier POS Screen)
 * **เส้นทางไฟล์**: [`frontend/server.js`](./frontend/server.js), [`frontend/public/app.js`](./frontend/public/app.js)
-* **คำอธิบาย**: หน้าจอขายหน้าร้านสำหรับ iPad 11" แสดงหมวดหมู่สินค้า การ์ดเมนูกาแฟ/เบเกอรี่ ช่องค้นหา ตะกร้าสินค้าด้านขวา และปุ่มพักบิล/คิดเงิน พร้อมป๊อปอัปปรับแต่งความหวานและชนิดนม (FR-04, NFR-01, NFR-02)
+* **คำอธิบาย**: หน้าจอขายหน้าร้านสำหรับ iPad แสดงเมนู 11 รายการ ช่องค้นหาคีย์เวิร์ดครอบคลุมท็อปปิ้ง ตะกร้าสินค้าด้านขวา (คำนวณ VAT 7%) ปุ่มพักบิล/Void/คิดเงิน และป๊อปอัปปรับแต่งความหวาน ชนิดนม และท็อปปิ้ง (FR-04, NFR-01, NFR-02)
 
 <img width="100%" alt="Screen_02_POS" src="./docs/screenshots/02_cashier_pos.png" />
 
@@ -439,7 +439,7 @@ flowchart TD
 
 #### 3) หน้าจอคิดเงินสดและใบเสร็จความร้อน 80mm (Payment Modal & Receipt Slip)
 * **เส้นทางไฟล์**: [`frontend/server.js`](./frontend/server.js), [`frontend/public/app.js`](./frontend/public/app.js)
-* **คำอธิบาย**: หน้าต่างคิดเงินสดพร้อมแป้น Numpad, ปุ่มลัดธนบัตร (฿100, ฿500, ฿1,000, พอดี), ระบบคำนวณเงินทอนอัตโนมัติ และพรีวิวใบเสร็จรับเงินขนาด 80mm พร้อมพิมพ์สลิป (FR-05, FR-06)
+* **คำอธิบาย**: หน้าต่างคิดเงินสดพร้อมแป้น Numpad, ปุ่มลัดธนบัตร (฿100, ฿500, ฿1,000, พอดี), ระบบคำนวณเงินทอนอัตโนมัติ, แท็บ PromptPay QR และพรีวิวใบเสร็จรับเงินขนาด 80mm พร้อมสั่งพิมพ์สลิป (FR-05, FR-06)
 
 <img width="100%" alt="Screen_03_Payment_Slip" src="./docs/screenshots/03_payment_slip.png" />
 
@@ -447,26 +447,27 @@ flowchart TD
 
 #### 4) หน้าจอกระดานคิวห้องครัวและบาริสต้า (Kitchen KDS Kanban Board)
 * **เส้นทางไฟล์**: [`frontend/server.js`](./frontend/server.js), [`frontend/public/app.js`](./frontend/public/app.js)
-* **คำอธิบาย**: กระดานคิวออเดอร์แบบ 3 คอลัมน์ (รอดำเนินการ -> กำลังชง/อบ -> พร้อมเสิร์ฟ) มีเสียงเตือนออเดอร์ใหม่ และปุ่มกดเปลี่ยนสถานะงานผ่าน Express API (`/api/orders/:id/status`) (TOR Operator 1-5)
+* **คำอธิบาย**: กระดานคิวออเดอร์แบบ 3 คอลัมน์ (รอดำเนินการ -> กำลังชง/อบ -> พร้อมรับที่เคาน์เตอร์) มีเสียงเตือนออเดอร์ใหม่ ปุ่มจำลองคิว และปุ่มเปลี่ยนสถานะงานผ่าน Express API (`/api/orders/:id/status`) (TOR Operator 1-5)
 
 <img width="100%" alt="Screen_04_Kitchen_KDS" src="./docs/screenshots/04_kitchen_kds.png" />
 
 ---
 
-#### 5) หน้าจอแผงควบคุมเจ้าของร้าน จัดการสต็อกและเมนู (Admin Dashboard & Inventory)
+#### 5) หน้าจอแผงควบคุมเจ้าของร้าน จัดการสต็อกและเมนู (Admin Dashboard, Inventory & Menu CRUD)
 * **เส้นทางไฟล์**: [`frontend/server.js`](./frontend/server.js), [`frontend/public/app.js`](./frontend/public/app.js)
-* **คำอธิบาย**: แดชบอร์ดสรุปยอดขายรวมประจำวัน สัดส่วนเงินสด/โอนเงิน สินค้าขายดี Top 5, ตารางควบคุมสต็อกเบเกอรี่, ป๊อปอัปเพิ่มเมนูใหม่/แก้ไขราคา (FR-02), ป๊อปอัปเพิ่มบัญชีพนักงาน และระบบขออนุมัติ Void บิล (FR-07, FR-08)
+* **คำอธิบาย**: แดชบอร์ดสรุปยอดขายรวมประจำวัน สัดส่วนเงินสด/PromptPay สินค้าขายดี Top 5, ตารางควบคุมสต็อกเบเกอรี่ และแท็บจัดการรายการเมนูทั้ง 11 รายการ (เพิ่ม ลบ แก้ไขชื่อ หมวดหมู่ ราคา สต็อก และตัวเลือกสินค้า) พร้อมหน้าประวัติการขาย/Void และจัดการพนักงาน (FR-02, FR-07, FR-08)
 
 <img width="100%" alt="Screen_05_Admin_Dashboard" src="./docs/screenshots/05_admin_dashboard.png" />
+
+<img width="100%" alt="Screen_06_Admin_Menu_CRUD" src="./docs/screenshots/06_admin_menu_crud.png" />
 
 ---
 
 #### 6) หน้าจอลูกค้าสั่งอาหารและติดตามคิวบนมือถือ (Customer Mobile Ordering)
 * **เส้นทางไฟล์**: [`frontend/server.js`](./frontend/server.js), [`frontend/public/app.js`](./frontend/public/app.js)
-* **คำอธิบาย**: หน้าจอมือถือ (Viewport 393×852) สำหรับลูกค้าสแกนดูเมนู ปรับแต่งความหวาน สั่งสินค้า และติดตามสถานะคิวคำสั่งซื้อ (#A03) แบบ Real-time (TOR User 1-5)
+* **คำอธิบาย**: หน้าจอมือถือ (Viewport 393x852) สำหรับลูกค้าดูเมนูแยกตามหมวดหมู่ ปรับแต่งตัวเลือก สั่งสินค้าผ่านตะกร้า และติดตามสถานะคิวคำสั่งซื้อ (#A03) แบบ Real-time (TOR User 1-5)
 
-<!-- ตัวอย่างหน้าจอ Mobile สำหรับลูกค้า -->
-<p align="center"><em>(แสดงผลในรูปแบบ Responsive Mobile Web ผ่าน Viewport 393×852)</em></p>
+<img width="100%" alt="Screen_07_Customer_Mobile" src="./docs/screenshots/07_customer_mobile.png" />
 
 ---
 

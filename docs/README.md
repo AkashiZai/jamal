@@ -16,8 +16,10 @@
 ---
 
 ## ภาพถ่ายหน้าจอหลัก (Screenshots)
-1. **Login Screen**: [`screenshots/01_login.png`](./screenshots/01_login.png)
+1. **Login Screen (PIN + Social Login)**: [`screenshots/01_login.png`](./screenshots/01_login.png)
 2. **Cashier POS**: [`screenshots/02_cashier_pos.png`](./screenshots/02_cashier_pos.png)
 3. **Payment Receipt Slip (80mm Thermal)**: [`screenshots/03_payment_slip.png`](./screenshots/03_payment_slip.png)
 4. **Kitchen Display System (KDS)**: [`screenshots/04_kitchen_kds.png`](./screenshots/04_kitchen_kds.png)
 5. **Admin Dashboard**: [`screenshots/05_admin_dashboard.png`](./screenshots/05_admin_dashboard.png)
+6. **Admin Menu & Price CRUD**: [`screenshots/06_admin_menu_crud.png`](./screenshots/06_admin_menu_crud.png)
+7. **Customer Mobile Ordering**: [`screenshots/07_customer_mobile.png`](./screenshots/07_customer_mobile.png)
