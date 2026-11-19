@@ -47,11 +47,11 @@
   <div class="row">
     <div class="col-md-6">
       <h2 class="header">Maintainability <a href="http://blogs.msdn.com/b/codeanalysis/archive/2007/11/20/maintainability-index-range-and-meaning.aspx"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="A value between 0 and 100 that represents the relative ease of maintaining the code. A high value means better maintainability." data-original-title="Maintainability Index"  data-container="body"></i></a></h2>
-      <p class="stat">65.40</p>
+      <p class="stat">66.03</p>
     </div>
     <div class="col-md-6">
       <h2 class="header">Lines of code <i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="Source Lines of Code / Logical Lines of Code" data-original-title="SLOC/LSLOC" data-container="body"></i></h2>
-      <p class="stat">501</p>
+      <p class="stat">525</p>
     </div>
   </div>
   <div class="row historical">
@@ -65,11 +65,11 @@
   <div class="row">
     <div class="col-md-6">
       <h2 class="header">Difficulty  <a href="http://en.wikipedia.org/wiki/Halstead_complexity_measures"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="The difficulty measure is related to the difficulty of the program to write or understand." data-original-title="Difficulty" data-container="body"></i></a></h2>
-      <p class="stat">34.07</p>
+      <p class="stat">47.19</p>
     </div>
     <div class="col-md-6">
       <h2 class="header">Estimated Errors  <a href="http://en.wikipedia.org/wiki/Halstead_complexity_measures"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="Halstead's delivered bugs is an estimate for the number of errors in the implementation." data-original-title="Delivered Bugs" data-container="body"></i></a></h2>
-      <p class="stat">5.65</p>
+      <p class="stat">6.30</p>
     </div>
   </div>
 </div>
@@ -470,6 +470,28 @@ app.post(&#039;/api/auth/social&#039;, (req, res) =&gt; {
   res.json({ user: result.user });
 });
 
+function resolveServerItemUnit(item) {
+  if (item.unitPrice !== undefined) return Number(item.unitPrice);
+  if (item.price !== undefined) return Number(item.price);
+  const prod = products.find((p) =&gt; p.id === item.id);
+  const basePrice = prod ? Number(prod.price) : 0;
+  const toppingSum = (item.toppings || []).reduce((sum, t) =&gt; sum + (Number(t.price) || 0), 0);
+  return basePrice + toppingSum;
+}
+
+function summarizeOrderBill(items = [], cashReceived = 0) {
+  const orderCart = new CartModel();
+  for (const item of items) {
+    const prod = products.find((p) =&gt; p.id === item.id) || item;
+    const unit = resolveServerItemUnit(item);
+    const qty = Math.max(1, Number(item.quantity) || 1);
+    for (let q = 0; q &lt; qty; q += 1) {
+      orderCart.addItem(prod, item.optionsText || &#039;&#039;, unit, item.toppings || []);
+    }
+  }
+  return orderCart.calculateBill(cashReceived);
+}
+
 app.post(&#039;/api/orders&#039;, (req, res) =&gt; {
   const payload = req.body || {};
   const items = payload.items || [];
@@ -481,12 +503,14 @@ app.post(&#039;/api/orders&#039;, (req, res) =&gt; {
     return res.status(stockResult.status).json({ error: stockResult.error });
   }
 
-  const newOrder = orderQueueModel.enqueueOrder(payload);
+  const billSummary = summarizeOrderBill(items, payload.cashReceived);
+  const resolvedTotal = Number(payload.totalAmount) &gt; 0 ? Number(payload.totalAmount) : billSummary.totalAmount;
+  const newOrder = orderQueueModel.enqueueOrder({ ...payload, totalAmount: resolvedTotal });
   orders = orderQueueModel.getAll();
 
   // บันทึกยอดขายและใบเสร็จเข้าประวัติการขาย (FR-08)
   inventoryModel.recordSale({
-    totalAmount: payload.totalAmount,
+    totalAmount: resolvedTotal,
     items,
     paymentMethod: payload.paymentMethod || &#039;PromptPay&#039;,
     queueNo: newOrder.queueNo,
@@ -499,7 +523,7 @@ app.post(&#039;/api/orders&#039;, (req, res) =&gt; {
     customerQueueNo = newOrder.queueNo;
   }
 
-  res.status(201).json({ order: newOrder, customerQueueNo });
+  res.status(201).json({ order: newOrder, billSummary, customerQueueNo });
 });
 
 app.patch(&#039;/api/orders/:id/status&#039;, (req, res) =&gt; {

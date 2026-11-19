@@ -376,6 +376,28 @@ app.post('/api/auth/social', (req, res) => {
   res.json({ user: result.user });
 });
 
+function resolveServerItemUnit(item) {
+  if (item.unitPrice !== undefined) return Number(item.unitPrice);
+  if (item.price !== undefined) return Number(item.price);
+  const prod = products.find((p) => p.id === item.id);
+  const basePrice = prod ? Number(prod.price) : 0;
+  const toppingSum = (item.toppings || []).reduce((sum, t) => sum + (Number(t.price) || 0), 0);
+  return basePrice + toppingSum;
+}
+
+function summarizeOrderBill(items = [], cashReceived = 0) {
+  const orderCart = new CartModel();
+  for (const item of items) {
+    const prod = products.find((p) => p.id === item.id) || item;
+    const unit = resolveServerItemUnit(item);
+    const qty = Math.max(1, Number(item.quantity) || 1);
+    for (let q = 0; q < qty; q += 1) {
+      orderCart.addItem(prod, item.optionsText || '', unit, item.toppings || []);
+    }
+  }
+  return orderCart.calculateBill(cashReceived);
+}
+
 app.post('/api/orders', (req, res) => {
   const payload = req.body || {};
   const items = payload.items || [];
@@ -387,12 +409,14 @@ app.post('/api/orders', (req, res) => {
     return res.status(stockResult.status).json({ error: stockResult.error });
   }
 
-  const newOrder = orderQueueModel.enqueueOrder(payload);
+  const billSummary = summarizeOrderBill(items, payload.cashReceived);
+  const resolvedTotal = Number(payload.totalAmount) > 0 ? Number(payload.totalAmount) : billSummary.totalAmount;
+  const newOrder = orderQueueModel.enqueueOrder({ ...payload, totalAmount: resolvedTotal });
   orders = orderQueueModel.getAll();
 
   // บันทึกยอดขายและใบเสร็จเข้าประวัติการขาย (FR-08)
   inventoryModel.recordSale({
-    totalAmount: payload.totalAmount,
+    totalAmount: resolvedTotal,
     items,
     paymentMethod: payload.paymentMethod || 'PromptPay',
     queueNo: newOrder.queueNo,
@@ -405,7 +429,7 @@ app.post('/api/orders', (req, res) => {
     customerQueueNo = newOrder.queueNo;
   }
 
-  res.status(201).json({ order: newOrder, customerQueueNo });
+  res.status(201).json({ order: newOrder, billSummary, customerQueueNo });
 });
 
 app.patch('/api/orders/:id/status', (req, res) => {

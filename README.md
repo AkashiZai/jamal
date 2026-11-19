@@ -636,9 +636,9 @@ npm run test:plato      # รันทั้ง Unit Test Coverage และ Pla
 | **`tests/ui/kds.ui.test.js`** | **78.0** | 31 | 2 | 9,397 | ผ่านเกณฑ์: Playwright UI Test คิวห้องครัว |
 | **`tests/ui/login.ui.test.js`** | **77.4** | 40 | 2 | 11,463 | ผ่านเกณฑ์: Playwright UI Test การตรวจสอบสิทธิ์ |
 | **`tests/ui/pos.ui.test.js`** | **72.9** | 39 | 2 | 13,646 | ผ่านเกณฑ์: Playwright UI Test การคิดเงินและทอนเงิน |
-| **`server.js`** | **65.4** | 501 | 41 | 577,361 | ผ่านเกณฑ์: REST API 16 Endpoints เชื่อมโยงโมเดล |
+| **`server.js`** | **66.0** | 525 | 52 | 892,191 | ผ่านเกณฑ์: REST API 16 Endpoints เชื่อมโยงโมเดล |
 | **`public/app.js`** | **71.3** | 2,684 | 287 | 5,564,791 | ผ่านเกณฑ์: SPA Client logic จัดการหน้าจอและเสียงเตือน |
-| **ค่าเฉลี่ยทั้งโปรเจกต์** | **67.02** | **320** | **-** | **-** | **ผ่านเกณฑ์มาตรฐาน Maintainability (> 65)** |
+| **ค่าเฉลี่ยทั้งโปรเจกต์** | **67.07** | **321** | **-** | **-** | **ผ่านเกณฑ์มาตรฐาน Maintainability (> 65)** |
 
 
 ### สิ่งที่ยังไม่เสร็จสมบูรณ์ / Bug ที่พบใน Phase 3 (และแก้ไขครบใน Phase 4)
@@ -657,10 +657,10 @@ npm run test:plato      # รันทั้ง Unit Test Coverage และ Pla
 | ไฟล์ Data Structure (`models/`) | % Stmts | % Branch | % Funcs | % Lines | ไฟล์ทดสอบ (`tests/`) | ผู้รับผิดชอบ |
 | :--- | :---: | :---: | :---: | :---: | :--- | :--- |
 | `StaffModel.js` | 100 | 84.48 | 100 | 100 | `staff.test.js` (5 tests) | `@AkashiZai` |
-| `CartModel.js` | 100 | 78.94 | 100 | 100 | `cart.test.js` (4 tests) | `@203Tharathep` |
+| `CartModel.js` | 100 | 80.70 | 100 | 100 | `cart.test.js` (4 tests) | `@203Tharathep` |
 | `OrderQueueModel.js` | 100 | 72.54 | 100 | 100 | `orderQueue.test.js` (3 tests) | `@Ctrl-Pichayut` |
 | `InventoryModel.js` | 100 | 95.31 | 100 | 100 | `inventory.test.js` (12 tests) | `@Kizizi123123` |
-| **All files** | **100** | **86.05** | **100** | **100** | 4 Test Suites / 24 Tests | ทั้งทีม |
+| **All files** | **100** | **86.39** | **100** | **100** | 4 Test Suites / 24 Tests | ทั้งทีม |
 
 ### ตารางสรุป 5 UI Test Cases (Phase 4 — Playwright, `npm run test:ui`)
 | ลำดับ | ชื่อไฟล์ UI Test | รายละเอียดการทดสอบ (Steps) | การเช็กค่า Expected Result (`expect(...)`) | ผู้รับผิดชอบ |
@@ -740,7 +740,7 @@ npm run test:plato      # รันทั้ง Unit Test Coverage และ Pla
 * **คลิปวิดีโอสรุปการประชุม Final Retrospective (Sprint 4):** https://youtu.be/hfDTt5S0-oo
 
 ### 1. สิ่งที่ทำได้ดี (What went well)
-1. **คุณภาพโค้ดและการทดสอบผ่านตามเกณฑ์ทั้งหมด:** หลังจาก Refactor `StaffModel.js` และ `InventoryModel.js` แล้ว คำสั่ง `npm run lint` ได้ **0 errors, 0 warnings**, `npm run test:coverage` ผ่านครบ **24/24 Tests** (Statement Coverage **100%**, Branch **86.05%**, Functions **100%**, Lines **100%**), และ `npm run test:ui` (Playwright) ผ่านครบ **5/5 เคส**
+1. **คุณภาพโค้ดและการทดสอบผ่านตามเกณฑ์ทั้งหมด:** หลังจาก Refactor `StaffModel.js` และ `InventoryModel.js` แล้ว คำสั่ง `npm run lint` ได้ **0 errors, 0 warnings**, `npm run test:coverage` ผ่านครบ **24/24 Tests** (Statement Coverage **100%**, Branch **86.39%**, Functions **100%**, Lines **100%**), และ `npm run test:ui` (Playwright) ผ่านครบ **5/5 เคส**
 2. **ระบบ CI/CD และการ Deploy บน AWS สำเร็จ:** GitHub Actions CI (`unit-test-and-coverage` และ `ui-test-and-static-check`) ผ่านทุก Job และ Deploy ระบบจริงขึ้น **AWS Elastic Beanstalk (`us-east-1`)** ได้สำเร็จที่ http://jamal-pos-env.eba-ycvffjku.us-east-1.elasticbeanstalk.com/
 3. **การทำงานร่วมกันครบทั้ง 4 คน:** ทุกคนมี Commit ตรง Format `<ticketid>: <msg>` (`>= 20` commits), Branches (`>= 2`), Issues และ Peer Review Comments (`>= 20` comments) ครบถ้วน
 
