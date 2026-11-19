@@ -17,6 +17,7 @@ const state = {
   customerQueueNo: 'A03',
 
   // Client UI state
+  usingStaticRuntime: false,
   currentPage: 'pos', // 'pos' | 'kds' | 'admin' | 'customer' | 'login'
   currentUser: {
     id: 'staff-01',
@@ -142,12 +143,42 @@ function formatTime(secs) {
 }
 
 // ============================================================================
-// API CALLS TO EXPRESS SERVER
+// API CALLS TO EXPRESS SERVER (WITH STATIC FALLBACK FOR GITHUB PAGES)
 // ============================================================================
+
+function shouldUseStaticRuntime() {
+  if (state.usingStaticRuntime) return true;
+  if (!window.JamalStaticApi) return false;
+  const host = window.location ? window.location.hostname : '';
+  const proto = window.location ? window.location.protocol : '';
+  return proto === 'file:' || host.endsWith('github.io') || Boolean(window.__JAMAL_FORCE_STATIC__);
+}
+
+async function apiFetch(url, options) {
+  if (shouldUseStaticRuntime() && window.JamalStaticApi) {
+    state.usingStaticRuntime = true;
+    return window.JamalStaticApi.request(url, options);
+  }
+  try {
+    const res = await fetch(url, options);
+    const ctype = (res.headers && res.headers.get('content-type')) || '';
+    if (res.status === 404 && !ctype.includes('application/json') && window.JamalStaticApi) {
+      state.usingStaticRuntime = true;
+      return window.JamalStaticApi.request(url, options);
+    }
+    return res;
+  } catch (err) {
+    if (window.JamalStaticApi) {
+      state.usingStaticRuntime = true;
+      return window.JamalStaticApi.request(url, options);
+    }
+    throw err;
+  }
+}
 
 async function fetchState() {
   try {
-    const res = await fetch('/api/state');
+    const res = await apiFetch('/api/state');
     const data = await res.json();
     state.categories = data.categories || [];
     state.products = data.products || [];
@@ -165,7 +196,7 @@ async function fetchState() {
 }
 
 async function apiCreateOrder(payload) {
-  const res = await fetch('/api/orders', {
+  const res = await apiFetch('/api/orders', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(payload),
@@ -188,7 +219,7 @@ async function apiAdvanceOrderStatus(orderId, currentStatus) {
   const nextStatus = nextMap[currentStatus];
   if (!nextStatus) return;
 
-  await fetch(`/api/orders/${encodeURIComponent(orderId)}/status`, {
+  await apiFetch(`/api/orders/${encodeURIComponent(orderId)}/status`, {
     method: 'PATCH',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ status: nextStatus }),
@@ -197,7 +228,7 @@ async function apiAdvanceOrderStatus(orderId, currentStatus) {
 }
 
 async function apiRestockProduct(productId, amount) {
-  await fetch(`/api/products/${encodeURIComponent(productId)}/restock`, {
+  await apiFetch(`/api/products/${encodeURIComponent(productId)}/restock`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ amount }),
@@ -206,7 +237,7 @@ async function apiRestockProduct(productId, amount) {
 }
 
 async function apiUpdatePrice(productId, price) {
-  await fetch(`/api/products/${encodeURIComponent(productId)}/price`, {
+  await apiFetch(`/api/products/${encodeURIComponent(productId)}/price`, {
     method: 'PATCH',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ price }),
@@ -215,7 +246,7 @@ async function apiUpdatePrice(productId, price) {
 }
 
 async function apiAddProduct(form) {
-  const res = await fetch('/api/products', {
+  const res = await apiFetch('/api/products', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(form),
@@ -228,7 +259,7 @@ async function apiAddProduct(form) {
 }
 
 async function apiUpdateProduct(productId, form) {
-  const res = await fetch(`/api/products/${encodeURIComponent(productId)}`, {
+  const res = await apiFetch(`/api/products/${encodeURIComponent(productId)}`, {
     method: 'PUT',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(form),
@@ -241,7 +272,7 @@ async function apiUpdateProduct(productId, form) {
 }
 
 async function apiVoidReceipt(receiptNo, pin, reason) {
-  const res = await fetch(`/api/sales/${encodeURIComponent(receiptNo)}/void`, {
+  const res = await apiFetch(`/api/sales/${encodeURIComponent(receiptNo)}/void`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ pin, reason }),
@@ -254,7 +285,7 @@ async function apiVoidReceipt(receiptNo, pin, reason) {
 }
 
 async function apiAddStaff(form) {
-  await fetch('/api/staff', {
+  await apiFetch('/api/staff', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(form),
@@ -312,7 +343,7 @@ window.appActions = {
   async submitLogin(e) {
     e.preventDefault();
     state.loginError = '';
-    const res = await fetch('/api/auth/login', {
+    const res = await apiFetch('/api/auth/login', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ username: state.loginUsername, pin: state.loginPin }),
@@ -341,7 +372,7 @@ window.appActions = {
     );
     if (!email) return;
 
-    const res = await fetch('/api/auth/social', {
+    const res = await apiFetch('/api/auth/social', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
@@ -754,7 +785,7 @@ window.appActions = {
   // Admin CRUD: ลบเมนูออกจากระบบ (DELETE /api/products/:id)
   async deleteProduct(productId) {
     if (!window.confirm('ยืนยันการลบรายการเมนูนี้?')) return;
-    await fetch(`/api/products/${encodeURIComponent(productId)}`, { method: 'DELETE' });
+    await apiFetch(`/api/products/${encodeURIComponent(productId)}`, { method: 'DELETE' });
     await fetchState();
   },
 
@@ -924,7 +955,7 @@ function renderNavbar() {
       <div class="flex items-center space-x-2.5 text-xs">
         <span class="hidden xl:inline-flex items-center gap-1.5 bg-espresso-800 px-2.5 py-1 rounded-md border border-espresso-700 text-warmgray-400 font-medium text-[11px]">
           <span class="w-2 h-2 rounded-full bg-green-500 animate-pulse"></span>
-          Express Server Online
+          ${state.usingStaticRuntime ? 'GitHub Pages Static Mode' : 'Express Server Online'}
         </span>
 
         ${
