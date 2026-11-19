@@ -1,4 +1,4 @@
-# 📥 คู่มือนำงานออกแบบเข้าสู่ Figma (Figma Import Guide)
+# คู่มือนำงานออกแบบเข้าสู่ Figma (Figma Import Guide)
 **โปรเจกต์**: Jamal Café & Bakery POS  
 **Figma Prototype Link**: [https://www.figma.com/design/DSn2mfMqepHiauo2lbwBFV/jamal?node-id=0-1&t=TBf61dXn3PTERRvu-1](https://www.figma.com/design/DSn2mfMqepHiauo2lbwBFV/jamal?node-id=0-1&t=TBf61dXn3PTERRvu-1)
 
@@ -6,7 +6,7 @@
 
 ---
 
-## 🚀 วิธีที่ 1: ลากไฟล์ SVG ลง Figma Canvas ได้ทันที (เร็วที่สุด ไม่ต้องลงปลั๊กอิน)
+## วิธีที่ 1: ลากไฟล์ SVG ลง Figma Canvas ได้ทันที (เร็วที่สุด ไม่ต้องลงปลั๊กอิน)
 คุณสามารถเปิดโปรแกรม Figma แล้วลากไฟล์ SVG ในโฟลเดอร์ `design/figma_import/` ไปวางบน Canvas ได้เลย โดย Figma จะแปลงเป็น **Vector Layer & Frame แท้ 100%** ที่แก้ไขตัวหนังสือ สี และปรับขนาดได้ทันที:
 
 | ไฟล์ Artboard SVG | หน้าจอที่ได้ใน Figma | ขนาด Frame |
@@ -19,15 +19,15 @@
 
 ---
 
-## ⚡ วิธีที่ 2: ใช้ปลั๊กอิน `html.to.design` ใน Figma (ได้ Auto-layout เต็มรูปแบบ)
+## วิธีที่ 2: ใช้ปลั๊กอิน `html.to.design` ใน Figma (ได้ Auto-layout เต็มรูปแบบ)
 หากต้องการให้ Figma จัดกลุ่มเป็น **Auto-layout (Flexbox)** อัตโนมัติ:
 1. ใน Figma คลิกขวาเลือก **Plugins** > ค้นหา **`html.to.design`**
-2. เลือกแท็บ **HTML** หรือนำไฟล์ [`design/prototype/index.html`](../prototype/index.html) ไปวาง
+2. เลือกแท็บ **HTML** หรือนำไฟล์ในโฟลเดอร์ `design/figma_pages/` ไปวาง
 3. ปลั๊กอินจะสร้างหน้าจอที่จัด Auto-layout พร้อมฟอนต์และ Components ให้ทันที
 
 ---
 
-## 🎨 วิธีที่ 3: นำเข้า Color & Spacing Tokens
+## วิธีที่ 3: นำเข้า Color & Spacing Tokens
 นำไฟล์ [`design/tokens.json`](../tokens.json) ไป Import ผ่าน:
 - ปลั๊กอิน **Tokens Studio for Figma** (เลือก Load Tokens > JSON File)
 - หรือใช้เป็นคู่มือตั้งค่า **Local Variables** ใน Figma เพื่อคุมโทนสี Dark Espresso, Warm Cream, Terracotta และ Sage Matcha ให้ตรงกันทั้งทีม
