@@ -47,11 +47,11 @@
   <div class="row">
     <div class="col-md-6">
       <h2 class="header">Maintainability <a href="http://blogs.msdn.com/b/codeanalysis/archive/2007/11/20/maintainability-index-range-and-meaning.aspx"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="A value between 0 and 100 that represents the relative ease of maintaining the code. A high value means better maintainability." data-original-title="Maintainability Index"  data-container="body"></i></a></h2>
-      <p class="stat">71.22</p>
+      <p class="stat">71.31</p>
     </div>
     <div class="col-md-6">
       <h2 class="header">Lines of code <i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="Source Lines of Code / Logical Lines of Code" data-original-title="SLOC/LSLOC" data-container="body"></i></h2>
-      <p class="stat">2639</p>
+      <p class="stat">2684</p>
     </div>
   </div>
   <div class="row historical">
@@ -65,11 +65,11 @@
   <div class="row">
     <div class="col-md-6">
       <h2 class="header">Difficulty  <a href="http://en.wikipedia.org/wiki/Halstead_complexity_measures"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="The difficulty measure is related to the difficulty of the program to write or understand." data-original-title="Difficulty" data-container="body"></i></a></h2>
-      <p class="stat">76.19</p>
+      <p class="stat">78.40</p>
     </div>
     <div class="col-md-6">
       <h2 class="header">Estimated Errors  <a href="http://en.wikipedia.org/wiki/Halstead_complexity_measures"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="Halstead's delivered bugs is an estimate for the number of errors in the implementation." data-original-title="Delivered Bugs" data-container="body"></i></a></h2>
-      <p class="stat">22.45</p>
+      <p class="stat">23.66</p>
     </div>
   </div>
 </div>
@@ -156,7 +156,8 @@ const state = {
   tempPrice: &#039;&#039;,
   salesSearch: &#039;&#039;,
   showAddMenuModal: false,
-  newMenuForm: { name: &#039;&#039;, category: &#039;coffee&#039;, price: &#039;&#039;, cost: &#039;&#039;, desc: &#039;&#039; },
+  editingMenuId: null,
+  newMenuForm: { name: &#039;&#039;, category: &#039;coffee&#039;, price: &#039;&#039;, cost: &#039;&#039;, stock: &#039;15&#039;, desc: &#039;&#039;, customizable: true },
   showAddStaffModal: false,
   newStaffForm: { name: &#039;&#039;, role: &#039;Cashier&#039;, username: &#039;&#039;, pin: &#039;&#039;, shift: &#039;กะเช้า (07:00 - 15:30)&#039; },
 
@@ -308,11 +309,28 @@ async function apiUpdatePrice(productId, price) {
 }
 
 async function apiAddProduct(form) {
-  await fetch(&#039;/api/products&#039;, {
+  const res = await fetch(&#039;/api/products&#039;, {
     method: &#039;POST&#039;,
     headers: { &#039;Content-Type&#039;: &#039;application/json&#039; },
     body: JSON.stringify(form),
   });
+  if (!res.ok) {
+    const data = await res.json().catch(() =&gt; ({}));
+    alert(data.error || &#039;ไม่สามารถเพิ่มเมนูได้&#039;);
+  }
+  await fetchState();
+}
+
+async function apiUpdateProduct(productId, form) {
+  const res = await fetch(`/api/products/${encodeURIComponent(productId)}`, {
+    method: &#039;PUT&#039;,
+    headers: { &#039;Content-Type&#039;: &#039;application/json&#039; },
+    body: JSON.stringify(form),
+  });
+  if (!res.ok) {
+    const data = await res.json().catch(() =&gt; ({}));
+    alert(data.error || &#039;ไม่สามารถแก้ไขเมนูได้&#039;);
+  }
   await fetchState();
 }
 
@@ -744,12 +762,31 @@ window.appActions = {
   },
 
   openAddMenuModal() {
+    state.editingMenuId = null;
     state.showAddMenuModal = true;
-    state.newMenuForm = { name: &#039;&#039;, category: &#039;coffee&#039;, price: &#039;&#039;, cost: &#039;&#039;, desc: &#039;&#039; };
+    state.newMenuForm = { name: &#039;&#039;, category: &#039;coffee&#039;, price: &#039;&#039;, cost: &#039;&#039;, stock: &#039;15&#039;, desc: &#039;&#039;, customizable: true };
+    render();
+  },
+
+  openEditMenuModal(productId) {
+    const prod = state.products.find((p) =&gt; p.id === productId);
+    if (!prod) return;
+    state.editingMenuId = prod.id;
+    state.showAddMenuModal = true;
+    state.newMenuForm = {
+      name: prod.name || &#039;&#039;,
+      category: prod.category || &#039;coffee&#039;,
+      price: String(prod.price !== undefined ? prod.price : &#039;&#039;),
+      cost: String(prod.cost !== undefined ? prod.cost : 0),
+      stock: String(prod.stock !== undefined &amp;&amp; prod.stock !== null ? prod.stock : 0),
+      desc: prod.desc || &#039;&#039;,
+      customizable: Boolean(prod.customizable),
+    };
     render();
   },
 
   closeAddMenuModal() {
+    state.editingMenuId = null;
     state.showAddMenuModal = false;
     render();
   },
@@ -757,7 +794,20 @@ window.appActions = {
   async submitAddMenu(e) {
     e.preventDefault();
     if (!state.newMenuForm.name || !state.newMenuForm.price) return;
-    await apiAddProduct(state.newMenuForm);
+    const payload = {
+      name: state.newMenuForm.name,
+      category: state.newMenuForm.category,
+      price: Number(state.newMenuForm.price),
+      stock: state.newMenuForm.stock === &#039;&#039; ? 0 : Number(state.newMenuForm.stock),
+      desc: state.newMenuForm.desc,
+      customizable: Boolean(state.newMenuForm.customizable),
+    };
+    if (state.editingMenuId) {
+      await apiUpdateProduct(state.editingMenuId, payload);
+    } else {
+      await apiAddProduct(payload);
+    }
+    state.editingMenuId = null;
     state.showAddMenuModal = false;
     render();
   },
@@ -2155,31 +2205,17 @@ function renderAdminPage() {
                   &lt;div&gt;
                     &lt;div class=&quot;font-bold text-sm text-espresso-900&quot;&gt;${escapeHtml(prod.name)}&lt;/div&gt;
                     &lt;div class=&quot;text-xs text-warmgray-500&quot;&gt;${escapeHtml(prod.desc)}&lt;/div&gt;
+                    &lt;div class=&quot;flex flex-wrap items-center gap-1.5 mt-1 text-[10px] font-semibold&quot;&gt;
+                      &lt;span class=&quot;px-2 py-0.5 rounded bg-cream-100 border border-cream-300 text-espresso-800&quot;&gt;${escapeHtml(prod.category)}&lt;/span&gt;
+                      &lt;span class=&quot;px-2 py-0.5 rounded bg-cream-100 border border-cream-300 text-warmgray-600&quot;&gt;สต็อก: ${prod.stock !== null &amp;&amp; prod.stock !== undefined ? prod.stock : 0}&lt;/span&gt;
+                      &lt;span class=&quot;px-2 py-0.5 rounded ${prod.customizable ? &#039;bg-matcha-light border border-matcha-border text-matcha&#039; : &#039;bg-cream-100 border border-cream-300 text-warmgray-500&#039;}&quot;&gt;${prod.customizable ? &#039;ปรับแต่งตัวเลือกได้&#039; : &#039;ไม่มีตัวเลือกเพิ่ม&#039;}&lt;/span&gt;
+                    &lt;/div&gt;
                   &lt;/div&gt;
                 &lt;/div&gt;
-                &lt;div class=&quot;flex items-center gap-3 self-end sm:self-auto&quot;&gt;
-                  ${
-                    state.editingPriceId === prod.id
-                      ? `
-                    &lt;div class=&quot;flex items-center gap-1.5&quot;&gt;
-                      &lt;input
-                        type=&quot;number&quot;
-                        value=&quot;${escapeHtml(state.tempPrice)}&quot;
-                        oninput=&quot;state.tempPrice = this.value&quot;
-                        class=&quot;w-20 px-2 py-1 text-sm border border-terracotta rounded-lg font-mono focus:outline-none&quot;
-                      /&gt;
-                      &lt;button onclick=&quot;appActions.savePrice(&#039;${prod.id}&#039;)&quot; class=&quot;px-2.5 py-1 bg-matcha text-white rounded-lg text-xs font-bold&quot;&gt;บันทึก&lt;/button&gt;
-                      &lt;button onclick=&quot;appActions.cancelEditPrice()&quot; class=&quot;px-2 py-1 bg-cream-200 text-espresso-800 rounded-lg text-xs font-bold&quot;&gt;ยกเลิก&lt;/button&gt;
-                    &lt;/div&gt;
-                  `
-                      : `
-                    &lt;div class=&quot;flex items-center gap-2&quot;&gt;
-                      &lt;span class=&quot;font-mono font-bold text-sm text-terracotta&quot;&gt;฿${prod.price.toFixed(2)}&lt;/span&gt;
-                      &lt;button onclick=&quot;appActions.startEditPrice(&#039;${prod.id}&#039;, ${prod.price})&quot; class=&quot;p-1.5 text-warmgray-500 hover:text-espresso-900 hover:bg-cream-200 rounded-lg transition&quot; title=&quot;แก้ไขราคา&quot;&gt;✎&lt;/button&gt;
-                      &lt;button onclick=&quot;appActions.deleteProduct(&#039;${prod.id}&#039;)&quot; class=&quot;p-1.5 text-red-500 hover:text-red-700 hover:bg-red-50 rounded-lg transition text-xs font-bold&quot; title=&quot;ลบเมนู&quot;&gt;🗑&lt;/button&gt;
-                    &lt;/div&gt;
-                  `
-                  }
+                &lt;div class=&quot;flex items-center gap-2 self-end sm:self-auto&quot;&gt;
+                  &lt;span class=&quot;font-mono font-bold text-sm text-terracotta mr-1&quot;&gt;฿${prod.price.toFixed(2)}&lt;/span&gt;
+                  &lt;button onclick=&quot;appActions.openEditMenuModal(&#039;${prod.id}&#039;)&quot; class=&quot;px-2.5 py-1 text-espresso-900 bg-cream-100 hover:bg-cream-200 border border-cream-300 rounded-lg transition text-xs font-bold&quot; title=&quot;แก้ไขเมนู หมวดหมู่ ราคา และตัวเลือก&quot;&gt;แก้ไข&lt;/button&gt;
+                  &lt;button onclick=&quot;appActions.deleteProduct(&#039;${prod.id}&#039;)&quot; class=&quot;px-2.5 py-1 text-red-600 hover:text-red-700 bg-red-50 hover:bg-red-100 border border-red-200 rounded-lg transition text-xs font-bold&quot; title=&quot;ลบเมนู&quot;&gt;ลบ&lt;/button&gt;
                 &lt;/div&gt;
               &lt;/div&gt;
             `
@@ -2343,38 +2379,47 @@ function renderAdminPage() {
 
 function renderAddMenuModal() {
   if (!state.showAddMenuModal) return &#039;&#039;;
+  const isEditing = Boolean(state.editingMenuId);
   return `
     &lt;div class=&quot;fixed inset-0 z-50 bg-espresso-950/60 backdrop-blur-sm flex items-center justify-center p-4&quot;&gt;
       &lt;div class=&quot;bg-white rounded-2xl border border-cream-300 shadow-2xl max-w-lg w-full p-6&quot;&gt;
-        &lt;h3 class=&quot;text-lg font-extrabold text-espresso-900&quot;&gt;เพิ่มรายการสินค้าใหม่ (Add New Menu)&lt;/h3&gt;
-        &lt;p class=&quot;text-xs text-warmgray-600 mt-0.5&quot;&gt;ข้อกำหนด FR-02: เพิ่มเมนูและกำหนดราคาขายเข้าสู่ระบบ POS หน้าร้าน&lt;/p&gt;
+        &lt;h3 class=&quot;text-lg font-extrabold text-espresso-900&quot;&gt;${isEditing ? &#039;แก้ไขรายการสินค้า (Edit Menu)&#039; : &#039;เพิ่มรายการสินค้าใหม่ (Add New Menu)&#039;}&lt;/h3&gt;
+        &lt;p class=&quot;text-xs text-warmgray-600 mt-0.5&quot;&gt;ข้อกำหนด FR-02: กำหนดชื่อสินค้า หมวดหมู่ ราคา สต็อก และตัวเลือกสินค้า&lt;/p&gt;
         &lt;form onsubmit=&quot;appActions.submitAddMenu(event)&quot; class=&quot;mt-4 space-y-3.5&quot;&gt;
           &lt;div&gt;
             &lt;label class=&quot;block text-xs font-bold text-espresso-900 mb-1&quot;&gt;ชื่อเมนู *&lt;/label&gt;
             &lt;input type=&quot;text&quot; required placeholder=&quot;เช่น คาราเมลมัคคิอาโต้เย็น&quot; value=&quot;${escapeHtml(state.newMenuForm.name)}&quot; oninput=&quot;state.newMenuForm.name = this.value&quot; class=&quot;w-full px-3 py-2 text-sm border border-cream-300 rounded-xl bg-cream-50/50&quot; /&gt;
           &lt;/div&gt;
-          &lt;div class=&quot;grid grid-cols-2 gap-3&quot;&gt;
+          &lt;div class=&quot;grid grid-cols-3 gap-3&quot;&gt;
             &lt;div&gt;
               &lt;label class=&quot;block text-xs font-bold text-espresso-900 mb-1&quot;&gt;หมวดหมู่ *&lt;/label&gt;
               &lt;select onchange=&quot;state.newMenuForm.category = this.value&quot; class=&quot;w-full px-3 py-2 text-sm border border-cream-300 rounded-xl bg-cream-50/50&quot;&gt;
-                &lt;option value=&quot;coffee&quot; ${state.newMenuForm.category === &#039;coffee&#039; ? &#039;selected&#039; : &#039;&#039;}&gt;☕ กาแฟสด&lt;/option&gt;
-                &lt;option value=&quot;non-coffee&quot; ${state.newMenuForm.category === &#039;non-coffee&#039; ? &#039;selected&#039; : &#039;&#039;}&gt;🍵 ชา &amp;amp; เครื่องดื่ม&lt;/option&gt;
-                &lt;option value=&quot;bakery&quot; ${state.newMenuForm.category === &#039;bakery&#039; ? &#039;selected&#039; : &#039;&#039;}&gt;🥐 เบเกอรี่สด&lt;/option&gt;
-                &lt;option value=&quot;dessert&quot; ${state.newMenuForm.category === &#039;dessert&#039; ? &#039;selected&#039; : &#039;&#039;}&gt;🍰 ของหวาน&lt;/option&gt;
+                &lt;option value=&quot;coffee&quot; ${state.newMenuForm.category === &#039;coffee&#039; ? &#039;selected&#039; : &#039;&#039;}&gt;กาแฟสด&lt;/option&gt;
+                &lt;option value=&quot;non-coffee&quot; ${state.newMenuForm.category === &#039;non-coffee&#039; ? &#039;selected&#039; : &#039;&#039;}&gt;ชา &amp;amp; เครื่องดื่ม&lt;/option&gt;
+                &lt;option value=&quot;bakery&quot; ${state.newMenuForm.category === &#039;bakery&#039; ? &#039;selected&#039; : &#039;&#039;}&gt;เบเกอรี่สด&lt;/option&gt;
+                &lt;option value=&quot;dessert&quot; ${state.newMenuForm.category === &#039;dessert&#039; ? &#039;selected&#039; : &#039;&#039;}&gt;ของหวาน&lt;/option&gt;
               &lt;/select&gt;
             &lt;/div&gt;
             &lt;div&gt;
-              &lt;label class=&quot;block text-xs font-bold text-espresso-900 mb-1&quot;&gt;ราคาขายหน้าร้าน (บาท) *&lt;/label&gt;
-              &lt;input type=&quot;number&quot; required min=&quot;1&quot; placeholder=&quot;75&quot; value=&quot;${escapeHtml(state.newMenuForm.price)}&quot; oninput=&quot;state.newMenuForm.price = this.value&quot; class=&quot;w-full px-3 py-2 text-sm border border-cream-300 rounded-xl bg-cream-50/50 font-mono&quot; /&gt;
+              &lt;label class=&quot;block text-xs font-bold text-espresso-900 mb-1&quot;&gt;ราคา (บาท) *&lt;/label&gt;
+              &lt;input type=&quot;number&quot; required min=&quot;1&quot; step=&quot;0.01&quot; placeholder=&quot;75&quot; value=&quot;${escapeHtml(state.newMenuForm.price)}&quot; oninput=&quot;state.newMenuForm.price = this.value&quot; class=&quot;w-full px-3 py-2 text-sm border border-cream-300 rounded-xl bg-cream-50/50 font-mono&quot; /&gt;
+            &lt;/div&gt;
+            &lt;div&gt;
+              &lt;label class=&quot;block text-xs font-bold text-espresso-900 mb-1&quot;&gt;สต็อก (ชิ้น)&lt;/label&gt;
+              &lt;input type=&quot;number&quot; min=&quot;0&quot; placeholder=&quot;15&quot; value=&quot;${escapeHtml(state.newMenuForm.stock)}&quot; oninput=&quot;state.newMenuForm.stock = this.value&quot; class=&quot;w-full px-3 py-2 text-sm border border-cream-300 rounded-xl bg-cream-50/50 font-mono&quot; /&gt;
             &lt;/div&gt;
           &lt;/div&gt;
           &lt;div&gt;
             &lt;label class=&quot;block text-xs font-bold text-espresso-900 mb-1&quot;&gt;คำอธิบายเมนู&lt;/label&gt;
             &lt;input type=&quot;text&quot; placeholder=&quot;เช่น หอมคาราเมล หวานนุ่มละมุน&quot; value=&quot;${escapeHtml(state.newMenuForm.desc)}&quot; oninput=&quot;state.newMenuForm.desc = this.value&quot; class=&quot;w-full px-3 py-2 text-sm border border-cream-300 rounded-xl bg-cream-50/50&quot; /&gt;
           &lt;/div&gt;
+          &lt;label class=&quot;flex items-center gap-2 text-xs font-semibold text-espresso-900 cursor-pointer select-none&quot;&gt;
+            &lt;input type=&quot;checkbox&quot; ${state.newMenuForm.customizable ? &#039;checked&#039; : &#039;&#039;} onchange=&quot;state.newMenuForm.customizable = this.checked&quot; class=&quot;w-4 h-4 rounded border-cream-300&quot; /&gt;
+            &lt;span&gt;เปิดใช้ตัวเลือกปรับแต่งสินค้า (ระดับความหวาน / ชนิดนม / ท็อปปิ้ง)&lt;/span&gt;
+          &lt;/label&gt;
           &lt;div class=&quot;flex items-center justify-end gap-2 pt-3 border-t border-cream-200&quot;&gt;
             &lt;button type=&quot;button&quot; onclick=&quot;appActions.closeAddMenuModal()&quot; class=&quot;px-4 py-2 bg-cream-200 text-espresso-800 rounded-xl text-xs font-bold&quot;&gt;ยกเลิก&lt;/button&gt;
-            &lt;button type=&quot;submit&quot; class=&quot;px-5 py-2 bg-terracotta text-white rounded-xl text-xs font-bold&quot;&gt;✓ บันทึกและเพิ่มเมนู&lt;/button&gt;
+            &lt;button type=&quot;submit&quot; class=&quot;px-5 py-2 bg-terracotta text-white rounded-xl text-xs font-bold&quot;&gt;${isEditing ? &#039;บันทึกการแก้ไข&#039; : &#039;บันทึกและเพิ่มเมนู&#039;}&lt;/button&gt;
           &lt;/div&gt;
         &lt;/form&gt;
       &lt;/div&gt;

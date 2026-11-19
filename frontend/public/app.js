@@ -62,7 +62,8 @@ const state = {
   tempPrice: '',
   salesSearch: '',
   showAddMenuModal: false,
-  newMenuForm: { name: '', category: 'coffee', price: '', cost: '', desc: '' },
+  editingMenuId: null,
+  newMenuForm: { name: '', category: 'coffee', price: '', cost: '', stock: '15', desc: '', customizable: true },
   showAddStaffModal: false,
   newStaffForm: { name: '', role: 'Cashier', username: '', pin: '', shift: 'กะเช้า (07:00 - 15:30)' },
 
@@ -214,11 +215,28 @@ async function apiUpdatePrice(productId, price) {
 }
 
 async function apiAddProduct(form) {
-  await fetch('/api/products', {
+  const res = await fetch('/api/products', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(form),
   });
+  if (!res.ok) {
+    const data = await res.json().catch(() => ({}));
+    alert(data.error || 'ไม่สามารถเพิ่มเมนูได้');
+  }
+  await fetchState();
+}
+
+async function apiUpdateProduct(productId, form) {
+  const res = await fetch(`/api/products/${encodeURIComponent(productId)}`, {
+    method: 'PUT',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(form),
+  });
+  if (!res.ok) {
+    const data = await res.json().catch(() => ({}));
+    alert(data.error || 'ไม่สามารถแก้ไขเมนูได้');
+  }
   await fetchState();
 }
 
@@ -650,12 +668,31 @@ window.appActions = {
   },
 
   openAddMenuModal() {
+    state.editingMenuId = null;
     state.showAddMenuModal = true;
-    state.newMenuForm = { name: '', category: 'coffee', price: '', cost: '', desc: '' };
+    state.newMenuForm = { name: '', category: 'coffee', price: '', cost: '', stock: '15', desc: '', customizable: true };
+    render();
+  },
+
+  openEditMenuModal(productId) {
+    const prod = state.products.find((p) => p.id === productId);
+    if (!prod) return;
+    state.editingMenuId = prod.id;
+    state.showAddMenuModal = true;
+    state.newMenuForm = {
+      name: prod.name || '',
+      category: prod.category || 'coffee',
+      price: String(prod.price !== undefined ? prod.price : ''),
+      cost: String(prod.cost !== undefined ? prod.cost : 0),
+      stock: String(prod.stock !== undefined && prod.stock !== null ? prod.stock : 0),
+      desc: prod.desc || '',
+      customizable: Boolean(prod.customizable),
+    };
     render();
   },
 
   closeAddMenuModal() {
+    state.editingMenuId = null;
     state.showAddMenuModal = false;
     render();
   },
@@ -663,7 +700,20 @@ window.appActions = {
   async submitAddMenu(e) {
     e.preventDefault();
     if (!state.newMenuForm.name || !state.newMenuForm.price) return;
-    await apiAddProduct(state.newMenuForm);
+    const payload = {
+      name: state.newMenuForm.name,
+      category: state.newMenuForm.category,
+      price: Number(state.newMenuForm.price),
+      stock: state.newMenuForm.stock === '' ? 0 : Number(state.newMenuForm.stock),
+      desc: state.newMenuForm.desc,
+      customizable: Boolean(state.newMenuForm.customizable),
+    };
+    if (state.editingMenuId) {
+      await apiUpdateProduct(state.editingMenuId, payload);
+    } else {
+      await apiAddProduct(payload);
+    }
+    state.editingMenuId = null;
     state.showAddMenuModal = false;
     render();
   },
@@ -2061,31 +2111,17 @@ function renderAdminPage() {
                   <div>
                     <div class="font-bold text-sm text-espresso-900">${escapeHtml(prod.name)}</div>
                     <div class="text-xs text-warmgray-500">${escapeHtml(prod.desc)}</div>
+                    <div class="flex flex-wrap items-center gap-1.5 mt-1 text-[10px] font-semibold">
+                      <span class="px-2 py-0.5 rounded bg-cream-100 border border-cream-300 text-espresso-800">${escapeHtml(prod.category)}</span>
+                      <span class="px-2 py-0.5 rounded bg-cream-100 border border-cream-300 text-warmgray-600">สต็อก: ${prod.stock !== null && prod.stock !== undefined ? prod.stock : 0}</span>
+                      <span class="px-2 py-0.5 rounded ${prod.customizable ? 'bg-matcha-light border border-matcha-border text-matcha' : 'bg-cream-100 border border-cream-300 text-warmgray-500'}">${prod.customizable ? 'ปรับแต่งตัวเลือกได้' : 'ไม่มีตัวเลือกเพิ่ม'}</span>
+                    </div>
                   </div>
                 </div>
-                <div class="flex items-center gap-3 self-end sm:self-auto">
-                  ${
-                    state.editingPriceId === prod.id
-                      ? `
-                    <div class="flex items-center gap-1.5">
-                      <input
-                        type="number"
-                        value="${escapeHtml(state.tempPrice)}"
-                        oninput="state.tempPrice = this.value"
-                        class="w-20 px-2 py-1 text-sm border border-terracotta rounded-lg font-mono focus:outline-none"
-                      />
-                      <button onclick="appActions.savePrice('${prod.id}')" class="px-2.5 py-1 bg-matcha text-white rounded-lg text-xs font-bold">บันทึก</button>
-                      <button onclick="appActions.cancelEditPrice()" class="px-2 py-1 bg-cream-200 text-espresso-800 rounded-lg text-xs font-bold">ยกเลิก</button>
-                    </div>
-                  `
-                      : `
-                    <div class="flex items-center gap-2">
-                      <span class="font-mono font-bold text-sm text-terracotta">฿${prod.price.toFixed(2)}</span>
-                      <button onclick="appActions.startEditPrice('${prod.id}', ${prod.price})" class="p-1.5 text-warmgray-500 hover:text-espresso-900 hover:bg-cream-200 rounded-lg transition" title="แก้ไขราคา">✎</button>
-                      <button onclick="appActions.deleteProduct('${prod.id}')" class="p-1.5 text-red-500 hover:text-red-700 hover:bg-red-50 rounded-lg transition text-xs font-bold" title="ลบเมนู">🗑</button>
-                    </div>
-                  `
-                  }
+                <div class="flex items-center gap-2 self-end sm:self-auto">
+                  <span class="font-mono font-bold text-sm text-terracotta mr-1">฿${prod.price.toFixed(2)}</span>
+                  <button onclick="appActions.openEditMenuModal('${prod.id}')" class="px-2.5 py-1 text-espresso-900 bg-cream-100 hover:bg-cream-200 border border-cream-300 rounded-lg transition text-xs font-bold" title="แก้ไขเมนู หมวดหมู่ ราคา และตัวเลือก">แก้ไข</button>
+                  <button onclick="appActions.deleteProduct('${prod.id}')" class="px-2.5 py-1 text-red-600 hover:text-red-700 bg-red-50 hover:bg-red-100 border border-red-200 rounded-lg transition text-xs font-bold" title="ลบเมนู">ลบ</button>
                 </div>
               </div>
             `
@@ -2249,38 +2285,47 @@ function renderAdminPage() {
 
 function renderAddMenuModal() {
   if (!state.showAddMenuModal) return '';
+  const isEditing = Boolean(state.editingMenuId);
   return `
     <div class="fixed inset-0 z-50 bg-espresso-950/60 backdrop-blur-sm flex items-center justify-center p-4">
       <div class="bg-white rounded-2xl border border-cream-300 shadow-2xl max-w-lg w-full p-6">
-        <h3 class="text-lg font-extrabold text-espresso-900">เพิ่มรายการสินค้าใหม่ (Add New Menu)</h3>
-        <p class="text-xs text-warmgray-600 mt-0.5">ข้อกำหนด FR-02: เพิ่มเมนูและกำหนดราคาขายเข้าสู่ระบบ POS หน้าร้าน</p>
+        <h3 class="text-lg font-extrabold text-espresso-900">${isEditing ? 'แก้ไขรายการสินค้า (Edit Menu)' : 'เพิ่มรายการสินค้าใหม่ (Add New Menu)'}</h3>
+        <p class="text-xs text-warmgray-600 mt-0.5">ข้อกำหนด FR-02: กำหนดชื่อสินค้า หมวดหมู่ ราคา สต็อก และตัวเลือกสินค้า</p>
         <form onsubmit="appActions.submitAddMenu(event)" class="mt-4 space-y-3.5">
           <div>
             <label class="block text-xs font-bold text-espresso-900 mb-1">ชื่อเมนู *</label>
             <input type="text" required placeholder="เช่น คาราเมลมัคคิอาโต้เย็น" value="${escapeHtml(state.newMenuForm.name)}" oninput="state.newMenuForm.name = this.value" class="w-full px-3 py-2 text-sm border border-cream-300 rounded-xl bg-cream-50/50" />
           </div>
-          <div class="grid grid-cols-2 gap-3">
+          <div class="grid grid-cols-3 gap-3">
             <div>
               <label class="block text-xs font-bold text-espresso-900 mb-1">หมวดหมู่ *</label>
               <select onchange="state.newMenuForm.category = this.value" class="w-full px-3 py-2 text-sm border border-cream-300 rounded-xl bg-cream-50/50">
-                <option value="coffee" ${state.newMenuForm.category === 'coffee' ? 'selected' : ''}>☕ กาแฟสด</option>
-                <option value="non-coffee" ${state.newMenuForm.category === 'non-coffee' ? 'selected' : ''}>🍵 ชา &amp; เครื่องดื่ม</option>
-                <option value="bakery" ${state.newMenuForm.category === 'bakery' ? 'selected' : ''}>🥐 เบเกอรี่สด</option>
-                <option value="dessert" ${state.newMenuForm.category === 'dessert' ? 'selected' : ''}>🍰 ของหวาน</option>
+                <option value="coffee" ${state.newMenuForm.category === 'coffee' ? 'selected' : ''}>กาแฟสด</option>
+                <option value="non-coffee" ${state.newMenuForm.category === 'non-coffee' ? 'selected' : ''}>ชา &amp; เครื่องดื่ม</option>
+                <option value="bakery" ${state.newMenuForm.category === 'bakery' ? 'selected' : ''}>เบเกอรี่สด</option>
+                <option value="dessert" ${state.newMenuForm.category === 'dessert' ? 'selected' : ''}>ของหวาน</option>
               </select>
             </div>
             <div>
-              <label class="block text-xs font-bold text-espresso-900 mb-1">ราคาขายหน้าร้าน (บาท) *</label>
-              <input type="number" required min="1" placeholder="75" value="${escapeHtml(state.newMenuForm.price)}" oninput="state.newMenuForm.price = this.value" class="w-full px-3 py-2 text-sm border border-cream-300 rounded-xl bg-cream-50/50 font-mono" />
+              <label class="block text-xs font-bold text-espresso-900 mb-1">ราคา (บาท) *</label>
+              <input type="number" required min="1" step="0.01" placeholder="75" value="${escapeHtml(state.newMenuForm.price)}" oninput="state.newMenuForm.price = this.value" class="w-full px-3 py-2 text-sm border border-cream-300 rounded-xl bg-cream-50/50 font-mono" />
+            </div>
+            <div>
+              <label class="block text-xs font-bold text-espresso-900 mb-1">สต็อก (ชิ้น)</label>
+              <input type="number" min="0" placeholder="15" value="${escapeHtml(state.newMenuForm.stock)}" oninput="state.newMenuForm.stock = this.value" class="w-full px-3 py-2 text-sm border border-cream-300 rounded-xl bg-cream-50/50 font-mono" />
             </div>
           </div>
           <div>
             <label class="block text-xs font-bold text-espresso-900 mb-1">คำอธิบายเมนู</label>
             <input type="text" placeholder="เช่น หอมคาราเมล หวานนุ่มละมุน" value="${escapeHtml(state.newMenuForm.desc)}" oninput="state.newMenuForm.desc = this.value" class="w-full px-3 py-2 text-sm border border-cream-300 rounded-xl bg-cream-50/50" />
           </div>
+          <label class="flex items-center gap-2 text-xs font-semibold text-espresso-900 cursor-pointer select-none">
+            <input type="checkbox" ${state.newMenuForm.customizable ? 'checked' : ''} onchange="state.newMenuForm.customizable = this.checked" class="w-4 h-4 rounded border-cream-300" />
+            <span>เปิดใช้ตัวเลือกปรับแต่งสินค้า (ระดับความหวาน / ชนิดนม / ท็อปปิ้ง)</span>
+          </label>
           <div class="flex items-center justify-end gap-2 pt-3 border-t border-cream-200">
             <button type="button" onclick="appActions.closeAddMenuModal()" class="px-4 py-2 bg-cream-200 text-espresso-800 rounded-xl text-xs font-bold">ยกเลิก</button>
-            <button type="submit" class="px-5 py-2 bg-terracotta text-white rounded-xl text-xs font-bold">✓ บันทึกและเพิ่มเมนู</button>
+            <button type="submit" class="px-5 py-2 bg-terracotta text-white rounded-xl text-xs font-bold">${isEditing ? 'บันทึกการแก้ไข' : 'บันทึกและเพิ่มเมนู'}</button>
           </div>
         </form>
       </div>
