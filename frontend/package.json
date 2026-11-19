@@ -4,6 +4,9 @@
   "version": "1.0.0",
   "description": "Jamal Café & Bakery POS System (Pure Node.js & Express)",
   "main": "server.js",
+  "engines": {
+    "node": ">=20.0.0 <25.0.0"
+  },
   "scripts": {
     "start": "node server.js",
     "dev": "node server.js",
