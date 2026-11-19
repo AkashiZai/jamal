@@ -681,7 +681,7 @@ npm run test:plato      # รันทั้ง Unit Test Coverage และ Pla
 ---
 
 ### การ Deploy ขึ้น Production บน AWS Elastic Beanstalk (Region: `us-east-1`)
-- **Live URL (Port 3000):** http://jamal-pos-env.eba-ycvffjku.us-east-1.elasticbeanstalk.com:3000/ (รองรับพอร์ต 80 ผ่าน Nginx Proxy ที่ http://jamal-pos-env.eba-ycvffjku.us-east-1.elasticbeanstalk.com/ ด้วยเช่นกัน)
+- **Live URL:** http://jamal-pos-env.eba-ycvffjku.us-east-1.elasticbeanstalk.com:3000/
 - **GitHub Issues ที่เกี่ยวข้อง:** `#52` และ `#53`
 
 #### รายละเอียด Environment บน AWS Elastic Beanstalk
@@ -705,10 +705,9 @@ npm run test:plato      # รันทั้ง Unit Test Coverage และ Pla
 #### ขั้นตอนการ Deploy และผลการตรวจสอบระบบจริง
 1. ตรวจสอบความพร้อมของโค้ดฝั่ง `frontend/` (`npm test` ผ่าน 4 Test Suites / 24 Tests) แล้วสร้างไฟล์ `.zip` จากไฟล์ข้างใน `frontend/` โดยตรงด้วยพาธแบบ POSIX (`/`)
 2. เปิด AWS Elastic Beanstalk Console (`us-east-1`) เลือก **Web server environment**, แพลตฟอร์ม **Node.js 24 running on 64bit Amazon Linux 2023**, อัปโหลดไฟล์ Local `.zip` (`jamal-pos-node24-v1`), ตั้งค่า **Single instance (`t2.small`, 10 GB SSD)**, เลือก `LabRole` + `vockey` + `LabInstanceProfile`, เปิด Public IP ใน default VPC พร้อมเลือก Security Group `allowall`, ปิด Managed updates และตั้งค่า Environment property `PORT=3000`
-3. เมื่อสร้าง Environment เสร็จสิ้น สถานะเปลี่ยนเป็น `Ok` และทดสอบ Endpoint จริงผ่านพอร์ต `3000` (และพอร์ต `80`) ได้ผลดังนี้:
+3. เมื่อสร้าง Environment เสร็จสิ้น สถานะเปลี่ยนเป็น `Ok` และทดสอบ Endpoint จริงผ่านพอร์ต `3000` ได้ผลดังนี้:
    - `GET http://jamal-pos-env.eba-ycvffjku.us-east-1.elasticbeanstalk.com:3000/` → HTTP `200` (โหลดหน้าเว็บ JAMAL POS และแสดงสถานะ `Express Server Online` สำเร็จ)
    - `GET http://jamal-pos-env.eba-ycvffjku.us-east-1.elasticbeanstalk.com:3000/api/state` → HTTP `200` คืนข้อมูล `11` products, `4` toppings, `3` orders และ `15` sortedInventory
-   - `GET http://jamal-pos-env.eba-ycvffjku.us-east-1.elasticbeanstalk.com/` (Port 80) → HTTP `200`
 4. ตรวจรับการใช้งานจริง End-to-End บน Production (Issue `#53` โดย `@Ctrl-Pichayut`): ทดสอบเข้าสู่ระบบ Cashier, สั่งซื้อ `ครัวซองต์เนยสด AOP` (`POST /api/orders` HTTP `201` คิว `#A05` พร้อมตัดสต็อกอัตโนมัติ `4 -> 3`) และเปลี่ยนสถานะคิวบนหน้าจอ Kitchen KDS (`PATCH /api/orders/:id/status` HTTP `200`) ผ่านสมบูรณ์
 
 > **หมายเหตุ (AWS Academy Learner Lab):** สภาพแวดล้อมที่ Deploy บนบัญชี Learner Lab จะทำงานตามรอบเวลาของ Lab Session (หาก Session หมดเวลา EC2 จะหยุดชั่วคราว และกด `Start Lab` เพื่อเปิดใช้งานใหม่ได้)
